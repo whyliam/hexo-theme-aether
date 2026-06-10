@@ -1,0 +1,253 @@
+// Aether — About page
+// ==================================================
+// Editorial-style about page. Single column, deliberate whitespace,
+// section-numbered like a magazine masthead.
+
+.aether-about {
+  background: var(--aether-paper);
+}
+
+.aether-about__article {
+  margin: 0 auto;
+  max-width: 760px;
+  padding: clamp(48px, 9vh, 96px) clamp(20px, 5vw, 56px) clamp(72px, 10vh, 120px);
+}
+
+// ---- Hero ----
+.aether-about__hero {
+  margin-bottom: clamp(48px, 7vh, 80px);
+}
+
+.aether-about__eyebrow {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.aether-about__title {
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-serif);
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 24px;
+
+  em {
+    color: var(--aether-accent);
+    font-family: var(--aether-ff-serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+}
+
+.aether-about__lede {
+  color: var(--aether-ink-2);
+  font-family: var(--aether-ff-serif);
+  font-size: clamp(17px, 1.6vw, 21px);
+  font-style: italic;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 56ch;
+}
+
+// ---- Section label ----
+.aether-about__sec-label {
+  align-items: center;
+  color: var(--aether-muted);
+  display: inline-flex;
+  font-family: var(--aether-ff-mono);
+  font-size: 11px;
+  gap: 8px;
+  letter-spacing: 0.16em;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+
+  .num { color: var(--aether-ink); font-weight: 600; }
+  .sep { color: var(--aether-rule-2); }
+}
+
+// ---- NOW grid ----
+.aether-about__now {
+  border-top: 1px solid var(--aether-rule);
+  margin-top: clamp(40px, 5vh, 64px);
+  padding-top: clamp(40px, 5vh, 56px);
+}
+
+.aether-about__now-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+
+  +tablet-mobile() { grid-template-columns: 1fr; }
+}
+
+.aether-about__now-card {
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: var(--aether-r-md);
+  padding: 24px;
+
+  h3 {
+    color: var(--aether-ink);
+    font-family: var(--aether-ff-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    margin: 0 0 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--aether-rule);
+    text-transform: uppercase;
+  }
+
+  ul {
+    color: var(--aether-ink);
+    font-family: var(--aether-ff-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding-left: 14px;
+      position: relative;
+      margin-bottom: 8px;
+
+      &::before {
+        color: var(--aether-muted-2);
+        content: '·';
+        left: 0;
+        position: absolute;
+        top: 0;
+      }
+
+      &:last-child { margin-bottom: 0; }
+    }
+  }
+}
+
+// ---- FACTS ----
+.aether-about__facts {
+  border-top: 1px solid var(--aether-rule);
+  margin-top: clamp(40px, 5vh, 64px);
+  padding-top: clamp(40px, 5vh, 56px);
+}
+
+.aether-about__facts-list {
+  font-family: var(--aether-ff-sans);
+  margin: 0;
+  padding: 0;
+
+  > div {
+    border-bottom: 1px dashed var(--aether-rule);
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 140px 1fr;
+    padding: 14px 0;
+
+    &:last-child { border-bottom: 0; }
+  }
+
+  dt {
+    color: var(--aether-muted);
+    font-family: var(--aether-ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    color: var(--aether-ink);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// ---- Long-form body ----
+.aether-about__body {
+  border-top: 1px solid var(--aether-rule);
+  margin-top: clamp(40px, 5vh, 64px);
+  padding-top: clamp(40px, 5vh, 56px);
+
+  // Serif body for prose — match post body style
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-serif);
+  font-size: 17px;
+  line-height: 1.7;
+
+  h2 {
+    font-family: var(--aether-ff-serif);
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    margin: 48px 0 16px;
+  }
+
+  h3 {
+    font-family: var(--aether-ff-serif);
+    font-size: 19px;
+    font-weight: 600;
+    margin: 32px 0 12px;
+  }
+
+  p { margin: 0 0 18px; }
+
+  a {
+    color: var(--aether-accent);
+    text-decoration: underline;
+    text-decoration-color: unquote('color-mix(in srgb, var(--aether-accent) 30%, transparent)');
+    text-underline-offset: 2px;
+
+    &:hover { text-decoration-color: var(--aether-accent); }
+  }
+}
+
+// ---- CONTACT ----
+.aether-about__contact {
+  border-top: 1px solid var(--aether-rule);
+  margin-top: clamp(40px, 5vh, 64px);
+  padding-top: clamp(40px, 5vh, 56px);
+}
+
+.aether-about__contact-list {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li a {
+    align-items: center;
+    background: var(--aether-paper);
+    border: 1px solid var(--aether-rule);
+    border-radius: var(--aether-r-md);
+    color: var(--aether-ink);
+    display: flex;
+    font-family: var(--aether-ff-sans);
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: space-between;
+    padding: 14px 18px;
+    transition: all var(--aether-base) var(--aether-ease);
+
+    &:hover {
+      background: var(--aether-ink);
+      border-color: var(--aether-ink);
+      color: var(--aether-paper);
+
+      .aether-about__contact-arr { color: var(--aether-paper); transform: translateX(4px); }
+    }
+  }
+}
+
+.aether-about__contact-arr {
+  color: var(--aether-muted-2);
+  font-family: var(--aether-ff-mono);
+  font-size: 14px;
+  transition: transform var(--aether-base) var(--aether-ease), color var(--aether-base) var(--aether-ease);
+}

@@ -16,13 +16,35 @@
   </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}>
+<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}{% if theme.scheme === 'Aether' %} data-aether{% endif %}>
   <div class="headband"></div>
+
+  {%- if theme.scheme === 'Aether' and theme.aether and theme.aether.reading_progress %}
+  <div class="aether-reading-progress" aria-hidden="true"><span></span></div>
+  {%- endif %}
 
   <main class="main">
     <div class="column">
       <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-        {%- include '_partials/header/index.njk' -%}
+        {%- if theme.scheme === 'Aether' -%}
+          <div class="aether-header-row">
+            {{ partial('_partials/header/brand.njk') }}
+            {{ partial('_partials/header/menu.njk', {}, {cache: theme.cache.enable}) }}
+            {%- if theme.aether and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
+              <button class="aether-search-btn" type="button" data-aether-cmdk-trigger
+                      aria-label="搜索档案 (⌘K)">
+                <span class="aether-search-btn__icon" aria-hidden="true"><i class="fa fa-search"></i></span>
+                <span class="aether-search-btn__label">搜索档案</span>
+                <kbd class="aether-search-btn__kbd">⌘K</kbd>
+              </button>
+            {%- endif %}
+            <button class="aether-dark-toggle" type="button" aria-label="切换深色模式">☾</button>
+          </div>
+          {{ partial('_partials/search/index.njk', {}, {cache: theme.cache.enable}) }}
+          {{- next_inject('header') }}
+        {%- else -%}
+          {%- include '_partials/header/index.njk' -%}
+        {%- endif -%}
       </header>
       {%- if theme.sidebar.display !== 'remove' %}
         {% block sidebar %}{% endblock %}
@@ -38,12 +60,57 @@
 
   <footer class="footer">
     <div class="footer-inner">
+      {%- if theme.scheme === 'Aether' -%}
+      {%- set aether_brand = theme.aether and theme.aether.brand or {} -%}
+      {%- set brand_text = aether_brand.text or title or 'AETHER' -%}
+      {%- set brand_dot  = aether_brand.dot if aether_brand.dot is defined else true -%}
+      {%- set since_year = (theme.footer and theme.footer.since) or '2010' -%}
+      {%- set tagline    = (theme.aether and theme.aether.footer and theme.aether.footer.tagline) or '' -%}
+      <div class="aether-footer">
+        <div class="aether-foot-brand">
+          <span class="aether-foot-logo">{{ brand_text }}{%- if brand_dot %}<span class="dot"></span>{%- endif %}</span>
+          {%- if tagline %}<p>{{ tagline }}</p>{%- endif %}
+        </div>
+        <nav class="aether-foot-nav">
+          {%- if theme.menu -%}
+            {%- for name, link in theme.menu -%}
+              {%- set href = link.split('||')[0] | trim -%}
+              <a href="{{ url_for(href) }}">{{ name }}</a>
+            {%- endfor -%}
+          {%- else -%}
+            <a href="{{ url_for('/') }}">首页</a>
+            <a href="{{ url_for('/archives/') }}">归档</a>
+          {%- endif %}
+        </nav>
+        <div class="aether-foot-meta">
+          <span>© {{ since_year }}–{{ date(null, 'YYYY') }} {{ author }}</span>
+          {%- if theme.social %}
+          <span class="aether-foot-social">
+            {%- for name, entry in theme.social -%}
+              {%- set parts = entry.split('||') -%}
+              {%- set url   = parts[0] | trim -%}
+              {%- set icon  = (parts[1] | trim) or 'fa fa-link' -%}
+              <a href="{{ url }}" target="_blank" rel="noopener" title="{{ name }}" aria-label="{{ name }}">
+                <i class="{{ icon }}"></i>
+              </a>
+            {%- endfor %}
+          </span>
+          {%- endif %}
+          <span>由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & Aether 驱动</span>
+        </div>
+      </div>
+      {%- else -%}
       {%- include '_partials/languages.njk' -%}
       {{ partial('_partials/footer.njk', {}, {cache: theme.cache.enable}) }}
+      {%- endif -%}
     </div>
   </footer>
 
   {{ partial('_partials/widgets.njk', {}, {cache: theme.cache.enable}) }}
+
+  {%- if theme.scheme === 'Aether' -%}
+    {%- include '_partials/cmdk.njk' -%}
+  {%- endif -%}
 
   {{- next_inject('bodyEnd') }}
 </body>

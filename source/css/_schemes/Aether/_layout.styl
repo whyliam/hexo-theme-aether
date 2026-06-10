@@ -1,0 +1,160 @@
+// Aether — Layout
+// ==================================================
+// 仍然沿用 NexT 的 _layout.njk 原结构（header 在 .column 里），
+// 但通过 CSS 把 .column "拆开"：
+//   1) display: contents 让 .column 自己不占 flex 位置
+//   2) .header 改 position: sticky 顶到 viewport 顶
+//   3) 剩下的 .sidebar（仅 post 页有）成为 .main 的直接 flex 子项
+//
+// 好处：不用改 _layout.njk 的结构，避免 nunjucks 的 "block defined twice" 限制；
+//      其他 scheme（Muse/Mist/Pisces/Gemini）完全不受影响。
+
+$aether-content-max = 1180px;
+$aether-content-narrow = 680px;
+$aether-sidebar-width = 240px;
+$aether-sidebar-gap = 64px;
+$aether-header-h = 64px;
+
+.main {
+  align-items: flex-start;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  gap: $aether-sidebar-gap;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: $aether-content-max;
+  padding: 32px clamp(20px, 4vw, 56px) 0;
+  position: relative;
+  width: 100%;
+
+  +tablet-mobile() {
+    display: block;
+    gap: 0;
+    padding: 24px 20px 0;
+  }
+}
+
+// .column 不再是双栏 flex 容器，而是 "透明" 包装；
+// 让它的子元素 (header / sidebar) 成为 .main 的直接 flex 子项
+.column {
+  display: contents;
+}
+
+.aether-header-row {
+  box-sizing: border-box;
+}
+
+// 强制让 .main 重排：header 全宽（fixed 出 flex 流），sidebar 240px 在右
+// 注意：sidebar 不要 stretch — 让它保持自然高度（TOC 内容那么高），
+// 这样 position: sticky 才有 "scrollable parent" 可贴：
+//   sticky 元素的滚动范围 = parent.height - element.height
+.sidebar {
+  align-self: flex-start;
+  flex: 0 0 $aether-sidebar-width;
+  margin: 0;
+  order: 2;
+  width: $aether-sidebar-width;
+
+  +tablet-mobile() {
+    align-self: auto;
+    flex: none;
+    margin-top: 32px;
+    order: initial;
+    width: 100%;
+  }
+}
+
+// .main-inner：列表/page/archive 时居中窄列；post 时与 sidebar 协同
+.main-inner {
+  background: transparent;
+  border-radius: initial;
+  box-shadow: initial;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  margin: 0 auto;
+  max-width: $aether-content-narrow;
+  min-width: 0;
+  order: 1;
+  width: 100%;
+
+  +tablet-mobile() {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+// 当 sidebar 存在（post 页）时，.main-inner 不再 margin: 0 auto
+.main:has(.sidebar) .main-inner {
+  margin: 0;
+  max-width: $aether-content-narrow;
+}
+
+// 首页 (.aether-home) 强制铺满 viewport，覆盖 .main-inner 的 760px 限制
+.main:has(.aether-home) {
+  max-width: none;
+  padding: 0;
+}
+
+.main-inner.aether-home {
+  background: transparent;
+  margin: 0 auto;
+  max-width: none;
+  padding: 0;
+  width: 100%;
+}
+
+
+// Footer
+.footer {
+  border-top: 1px solid var(--aether-rule);
+  margin-top: 96px;
+  padding: 48px 0 32px;
+}
+
+.footer-inner {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  margin: 0 auto;
+  max-width: $aether-content-max;
+  padding: 0 clamp(20px, 4vw, 56px);
+  text-align: left;
+  text-transform: uppercase;
+
+  +mobile() {
+    padding: 0 20px;
+    text-align: center;
+  }
+}
+
+
+// Headband：纸白主题里收成极细 accent 线
+.headband {
+  background: var(--aether-accent);
+  height: 2px;
+  position: relative;
+  z-index: ($zindex-4 + 1);
+}
+
+
+// Aether reading-progress bar
+.aether-reading-progress {
+  height: 2px;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 9999;
+
+  span {
+    background: var(--aether-accent);
+    display: block;
+    height: 100%;
+    transform-origin: 0 0;
+    transition: transform 60ms linear;
+    width: 100%;
+  }
+}

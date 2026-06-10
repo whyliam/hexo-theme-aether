@@ -1,0 +1,203 @@
+// Aether — Header (fixed full-width topbar)
+// ==================================================
+
+// Search button (⌘K trigger) — sits to the right of the menu
+.aether-search-btn {
+  align-items: center;
+  background: var(--aether-paper-tint);
+  border: 1px solid var(--aether-rule);
+  border-radius: 999px;
+  color: var(--aether-muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--aether-ff-mono);
+  font-size: 11px;
+  gap: 8px;
+  letter-spacing: 0.06em;
+  margin-left: 14px;
+  padding: 6px 14px;
+  transition: all var(--aether-fast) var(--aether-ease);
+  white-space: nowrap;
+
+  &:hover { color: var(--aether-ink); border-color: var(--aether-rule-2); }
+
+  +mobile() { display: none; }
+}
+.aether-search-btn__icon  { font-size: 11px; }
+.aether-search-btn__label {
+  font-family: var(--aether-ff-sans);
+  font-size: 12.5px;
+}
+.aether-search-btn__kbd {
+  background: var(--aether-paper);
+  border: 1px solid var(--aether-rule);
+  border-radius: 3px;
+  color: var(--aether-muted-2);
+  font-family: var(--aether-ff-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+}
+// 因为 _layout.njk 把 <header> 放在 <div class="column">里（NexT 原结构），
+// _layout.styl 又给 .column 加 display: contents，让 .header 成为 .main 直接子项。
+// 这里用 position: fixed 把 header 拉到 viewport 顶部并全宽，脱离 flex 流。
+
+.header {
+  background: unquote('color-mix(in oklch, var(--aether-paper) 88%, transparent)');
+  backdrop-filter: unquote('saturate(120%) blur(10px)');
+  -webkit-backdrop-filter: unquote('saturate(120%) blur(10px)');
+  border-bottom: 1px solid var(--aether-rule);
+  left: 0;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: $zindex-4;
+
+  +tablet-mobile() {
+    position: fixed;
+  }
+}
+
+// body 顶端给 header 预留高度（header 高度随导航条数变动 64-96px）
+body[data-aether] {
+  padding-top: 96px;
+}
+
++mobile() {
+  body[data-aether] {
+    padding-top: 56px;
+  }
+}
+
+.aether-header-row {
+  align-items: center;
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 14px clamp(20px, 4vw, 56px);
+  width: 100%;
+
+  +tablet-mobile() {
+    padding: 12px 20px;
+  }
+}
+
+// brand 容器：让 .site-meta 与 toggle/right 同行
+.site-brand-container {
+  align-items: center;
+  background: transparent;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+  padding: 0;
+}
+
+.site-meta {
+  display: flex;
+  align-items: center;
+  flex-grow: 0;
+  padding: 0;
+  text-align: left;
+
+  +mobile() {
+    text-align: left;
+  }
+}
+
+.brand {
+  align-items: center;
+  background: transparent;
+  color: var(--aether-ink);
+  display: inline-flex;
+  font-family: var(--aether-ff-sans);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  padding: 0;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--aether-accent);
+  }
+
+  .logo-line {
+    display: none;
+  }
+}
+
+.site-title {
+  font-family: var(--aether-ff-sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.site-subtitle {
+  display: none;
+}
+
+.custom-logo-image {
+  display: none;
+}
+
+// 让 use-motion 的初始隐藏失效
+.use-motion .site-title,
+.use-motion .site-subtitle,
+.use-motion .custom-logo-image,
+.use-motion .column,
+.use-motion .site-brand-container .toggle {
+  opacity: 1;
+  top: 0;
+}
+
+// site-nav-toggle：mobile hamburger
+.site-nav-toggle {
+  display: none;
+
+  +tablet-mobile() {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+  }
+
+  .toggle {
+    color: var(--aether-muted);
+    padding: 6px;
+
+    .toggle-line {
+      background: var(--aether-ink);
+      border-radius: 1px;
+      height: 1.5px;
+      width: 18px;
+    }
+  }
+}
+
+// site-nav-right：放 search-icon
+.site-nav-right {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  width: auto;
+
+  .toggle {
+    color: var(--aether-muted);
+    padding: 8px 10px;
+
+    &:hover {
+      color: var(--aether-ink);
+    }
+
+    .fa-search {
+      font-size: 14px;
+    }
+  }
+}

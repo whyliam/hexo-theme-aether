@@ -9,3 +9,15 @@ node_modules/
 .nyc_output/
 coverage/
 .env
+
+# Open Design / temp artifacts
+.od-skills/
+.learnings/
+.tmp/
+*.artifact.json
+aether-home-mockup.html
+audit-log.md
+audit-plan.json
+audit-plan.md
+sync-log.md
+mq*.png

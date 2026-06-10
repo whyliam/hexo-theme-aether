@@ -3,18 +3,49 @@
 
 {% block title %}{{ title }}{% if theme.index_with_subtitle and subtitle %} - {{ subtitle }}{% endif %}{% endblock %}
 
-{% block class %}index posts-expand{% endblock %}
+{% block class %}index{% if theme.scheme === 'Aether' %} aether-home{% else %} posts-expand{% endif %}{% endblock %}
 
 {% block content %}
+  {%- if theme.scheme === 'Aether' %}
+    {# 01 Hero #}
+    {%- if theme.aether.hero.enable !== false %}
+      {%- include '_partials/home/hero.njk' -%}
+    {%- endif %}
+    {# 02 Start Here (merged featured + paths) #}
+    {%- if theme.aether.start_here and theme.aether.start_here.enable !== false %}
+      {%- include '_partials/home/start-here.njk' -%}
+    {%- elif theme.aether.paths and theme.aether.paths.enable !== false %}
+      {%- include '_partials/home/start-here.njk' -%}
+    {%- endif %}
+    {# 03 Building (projects) #}
+    {%- if theme.aether.building and theme.aether.building.enable !== false %}
+      {%- include '_partials/home/building.njk' -%}
+    {%- endif %}
+    {# 04 Latest #}
+    {%- if theme.aether.latest.enable !== false %}
+      {%- include '_partials/home/latest.njk' -%}
+    {%- endif %}
+    {# 05 Notes & Visuals #}
+    {%- if theme.aether.notes_visuals and theme.aether.notes_visuals.enable !== false %}
+      {%- include '_partials/home/notes-visuals.njk' -%}
+    {%- elif (theme.aether.notes and theme.aether.notes.enable !== false) or (theme.aether.visuals and theme.aether.visuals.enable !== false) %}
+      {%- include '_partials/home/notes-visuals.njk' -%}
+    {%- endif %}
+    {# 06 Subscribe #}
+    {%- if theme.aether.newsletter.enable !== false %}
+      {%- include '_partials/home/newsletter.njk' -%}
+    {%- endif %}
+  {%- else %}
+    {%- for post in page.posts.toArray() %}
+      {{ partial('_macro/post.njk', {post: post, is_index: true}) }}
+    {%- endfor %}
 
-  {%- for post in page.posts.toArray() %}
-    {{ partial('_macro/post.njk', {post: post, is_index: true}) }}
-  {%- endfor %}
-
-  {%- include '_partials/pagination.njk' -%}
-
+    {%- include '_partials/pagination.njk' -%}
+  {%- endif %}
 {% endblock %}
 
 {% block sidebar %}
-  {{ sidebar_template.render(false) }}
+  {%- if theme.scheme !== 'Aether' %}
+    {{ sidebar_template.render(false) }}
+  {%- endif %}
 {% endblock %}

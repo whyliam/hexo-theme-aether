@@ -1,0 +1,114 @@
+// Aether — Visuals archive page
+// ==================================================
+
+.aether-visuals-archive {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: clamp(48px, 9vh, 96px) clamp(20px, 5vw, 56px) clamp(72px, 10vh, 120px);
+}
+
+.aether-visuals-archive__hero {
+  margin-bottom: clamp(48px, 7vh, 72px);
+}
+
+.aether-visuals-archive__eyebrow {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.aether-visuals-archive__title {
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-serif);
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 24px;
+}
+
+.aether-visuals-archive__lede {
+  color: var(--aether-ink-2);
+  font-family: var(--aether-ff-serif);
+  font-size: clamp(17px, 1.6vw, 20px);
+  font-style: italic;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 56ch;
+}
+
+.aether-visuals-archive__grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+
+  +tablet() { grid-template-columns: repeat(2, 1fr); }
+  +mobile() { grid-template-columns: 1fr; }
+}
+
+.aether-visuals-archive__card {
+  background: var(--aether-paper);
+  border: 1px solid var(--aether-rule);
+  border-radius: var(--aether-r-md);
+  color: var(--aether-ink);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 0 18px;
+  transition: all var(--aether-base) var(--aether-ease);
+
+  &:hover {
+    border-color: var(--aether-ink);
+    transform: translateY(-3px);
+
+    .aether-visuals-archive__cover { transform: scale(1.02); }
+  }
+}
+
+.aether-visuals-archive__cover {
+  aspect-ratio: unquote('4 / 3');
+  background: linear-gradient(135deg, var(--aether-rule-2), var(--aether-paper-tint));
+  background-position: center;
+  background-size: cover;
+  display: block;
+  margin-bottom: 18px;
+  transition: transform var(--aether-base) var(--aether-ease);
+  width: 100%;
+}
+
+.aether-visuals-archive__meta {
+  align-items: center;
+  color: var(--aether-muted);
+  display: flex;
+  font-family: var(--aether-ff-mono);
+  font-size: 10.5px;
+  gap: 12px;
+  justify-content: space-between;
+  letter-spacing: 0.10em;
+  margin: 0 18px 8px;
+  text-transform: uppercase;
+}
+
+.aether-visuals-archive__num { color: var(--aether-ink); font-weight: 600; }
+
+.aether-visuals-archive__name {
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-serif);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0 18px;
+}
+
+.aether-visuals-archive__sub {
+  color: var(--aether-muted);
+  display: block;
+  font-family: var(--aether-ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  margin: 6px 18px 0;
+}
