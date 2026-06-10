@@ -1,0 +1,14 @@
+{%- set cfg = theme.aether.newsletter -%}
+<section class="aether-section aether-subscribe" data-aether-reveal>
+  <div class="aether-subscribe-bar">
+    <span class="aether-subscribe-text">{{ cfg.text or '关注更新' }}</span>
+    {%- if cfg.channels and cfg.channels.length %}
+      <div class="aether-subscribe-links">
+        {%- for ch in cfg.channels -%}
+          {% if loop.index > 1 %}<span class="aether-subscribe-dot">·</span>{% endif %}
+          <a href="{{ url_for(ch.url) }}"{% if ch.external %} target="_blank" rel="noopener"{% endif %}>{{ ch.label }}</a>
+        {%- endfor %}
+      </div>
+    {%- endif %}
+  </div>
+</section>

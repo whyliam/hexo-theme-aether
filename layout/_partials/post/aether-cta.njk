@@ -1,0 +1,49 @@
+{%- set cfg = theme.aether.cta -%}
+{%- if cfg and cfg.enable !== false and theme.scheme === 'Aether' -%}
+  {#- skip notes/visuals unless enable_all -#}
+  {%- set _type = page.type or page.layout -%}
+  {%- if cfg.enable_all or (_type !== 'note' and _type !== 'visual') -%}
+
+  {%- set channels = [] -%}
+  {%- if cfg.channels and cfg.channels.length -%}
+    {%- set channels = cfg.channels -%}
+  {%- elif theme.follow_me -%}
+    {#- adapt NexT follow_me dict into label/url -#}
+    {%- set _tmp = [] -%}
+    {%- for label, val in theme.follow_me -%}
+      {%- set _url = val.split('||')[0] | trim -%}
+      {%- set _tmp = (_tmp.push({label: label, url: _url}), _tmp) -%}
+    {%- endfor -%}
+    {%- set channels = _tmp -%}
+  {%- endif -%}
+
+<aside class="aether-post-cta" aria-label="持续追踪档案">
+  <div class="aether-post-cta__head">
+    {%- if cfg.eyebrow %}<span class="aether-post-cta__eyebrow">{{ cfg.eyebrow }}</span>{% endif %}
+    {%- if cfg.title %}<h2>{{ cfg.title | safe }}</h2>{% endif %}
+    {%- if cfg.description %}<p>{{ cfg.description }}</p>{% endif %}
+  </div>
+
+  {%- if channels and channels.length %}
+  <div class="aether-post-cta__channels">
+    {%- for ch in channels %}
+      <a class="aether-post-cta__channel" href="{{ ch.url }}"
+         {% if ch.url and ch.url.startsWith('http') %}target="_blank" rel="noopener"{% endif %}>
+        <span class="aether-post-cta__label">{{ ch.label }}</span>
+        {%- if ch.hint %}<span class="aether-post-cta__hint">{{ ch.hint }}</span>{% endif %}
+        <span class="aether-post-cta__arr">→</span>
+      </a>
+    {%- endfor %}
+  </div>
+  {%- else %}
+  <div class="aether-post-cta__empty">
+    <a class="aether-post-cta__channel" href="{{ url_for('/atom.xml') }}">
+      <span class="aether-post-cta__label">RSS</span>
+      <span class="aether-post-cta__arr">→</span>
+    </a>
+  </div>
+  {%- endif %}
+</aside>
+
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,29 @@
+{%- set cfg = theme.aether.kindex -%}
+{%- set items = aether_kindex() -%}
+{%- if items and items.length %}
+<section class="aether-section" id="aether-kindex">
+  <div class="aether-sec-label">
+    {%- set parts = (cfg.section_label or '03 / 知识地图').split('/') -%}
+    <span class="num">{{ parts[0] | trim }}</span>
+    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+  </div>
+  <div class="aether-sec-head">
+    <h2>{{ cfg.title | safe }}</h2>
+    <a class="aether-more" href="{{ url_for('/categories/') }}">全部分类 <span class="arr">→</span></a>
+  </div>
+
+  <div class="aether-kindex">
+    {%- for item in items %}
+      <a class="aether-kcell" href="{{ url_for(item.url or '#') }}">
+        <div class="aether-kcode">K-{{ item.index or aether_pad(loop.index) }}</div>
+        <h3>{{ item.title }}</h3>
+        <p class="aether-kdesc">{{ item.description or '' }}</p>
+        <div class="aether-kfoot">
+          <span class="aether-kcount">{{ item.count or 0 }} {%- if item.count_label %} {{ item.count_label }}{% else %} 篇{% endif -%}</span>
+          <span class="aether-karr">→</span>
+        </div>
+      </a>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}
