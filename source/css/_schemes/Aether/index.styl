@@ -34,6 +34,10 @@
   --aether-muted:       #6b6660;
   --aether-muted-2:     #8e8a84;
 
+  // Secondary text
+  --aether-fg-2:        #4a4640;
+  --aether-bg-alt:      oklch(96% 0.004 250);
+
   // Rule
   --aether-rule:        #e7e1d3;
   --aether-rule-2:      #d6cfbe;
@@ -349,6 +353,24 @@ a {
     letter-spacing: 0.06em;
     margin: 0 6px;
     padding: 6px 12px;
+    color: var(--aether-muted);
+    border-color: var(--aether-rule);
+    transition: color var(--aether-fast) var(--aether-ease), border-color var(--aether-fast) var(--aether-ease);
+
+    &:hover {
+      color: var(--aether-accent);
+      border-color: var(--aether-accent);
+    }
+  }
+
+  .page-number.current {
+    background: var(--aether-ink);
+    color: var(--aether-paper);
+    border-color: var(--aether-ink);
+  }
+
+  .space {
+    color: var(--aether-muted-2);
   }
 }
 
@@ -765,6 +787,43 @@ figure.highlight .copy-btn {
     font-family: var(--aether-ff-mono);
     font-size: 12px;
     min-width: 80px;
+  }
+}
+
+// ==================================================
+// Article footer: tags, post-nav, separator — dark mode
+// ==================================================
+.post-eof {
+  background: var(--aether-rule);
+}
+
+.post-tags a {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  transition: color var(--aether-fast) var(--aether-ease);
+
+  &:hover {
+    color: var(--aether-accent);
+  }
+}
+
+.post-nav {
+  border-top-color: var(--aether-rule);
+
+  .post-nav-item a {
+    color: var(--aether-ink-2);
+    font-family: var(--aether-ff-sans);
+    transition: color var(--aether-fast) var(--aether-ease);
+
+    &:hover {
+      color: var(--aether-accent);
+    }
+  }
+
+  .post-nav-item .fa {
+    color: var(--aether-muted);
   }
 }
 

@@ -19,7 +19,7 @@
 }
 
 .aether-cmdk__backdrop {
-  background: rgba(8, 8, 12, .35);
+  background: unquote('color-mix(in oklch, var(--aether-ink) 35%, transparent)');
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   bottom: 0;
@@ -34,7 +34,7 @@
   background: var(--aether-paper);
   border: 1px solid var(--aether-rule-2);
   border-radius: var(--aether-r-lg);
-  box-shadow: 0 24px 60px rgba(20, 20, 24, .25);
+  box-shadow: 0 24px 60px unquote('color-mix(in oklch, var(--aether-ink) 25%, transparent)');
   display: flex;
   flex-direction: column;
   max-height: 70vh;
