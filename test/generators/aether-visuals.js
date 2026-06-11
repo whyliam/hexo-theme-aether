@@ -115,4 +115,17 @@ describe('aether-visuals', () => {
     result.should.have.length(1);
     result[0].data.visual_posts[0].title.should.equal('LayoutVisual');
   });
+
+  it('uses Travel & Visuals category when type is absent', () => {
+    const posts = [
+      {
+        title     : 'Paris',
+        date      : new Date('2026-06-01'),
+        path      : 'paris/',
+        categories: ['Travel & Visuals']
+      }
+    ];
+    const result = run(makeLocals(posts));
+    result[0].data.visual_posts[0].title.should.equal('Paris');
+  });
 });

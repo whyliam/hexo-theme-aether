@@ -70,6 +70,20 @@ describe('aether-cmdk-index', () => {
     data.entries.find(e => e.title === 'P').kind.should.equal('post');
   });
 
+  it('classifies category-inferred visuals', () => {
+    const posts = [
+      {
+        title     : 'Paris',
+        date      : new Date('2026-06-01'),
+        path      : 'paris/',
+        categories: ['Travel & Visuals']
+      }
+    ];
+    const result = run(makeLocals(posts));
+    const data = JSON.parse(result[0].data);
+    data.entries.find(e => e.title === 'Paris').kind.should.equal('visual');
+  });
+
   it('includes series entries', () => {
     const posts = [
       { title: 'S1', date: new Date('2026-06-01'), path: 's1/', series: 'My Series' }
@@ -80,6 +94,17 @@ describe('aether-cmdk-index', () => {
     series.should.not.equal(undefined);
     series.title.should.equal('My Series');
     series.path.should.include('/series/');
+  });
+
+  it('includes inferred series entries', () => {
+    const posts = [
+      { title: 'L121_意图驱动时代', date: new Date('2026-06-01'), path: 'newsletter-121/' }
+    ];
+    const result = run(makeLocals(posts));
+    const data = JSON.parse(result[0].data);
+    const series = data.entries.find(e => e.kind === 'series');
+    series.title.should.equal('Newsletter 周刊');
+    series.path.should.equal('/series/newsletter-周刊/');
   });
 
   it('includes page entries', () => {

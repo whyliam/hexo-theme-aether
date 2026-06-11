@@ -33,10 +33,13 @@
   --aether-ink-2:       #2a2a2a;
   --aether-muted:       #6b6660;
   --aether-muted-2:     #8e8a84;
+  // 2027 补充灰色分层
+  --aether-muted-light: #9a9590;     // 装饰文字 / placeholder / 极弱分隔
+  --aether-muted-deep:  #4a4640;     // 三级标题 / 深 meta
 
   // Secondary text
   --aether-fg-2:        #4a4640;
-  --aether-bg-alt:      oklch(96% 0.004 250);
+  --aether-bg-alt:      oklch(96% .004 250);
 
   // Rule
   --aether-rule:        #e7e1d3;
@@ -70,22 +73,24 @@
 [data-color-scheme='dark'] {
   --aether-paper:       #141416;
   --aether-paper-tint:  #1a1a1e;
-  --aether-surface:     #1e1e22;
-  --aether-surface-2:   #242428;
-  --aether-ink:         #e8e4dc;
-  --aether-ink-2:       #c8c4ba;
+  --aether-surface:     #1c1c20;
+  --aether-surface-2:   #26262c;
+  --aether-ink:         #ece8e0;
+  --aether-ink-2:       #cac6bc;
   --aether-fg-2:        #b0aca4;
-  --aether-muted:       #8a867e;
-  --aether-muted-2:     #6a665e;
-  --aether-rule:        #2a2a2e;
-  --aether-rule-2:      #3a3a40;
+  --aether-muted:       #807c74;
+  --aether-muted-2:     #5e5a52;
+  --aether-muted-light: #6c6860;
+  --aether-muted-deep:  #b6b2a8;
+  --aether-rule:        #2e2e34;
+  --aether-rule-2:      #40404a;
   --aether-accent:      #6b8adb;
   --aether-accent-hover:#8aa4f0;
   --aether-accent-tint: #1c2238;
-  --aether-bg-alt:      #1e1e22;
+  --aether-bg-alt:      #1c1c20;
   --body-bg-color:      #141416;
   --content-bg-color:   #141416;
-  --text-color:         #e8e4dc;
+  --text-color:         #ece8e0;
   --header-bg-color:    unquote('color-mix(in oklch, #141416 88%, transparent)');
   // Code block — github-dark tokens
   --highlight-background: #0d1117;
@@ -115,22 +120,24 @@
   :root:not([data-color-scheme='light']) {
     --aether-paper:       #141416;
     --aether-paper-tint:  #1a1a1e;
-    --aether-surface:     #1e1e22;
-    --aether-surface-2:   #242428;
-    --aether-ink:         #e8e4dc;
-    --aether-ink-2:       #c8c4ba;
+    --aether-surface:     #1c1c20;
+    --aether-surface-2:   #26262c;
+    --aether-ink:         #ece8e0;
+    --aether-ink-2:       #cac6bc;
     --aether-fg-2:        #b0aca4;
-    --aether-muted:       #8a867e;
-    --aether-muted-2:     #6a665e;
-    --aether-rule:        #2a2a2e;
-    --aether-rule-2:      #3a3a40;
+    --aether-muted:       #807c74;
+    --aether-muted-2:     #5e5a52;
+    --aether-muted-light: #6c6860;
+    --aether-muted-deep:  #b6b2a8;
+    --aether-rule:        #2e2e34;
+    --aether-rule-2:      #40404a;
     --aether-accent:      #6b8adb;
     --aether-accent-hover:#8aa4f0;
     --aether-accent-tint: #1c2238;
-    --aether-bg-alt:      #1e1e22;
+    --aether-bg-alt:      #1c1c20;
     --body-bg-color:      #141416;
     --content-bg-color:   #141416;
-    --text-color:         #e8e4dc;
+    --text-color:         #ece8e0;
     --highlight-background: #0d1117;
     --highlight-foreground: #c9d1d9;
     --highlight-gutter-background: #0d1117;
@@ -143,6 +150,16 @@
 // ==================================================
 // 2) Typographic baseline — 给整站铺底色
 // ==================================================
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   font-family: var(--aether-ff-sans);
   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
@@ -160,6 +177,33 @@ a {
 ::selection {
   background: var(--aether-accent);
   color: var(--aether-paper);
+}
+
+// ==================================================
+// 2a) 无障碍 — 键盘焦点统一样式
+// ==================================================
+// 仅键盘导航触发，鼠标点击不显示，避免视觉噪音
+:focus { outline: none; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--aether-accent);
+  outline-offset: 2px;
+  border-radius: var(--aether-r-sm);
+}
+
+// 已有自定义边框 / 背景的胶囊（tag、pill）使用 box-shadow 形态焦点环，
+// 避免 outline 与 border-radius 999px 视觉冲突
+.tag-cloud a:focus-visible,
+.aether-pill:focus-visible,
+.aether-search-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--aether-paper), 0 0 0 4px var(--aether-accent);
 }
 
 
@@ -204,12 +248,14 @@ a {
   letter-spacing: -0.018em;
   line-height: 1.18;
   margin-bottom: 14px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .posts-expand .post-meta-container {
   color: var(--aether-muted);
   font-family: var(--aether-ff-mono);
-  font-size: 11px;
+  font-size: clamp(11px, 1.5vw, 12px);
   letter-spacing: 0.10em;
   margin-top: 8px;
   text-align: left;
@@ -224,6 +270,10 @@ a {
     line-height: 1.55;
     margin: 14px 0 6px;
     text-transform: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
@@ -255,11 +305,11 @@ a {
     line-height: 1.3;
   }
 
-  h2 { font-size: 26px; margin-top: 56px; margin-bottom: 18px; }
-  h3 { font-size: 21px; margin-top: 40px; margin-bottom: 14px; }
-  h4 { font-size: 18px; margin-top: 28px; margin-bottom: 10px; }
+  h2 { font-size: 26px; margin-top: 56px; margin-bottom: 20px; }
+  h3 { font-size: 21px; margin-top: 40px; margin-bottom: 16px; }
+  h4 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; }
 
-  p { margin: 0 0 1.4em; }
+  p { margin: 0 0 1.8em; }
 
   blockquote {
     background: var(--aether-paper-tint);
@@ -282,18 +332,24 @@ a {
     padding: 1px 6px;
   }
 
+  // 正文链接：沉浸阅读优先——继承身边色 + hairline 下划线，hover 才走 accent
   a {
-    color: var(--aether-accent);
-    border-bottom: 1px solid var(--aether-rule-2);
+    color: inherit;
+    border-bottom: 0;
+    text-decoration: underline;
+    text-decoration-color: var(--aether-rule-2);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color var(--aether-fast) var(--aether-ease), text-decoration-color var(--aether-fast) var(--aether-ease);
 
     &:hover {
-      color: var(--aether-accent-hover);
-      border-bottom-color: var(--aether-accent);
+      color: var(--aether-accent);
+      text-decoration-color: var(--aether-accent);
     }
   }
 
   ul, ol {
-    margin: 0 0 1.4em;
+    margin: 0 0 1.8em;
     padding-left: 1.6em;
   }
 
@@ -330,6 +386,20 @@ a {
   display: block;
   margin: 24px auto 32px;
   max-width: 100%;
+}
+
+// Image figcaption — override NexT default (bold + negative margin) with Aether editorial style
+.posts-expand .post-body figure:not(.highlight) figcaption {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-sans);
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: -24px auto 0;
+  padding: 8px 0 0;
+  text-align: center;
+  max-width: 90%;
 }
 
 // post-eof 装饰：替换默认的虚线为细 accent 线
@@ -447,6 +517,8 @@ figure.highlight {
   line-height: 1.65;
   margin: 28px 0 32px;
   border: 1px solid var(--aether-rule);
+  max-height: 560px;
+  overflow-y: auto;
 
   pre {
     padding: 18px 20px;
@@ -514,6 +586,15 @@ figure.highlight {
 
   tr:hover td {
     background: var(--aether-surface-2);
+  }
+}
+
+// Responsive table — prevent mobile overflow
++mobile-small() {
+  .posts-expand .post-body table:not(figure.highlight table) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -801,7 +882,7 @@ figure.highlight .copy-btn {
   color: var(--aether-muted);
   font-family: var(--aether-ff-mono);
   font-size: 12px;
-  letter-spacing: 0.02em;
+  letter-spacing: .02em;
   transition: color var(--aether-fast) var(--aether-ease);
 
   &:hover {
@@ -825,6 +906,14 @@ figure.highlight .copy-btn {
   .post-nav-item .fa {
     color: var(--aether-muted);
   }
+}
+
+// ==================================================
+// ToC active highlight (driven by toc-highlight.js)
+// ==================================================
+.toc-link.active {
+  color: var(--aether-accent, #2a3a6b);
+  font-weight: 600;
 }
 
 // ==================================================

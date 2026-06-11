@@ -13,6 +13,13 @@
  */
 'use strict';
 
+const {
+  inferredSeriesName,
+  isNotePost,
+  isVisualPost,
+  slugifySeries
+} = require('../lib/aether-content');
+
 const stripTags = (html = '') =>
   String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -27,10 +34,9 @@ hexo.extend.generator.register('aether-cmdk-index', function(locals) {
 
   // Posts (+ notes, visuals — all sit in posts collection with `type:` differentiation)
   locals.posts.toArray().forEach(p => {
-    const type = (p.type || p.layout || '').toLowerCase();
     let kind = 'post';
-    if (type === 'visual') kind = 'visual';
-    else if (type === 'note') kind = 'note';
+    if (isVisualPost(p)) kind = 'visual';
+    else if (isNotePost(p)) kind = 'note';
     const tags = p.tags && p.tags.length
       ? (p.tags.toArray ? p.tags.toArray() : p.tags).map(t => t.name)
       : [];
@@ -49,19 +55,18 @@ hexo.extend.generator.register('aether-cmdk-index', function(locals) {
       summary,
       category,
       tags,
-      series: p.series || null
+      series: inferredSeriesName(p)
     });
   });
 
   // Series pages
   const seriesNames = new Set();
-  locals.posts.toArray().forEach(p => { if (p.series) seriesNames.add(p.series); });
+  locals.posts.toArray().forEach(p => {
+    const name = inferredSeriesName(p);
+    if (name) seriesNames.add(name);
+  });
   seriesNames.forEach(name => {
-    const slug = String(name).toLowerCase()
-      .replace(/[\s\u3000]+/g, '-')
-      .replace(/[^\w一-鿿-]/g, '')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '') || 'series';
+    const slug = slugifySeries(name);
     entries.push({
       kind    : 'series',
       title   : name,

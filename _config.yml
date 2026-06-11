@@ -403,8 +403,8 @@ reading_progress:
   # Available values: top | bottom
   position: top
   reversed: false
-  color: "#37c6c0"
-  height: 3px
+  color: "#2a3a6b"
+  height: 2px
 
 # Bookmark Support
 bookmark:
@@ -606,7 +606,7 @@ lazyload: false
 # Automatically insert whitespace between CJK and half-width characters.
 # For more information: https://github.com/vinta/pangu.js
 # Server-side plugin: https://github.com/next-theme/hexo-pangu
-pangu: false
+pangu: true
 
 # Prefetch links based on what is in the user's viewport.
 # For more information: https://getquick.link
@@ -1012,7 +1012,8 @@ aether:
     limit: 4
     show_filter_chips: false
 
-  # Series & projects
+  # Series & projects. Explicit post.series wins; stable Newsletter / AI Coding /
+  # Agent / Obsidian signals are recognized when legacy posts omit the field.
   series:
     enable: true
     section_label: '04 / 长期系列'
@@ -1027,7 +1028,8 @@ aether:
     title: '短札 — 思考碎片。'
     limit: 4
 
-  # Visuals (compact entry — not a full gallery on home)
+  # Visuals (compact entry — not a full gallery on home).
+  # Posts in category "Travel & Visuals" are included when type: visual is absent.
   visuals:
     enable: true
     section_label: '07 / 影像'
@@ -1040,16 +1042,11 @@ aether:
   # Newsletter / subscribe block
   newsletter:
     enable: true
-    eyebrow: 订阅
-    title: '加入档案订阅。'
-    description: '这里没有营销列表。只有一份缓慢生长的写作档案，和一个不打扰你的订阅入口。'
-    action_url: ''        # POST endpoint for email form, or external link
-    placeholder: '邮箱地址'
-    button_text: '订阅'
+    text: 关注更新
     channels:
       - { label: 'RSS', url: '/atom.xml' }
       - { label: 'Newsletter', url: '/newsletter/' }
-      - { label: 'GitHub', url: 'https://github.com/whyliam' }
+      - { label: 'GitHub', url: 'https://github.com/whyliam', external: true }
 
   # Footer
   footer:

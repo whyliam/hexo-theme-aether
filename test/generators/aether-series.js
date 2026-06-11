@@ -67,6 +67,16 @@ describe('aether-series', () => {
     run(makeLocals(posts)).should.have.length(0);
   });
 
+  it('generates inferred series pages from stable content signals', () => {
+    const posts = [
+      { title: 'L121_意图驱动时代', date: new Date('2026-06-01'), path: '2026/06/newsletter-121/' },
+      { title: 'Agent Runtime 实践', date: new Date('2026-05-01'), path: 'agent-runtime/', tags: ['Agent'] }
+    ];
+    const result = run(makeLocals(posts));
+    result.find(r => r.path === 'series/newsletter-周刊/index.html').should.not.equal(undefined);
+    result.find(r => r.path === 'series/agent-runtime/index.html').should.not.equal(undefined);
+  });
+
   it('returns empty when scheme is not Aether', () => {
     const orig = hexo.theme.config.scheme;
     hexo.theme.config.scheme = 'Muse';

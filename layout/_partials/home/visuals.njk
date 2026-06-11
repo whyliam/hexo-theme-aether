@@ -20,9 +20,15 @@
   <div class="aether-visuals">
     {%- for v in items %}
       {%- set cover = v.cover or (v.photos and v.photos[0]) -%}
-      <a class="aether-visual {% if cover %}has-bg{% endif %}" href="{{ aether_post_url(v) }}"
+      <a class="aether-visual {% if cover %}has-bg{% else %}no-bg{% endif %}" href="{{ aether_post_url(v) }}"
          {%- if cover %} style="--cover: url('{{ url_for(cover) }}')" {% endif -%}>
-        <div class="aether-v-img"{% if cover %} style="background-image: url('{{ url_for(cover) }}'); background-size: cover; background-position: center;"{% endif %}></div>
+        {%- if cover %}
+        <div class="aether-v-img" style="background-image: url('{{ url_for(cover) }}'); background-size: cover; background-position: center;"></div>
+        {%- else %}
+        <div class="aether-v-img aether-v-placeholder">
+          <span>{{ (v.location or v.title) | truncate(20) }}</span>
+        </div>
+        {%- endif %}
         <div class="aether-v-meta">
           <span>{{ (v.location or v.title) | upper }}</span>
           <span>{{ date(v.date, 'YYYY-MM') }}</span>

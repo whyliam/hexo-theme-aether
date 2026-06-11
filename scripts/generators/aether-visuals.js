@@ -8,6 +8,8 @@
  */
 'use strict';
 
+const { isVisualPost } = require('../lib/aether-content');
+
 hexo.extend.generator.register('aether-visuals', function(locals) {
   const scheme = hexo.theme.config && hexo.theme.config.scheme;
   if (scheme !== 'Aether') return [];
@@ -15,7 +17,7 @@ hexo.extend.generator.register('aether-visuals', function(locals) {
   const aether = hexo.theme.config && hexo.theme.config.aether;
   if (aether && aether.visuals_page && aether.visuals_page.enable === false) return [];
 
-  const posts = locals.posts.filter(p => (p.type || p.layout) === 'visual').toArray();
+  const posts = locals.posts.toArray().filter(isVisualPost);
   if (!posts.length) return [];
 
   posts.sort((a, b) => b.date - a.date);

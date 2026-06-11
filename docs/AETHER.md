@@ -93,6 +93,8 @@ series: Newsletter 周刊
 
 系列页 `/series/newsletter-周刊/` 和首页「系列」模块自动生成，无需额外配置。
 
+为兼容已有内容，未填写 `series` 时，Aether 也会根据稳定信号识别 Newsletter、AI Coding、Agent、Obsidian 与 2016 设计年鉴系列。显式 `series` 始终优先。
+
 ### 影像帖
 
 ```yaml
@@ -108,6 +110,8 @@ location: Cancún, Mexico
 camera: Fujifilm X-T5
 ---
 ```
+
+未填写 `type` 时，分类为 `Travel & Visuals` 的文章也会进入影像页；显式 `type: visual` 始终优先。
 
 ### 短札
 
@@ -288,6 +292,7 @@ theme_config:
           url: https://your-newsletter-url
         - label: GitHub
           url: https://github.com/yourname
+          external: true
 ```
 
 极简的一行订阅栏。`channels` 为空时不渲染。
@@ -351,9 +356,9 @@ theme_config:
 
 | 页面 | 路径 | 触发条件 |
 |---|---|---|
-| 系列索引 | `/series/` | 任意文章有 `series` 字段 |
+| 系列索引 | `/series/` | 有显式 `series`，或命中稳定系列识别规则 |
 | 系列详情 | `/series/<slug>/` | 同上，每个系列一个页面 |
-| 影像页 | `/visuals/` | 任意文章有 `type: visual` |
+| 影像页 | `/visuals/` | 有 `type: visual`，或分类为 `Travel & Visuals` |
 | 搜索索引 | `/aether-search.json` | `cmdk.enable` 不为 false |
 
 ### 需要手动创建的页面

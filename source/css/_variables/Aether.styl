@@ -15,11 +15,15 @@ $surface-2                = #f6f1e6;    // 次级面（hover / accent-tint 等�
 
 $ink                      = #181818;    // fg     —— 主文字
 $ink-2                    = #2a2a2a;    // fg-2
-$ink-muted                = #6b6660;    // muted
+$ink-muted                = #6b6660;    // muted（次要文本）
 $ink-muted-2              = #8e8a84;    // muted-2
 
-$rule                     = #e7e1d3;    // border
-$rule-2                   = #d6cfbe;    // border-2
+// 2027 灰色分层补充：填充 rule → muted 之间和 muted → ink 之间的空档
+$ink-muted-light          = #9a9590;    // 极弱提示、装饰文字、placeholder
+$ink-muted-deep           = #4a4640;    // 三级标题 / 深 meta（深于 muted、淡于 ink）
+
+$rule                     = #e7e1d3;    // border（主分隔线，1px 清晰）
+$rule-2                   = #d6cfbe;    // border-2（强调分隔）
 
 // Accent：克制的中性墨蓝（编辑/档案气质），不是营销红
 $accent                   = #2a3a6b;

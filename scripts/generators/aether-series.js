@@ -11,15 +11,11 @@
  */
 'use strict';
 
-function slugify(s) {
-  return String(s || '')
-    .toLowerCase()
-    .replace(/[\s\u3000]+/g, '-')
-    .replace(/[^\w一-鿿-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    || 'series';
-}
+const {
+  inferredSeriesName,
+  isRegularPost,
+  slugifySeries
+} = require('../lib/aether-content');
 
 hexo.extend.generator.register('aether-series', function(locals) {
   const scheme = hexo.theme.config && hexo.theme.config.scheme;
@@ -28,15 +24,17 @@ hexo.extend.generator.register('aether-series', function(locals) {
   const aether = hexo.theme.config && hexo.theme.config.aether;
   if (aether && aether.series_pages && aether.series_pages.enable === false) return [];
 
-  const posts = locals.posts.filter(p => p.series).toArray();
+  const posts = locals.posts.toArray()
+    .filter(isRegularPost)
+    .map(post => ({ post, name: inferredSeriesName(post) }))
+    .filter(item => item.name);
   if (!posts.length) return [];
 
   // Group by series name
   const groups = new Map();
-  posts.forEach(p => {
-    const name = p.series;
+  posts.forEach(({ post, name }) => {
     if (!groups.has(name)) groups.set(name, []);
-    groups.get(name).push(p);
+    groups.get(name).push(post);
   });
 
   const out = [];
@@ -48,7 +46,7 @@ hexo.extend.generator.register('aether-series', function(locals) {
     const recent = items.slice(-3).reverse();
     seriesList.push({
       name,
-      slug        : slugify(name),
+      slug        : slugifySeries(name),
       count       : items.length,
       latest_date : items[items.length - 1].date,
       first_date  : items[0].date,
@@ -74,7 +72,7 @@ hexo.extend.generator.register('aether-series', function(locals) {
 
   // One page per series
   groups.forEach((items, name) => {
-    const slug = slugify(name);
+    const slug = slugifySeries(name);
     items.sort((a, b) => a.date - b.date);
 
     out.push({

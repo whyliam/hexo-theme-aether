@@ -140,6 +140,19 @@ describe('aether-data', () => {
       const ctx = baseCtx(posts);
       callHelper('aether_visuals', [], ctx).should.have.length(5);
     });
+
+    it('uses Travel & Visuals category when type is absent', () => {
+      const posts = [
+        {
+          title     : 'Paris',
+          date      : new Date('2026-06-01'),
+          path      : 'paris/',
+          categories: ['Travel & Visuals']
+        }
+      ];
+      const ctx = baseCtx(posts);
+      callHelper('aether_visuals', [], ctx)[0].title.should.equal('Paris');
+    });
   });
 
   // ---------- aether_notes ----------
@@ -204,6 +217,19 @@ describe('aether-data', () => {
       ];
       const ctx = baseCtx(posts);
       callHelper('aether_series', [], ctx).should.have.length(0);
+    });
+
+    it('infers stable series when frontmatter series is absent', () => {
+      const posts = [
+        { title: 'L121_意图驱动时代', date: new Date('2026-06-01'), path: 'newsletter-121/' },
+        { title: 'Claude Code 实践', date: new Date('2026-05-01'), path: 'claude-code/', tags: ['AI Coding'] },
+        { title: 'OpenClaw 观察', date: new Date('2026-04-01'), path: 'openclaw/', tags: ['Agent'] }
+      ];
+      const ctx = baseCtx(posts);
+      const names = callHelper('aether_series', [], ctx).map(series => series.name);
+      names.should.include('Newsletter 周刊');
+      names.should.include('AI Coding Harness');
+      names.should.include('Agent Runtime');
     });
   });
 

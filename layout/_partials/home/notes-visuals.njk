@@ -17,7 +17,7 @@
     {%- endif %}
   </div>
 
-  <div class="aether-nv-split">
+  <div class="aether-nv-split{% if not (notes and notes.length) or not (visuals and visuals.length) %} is-single{% endif %}">
     {%- if notes and notes.length %}
     <div class="aether-nv-notes">
       <div class="aether-nv-label">

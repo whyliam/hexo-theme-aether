@@ -15,6 +15,14 @@
  */
 'use strict';
 
+const {
+  inferredSeriesName,
+  isNotePost,
+  isRegularPost,
+  isVisualPost,
+  slugifySeries
+} = require('../lib/aether-content');
+
 const stripTags = (html = '') => String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
 const CAT_ZH = {
@@ -31,16 +39,6 @@ const CAT_ZH = {
 
 function catLabel(name) {
   return CAT_ZH[name] || name;
-}
-
-function isPostType(post, kind) {
-  if (!post) return false;
-  return (post.type || post.layout) === kind;
-}
-
-function isRegularPost(post) {
-  // exclude visuals / notes from "essays" surfaces
-  return !isPostType(post, 'visual') && !isPostType(post, 'note');
 }
 
 function ensureArr(x) {
@@ -86,7 +84,7 @@ hexo.extend.helper.register('aether_visuals', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.visuals) || {};
   const n = limit || cfg.limit || 5;
   return (this.site.posts || { toArray: () => [] }).toArray()
-    .filter(p => isPostType(p, 'visual'))
+    .filter(isVisualPost)
     .sort((a, b) => b.date - a.date)
     .slice(0, n);
 });
@@ -97,7 +95,7 @@ hexo.extend.helper.register('aether_notes', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.notes) || {};
   const n = limit || cfg.limit || 4;
   return (this.site.posts || { toArray: () => [] }).toArray()
-    .filter(p => isPostType(p, 'note'))
+    .filter(isNotePost)
     .sort((a, b) => b.date - a.date)
     .slice(0, n);
 });
@@ -107,19 +105,19 @@ hexo.extend.helper.register('aether_notes', function(limit) {
 hexo.extend.helper.register('aether_series', function() {
   const all = (this.site.posts || { toArray: () => [] }).toArray()
     .filter(isRegularPost)
-    .filter(p => p.series);
+    .map(post => ({ post, name: inferredSeriesName(post) }))
+    .filter(item => item.name);
 
   const map = new Map();
-  all.forEach(p => {
-    const name = p.series;
+  all.forEach(({ post, name }) => {
     if (!map.has(name)) map.set(name, []);
-    map.get(name).push(p);
+    map.get(name).push(post);
   });
 
   const out = [];
   map.forEach((posts, name) => {
     posts.sort((a, b) => a.date - b.date);
-    const slug = name.toLowerCase().replace(/[^a-z0-9一-鿿]+/g, '-').replace(/^-|-$/g, '');
+    const slug = slugifySeries(name);
     out.push({
       name,
       slug,
