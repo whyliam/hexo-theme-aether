@@ -14,6 +14,13 @@
 {%- endif %}
 
 {{- next_js('next-boot.js') }}
+{%- if theme.scheme === 'Aether' %}
+  {{- next_js('aether.js') }}
+  {{- next_js('lib/toc-highlight.js') }}
+  {%- if theme.aether and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
+    {{- next_js('aether-cmdk.js') }}
+  {%- endif %}
+{%- endif %}
 {%- if theme.bookmark.enable %}
   {{- next_js('bookmark.js') }}
 {%- endif %}

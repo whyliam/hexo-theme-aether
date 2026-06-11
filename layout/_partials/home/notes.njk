@@ -1,0 +1,31 @@
+{%- set cfg = theme.aether.notes -%}
+{%- set notes = aether_notes(cfg.limit) -%}
+{%- if notes and notes.length %}
+<section class="aether-section" id="aether-notes" data-aether-reveal>
+  <div class="aether-sec-label">
+    {%- set parts = (cfg.section_label or '06 / 短札').split('/') -%}
+    <span class="num">{{ parts[0] | trim }}</span>
+    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+  </div>
+  <div class="aether-sec-head">
+    <h2>{{ cfg.title | safe }}</h2>
+    <a class="aether-more" href="{{ url_for('/categories/Notes-Essays/') }}">所有短札 <span class="arr">→</span></a>
+  </div>
+
+  <div class="aether-notes">
+    {%- for note in notes %}
+      <a class="aether-note" href="{{ aether_post_url(note) }}">
+        <div class="aether-ndate">{{ date(note.date, 'YYYY-MM-DD') }}</div>
+        <h4>{{ note.title }}</h4>
+        {%- set sum = aether_summary(note, 80) -%}
+        {%- if sum %}<p>{{ sum }}</p>{% endif %}
+        {%- if note.tags and note.tags.length %}
+          <div class="aether-ntags">
+            {%- for tag in note.tags.toArray().slice(0, 3) -%}<span>{{ tag.name }}</span>{%- endfor -%}
+          </div>
+        {%- endif %}
+      </a>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}

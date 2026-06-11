@@ -1,0 +1,82 @@
+{%- set hero = theme.aether.hero -%}
+{%- set sp = hero.side_panel -%}
+<section class="aether-hero">
+  <div class="aether-hero__inner">
+    <div class="aether-hero__left">
+      {%- if hero.eyebrow %}
+        <div class="aether-hero__eyebrow" data-hero-step="0">{{ hero.eyebrow }}</div>
+      {%- endif %}
+
+      {%- if hero.identity %}
+        <p class="aether-hero__identity" data-hero-step="80">{{ hero.identity }}</p>
+      {%- endif %}
+
+      <h1 class="aether-hero__title" data-hero-step="120">
+        {%- if hero.title -%}
+          {{ hero.title | replace('\n', '<br>') | safe }}
+        {%- else -%}
+          {{ title }}{%- if subtitle %} <em>— {{ subtitle }}</em>{%- endif -%}
+        {%- endif -%}
+      </h1>
+
+      {%- if hero.description %}
+        <p class="aether-hero__desc" data-hero-step="280">{{ hero.description | replace('\n', '<br>') | safe }}</p>
+      {%- elif config.description %}
+        <p class="aether-hero__desc" data-hero-step="280">{{ config.description }}</p>
+      {%- endif %}
+
+      {%- if hero.actions and hero.actions.length %}
+        <div class="aether-hero__actions" data-hero-step="420">
+          {%- for action in hero.actions %}
+            {%- set variant = action.variant or 'default' -%}
+            <a class="aether-btn{% if variant === 'primary' %} is-primary{% elif variant === 'ghost' %} is-ghost{% endif %}"
+               href="{{ url_for(action.url) }}">
+              {{ action.text }}
+              {%- if variant !== 'ghost' %} <span class="arr">→</span>{% endif %}
+            </a>
+          {%- endfor %}
+        </div>
+      {%- endif %}
+
+      {%- if hero.meta_stats and hero.meta_stats.length %}
+        <div class="aether-hero__meta" data-hero-step="560">
+          {%- for stat in hero.meta_stats %}
+            <span><b>{{ stat.value }}</b> {{ stat.label }}</span>
+          {%- endfor %}
+        </div>
+      {%- else %}
+        <div class="aether-hero__meta" data-hero-step="560">
+          <a href="{{ url_for('/archives/') }}"><b>{{ site.posts.length }}</b> 篇文章</a>
+          {%- if site.categories.length %}
+            <a href="{{ url_for('/categories/') }}"><b>{{ site.categories.length }}</b> 个分类</a>
+          {%- endif %}
+          {%- if site.tags.length %}
+            <a href="{{ url_for('/tags/') }}"><b>{{ site.tags.length }}</b> 个标签</a>
+          {%- endif %}
+        </div>
+      {%- endif %}
+    </div>
+
+    {%- if sp and sp.enable !== false and sp.items and sp.items.length %}
+      <aside class="aether-hero__panel" data-hero-step="360">
+        <div class="aether-panel-label">
+          <span>{{ sp.title or '当前关注' }}</span>
+          {%- if sp.updated %}
+            <span>updated {{ sp.updated }}</span>
+          {%- endif %}
+        </div>
+        <ul class="aether-panel-list">
+          {%- for item in sp.items %}
+            <li>
+              <a href="{{ url_for(item.url or '#') }}">
+                <span class="pn">{{ item.index or aether_pad(loop.index) }}</span>
+                <span class="label">{{ item.title }}{%- if item.subtitle %}<small>{{ item.subtitle }}</small>{% endif %}</span>
+                <span class="arr">↗</span>
+              </a>
+            </li>
+          {%- endfor %}
+        </ul>
+      </aside>
+    {%- endif %}
+  </div>
+</section>

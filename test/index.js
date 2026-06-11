@@ -6,4 +6,6 @@ describe('NexT', () => {
   require('./helpers');
   require('./tags');
   require('./validate');
+  require('./generators');
+  require('./filters');
 });

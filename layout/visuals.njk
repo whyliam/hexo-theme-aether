@@ -1,0 +1,38 @@
+{% extends '_layout.njk' %}
+
+{% block title %}影像 | {{ title }}{% endblock %}
+
+{% block class %}page aether-visuals-page{% endblock %}
+
+{% block content %}
+  <article class="aether-visuals-archive">
+    <header class="aether-visuals-archive__hero">
+      <div class="aether-visuals-archive__eyebrow">影像 · {{ page.visual_posts.length }} 组</div>
+      <h1 class="aether-visuals-archive__title">影像档案</h1>
+      <p class="aether-visuals-archive__lede">城市行走、旅行片段、视觉碎片 — 这里是不写成长文的另一种语言。</p>
+    </header>
+
+    <section class="aether-visuals-archive__grid">
+      {%- for v in page.visual_posts %}
+        <a class="aether-visuals-archive__card" href="{{ url_for(v.path) }}">
+          <span class="aether-visuals-archive__cover{% if v.cover %} has-bg{% endif %}"
+                {% if v.cover %}style="background-image: url('{{ v.cover }}');"{% endif %}></span>
+          <span class="aether-visuals-archive__meta">
+            <span class="aether-visuals-archive__num">V-{{ v.index }}</span>
+            <span class="aether-visuals-archive__date">{{ aether_iso_date(v.date) }}</span>
+          </span>
+          <span class="aether-visuals-archive__name">{{ v.title }}</span>
+          {%- if v.location or v.camera %}
+            <span class="aether-visuals-archive__sub">
+              {%- if v.location %}<span>{{ v.location }}</span>{% endif %}
+              {%- if v.location and v.camera %}<span> · </span>{% endif %}
+              {%- if v.camera %}<span>{{ v.camera }}</span>{% endif %}
+            </span>
+          {%- endif %}
+        </a>
+      {%- endfor %}
+    </section>
+  </article>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

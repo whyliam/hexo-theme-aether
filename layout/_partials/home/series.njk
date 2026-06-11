@@ -1,0 +1,123 @@
+{%- set cfg = theme.aether.series -%}
+{%- set explicit_series = cfg.series_items -%}
+{%- set explicit_projects = cfg.project_items -%}
+{%- set auto_series = aether_series() -%}
+{%- set has_series = (explicit_series and explicit_series.length) or (auto_series and auto_series.length) -%}
+{%- set has_projects = explicit_projects and explicit_projects.length -%}
+{%- if has_series or has_projects %}
+<section class="aether-section" id="aether-series" data-aether-reveal>
+  <div class="aether-sec-label">
+    {%- set parts = (cfg.section_label or '05 / 系列与项目').split('/') -%}
+    <span class="num">{{ parts[0] | trim }}</span>
+    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+  </div>
+  <div class="aether-sec-head">
+    <h2>{{ cfg.title | safe }}</h2>
+    {%- if not has_projects %}
+    <a class="aether-more" href="/series/">全部系列 <span class="arr">→</span></a>
+    {%- endif %}
+  </div>
+
+  {%- if has_projects %}
+  <div class="aether-split">
+    {%- if has_series %}
+      <div class="aether-series-card">
+        <div class="aether-sc-head">
+          <h3>长期主题</h3>
+          {%- if explicit_series and explicit_series.length %}
+            <span class="meta">{{ aether_pad(explicit_series.length) }} 个进行中</span>
+          {%- else %}
+            <span class="meta">{{ aether_pad(auto_series.length) }} 个进行中</span>
+          {%- endif %}
+        </div>
+        <ul class="aether-series-list">
+          {%- if explicit_series and explicit_series.length %}
+            {%- for s in explicit_series %}
+              <li>
+                <span class="pn">S-{{ s.index or aether_pad(loop.index) }}</span>
+                <span class="label">{{ s.name }}{%- if s.subtitle %}<small>{{ s.subtitle }}</small>{% endif %}</span>
+                {%- if s.status %}<span class="status {{ s.status_variant or 'is-live' }}">{{ s.status }}</span>{% endif %}
+              </li>
+            {%- endfor %}
+          {%- else %}
+            {%- for s in auto_series.slice(0, 4) %}
+              <li><a href="{{ s.url }}">
+                <span class="pn">S-{{ aether_pad(loop.index) }}</span>
+                <span class="label">{{ s.name }}<small>{{ s.count }} 篇 · 最近更新 {{ date(s.latest_date, 'YYYY-MM') }}</small></span>
+                <span class="status is-live">进行中</span>
+              </a></li>
+            {%- endfor %}
+          {%- endif %}
+        </ul>
+      </div>
+    {%- endif %}
+    <div class="aether-series-card">
+      <div class="aether-sc-head">
+        <h3>在做的事</h3>
+        <span class="meta">{{ aether_pad(explicit_projects.length) }} 个持续中</span>
+      </div>
+      <ul class="aether-series-list">
+        {%- for p in explicit_projects %}
+          <li>
+            <span class="pn">P-{{ p.index or aether_pad(loop.index) }}</span>
+            <span class="label">{{ p.name }}{%- if p.description %}<small>{{ p.description }}</small>{% endif %}</span>
+            {%- if p.status %}<span class="status {{ p.status_variant or 'is-rd' }}">{{ p.status }}</span>{% endif %}
+          </li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {%- else %}
+  {# ── No projects → full-width Bento grid of series ── #}
+  {%- if explicit_series and explicit_series.length %}
+    {%- set s_list = explicit_series -%}
+    {%- set s_is_explicit = true -%}
+  {%- else %}
+    {%- set s_list = auto_series.slice(0, 6) -%}
+    {%- set s_is_explicit = false -%}
+  {%- endif %}
+  <div class="aether-series-grid">
+    {%- for s in s_list %}
+    {%- set latest = s.posts[s.posts.length - 1] if (not s_is_explicit and s.posts and s.posts.length) else null -%}
+    {%- set prev = s.posts[s.posts.length - 2] if (not s_is_explicit and s.posts and s.posts.length > 1) else null -%}
+    <a href="{{ s.url or '#' }}" class="aether-series-tile{% if loop.index0 == 0 and s_list.length >= 3 %} is-featured{% endif %}{% if not latest %} no-posts{% endif %}">
+      <div class="aether-st-head">
+        <span class="aether-st-num">S-{{ s.index or aether_pad(loop.index) }}</span>
+        {%- if s_is_explicit and s.status %}
+          <span class="aether-st-status {{ s.status_variant or 'is-live' }}">{{ s.status }}</span>
+        {%- else %}
+          <span class="aether-st-status is-live">进行中</span>
+        {%- endif %}
+      </div>
+      <h3 class="aether-st-title">{{ s.name }}</h3>
+      {%- if s_is_explicit and s.subtitle %}
+        <p class="aether-st-desc">{{ s.subtitle }}</p>
+      {%- endif %}
+      {%- if latest %}
+      <div class="aether-st-posts">
+        <div class="aether-st-post">
+          <span class="aether-st-post-label">最新</span>
+          <span class="aether-st-post-title">{{ latest.title }}</span>
+        </div>
+        {%- if prev and loop.index0 == 0 and s_list.length >= 3 %}
+        <div class="aether-st-post">
+          <span class="aether-st-post-label">上篇</span>
+          <span class="aether-st-post-title">{{ prev.title }}</span>
+        </div>
+        {%- endif %}
+      </div>
+      {%- endif %}
+      <div class="aether-st-foot">
+        <span class="aether-st-count">{{ s.count or '—' }} 篇</span>
+        {%- if s.latest_date %}
+        <span class="aether-st-date">{{ date(s.latest_date, 'YYYY-MM') }}</span>
+        {%- endif %}
+        <span class="aether-st-arr">→</span>
+      </div>
+    </a>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+</section>
+{%- endif %}

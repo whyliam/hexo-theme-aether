@@ -1,0 +1,47 @@
+{%- set cfg = theme.aether.paths -%}
+{%- set items = aether_paths() -%}
+{%- if items and items.length %}
+<section class="aether-section aether-paths-wrap" id="aether-paths" data-aether-reveal>
+  <div class="aether-sec-label">
+    {%- set parts = (cfg.section_label or '03 / 阅读路径').split('/') -%}
+    <span class="num">{{ parts[0] | trim }}</span>
+    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+  </div>
+  <div class="aether-sec-head">
+    <h2>{{ cfg.title | safe }}</h2>
+  </div>
+
+  <div class="aether-paths">
+    {%- for path in items %}
+      <article class="aether-path">
+        <header class="aether-path__head">
+          <span class="aether-path__num">P-{{ path.index }}</span>
+          <h3 class="aether-path__intent">{{ path.intent }}</h3>
+          {%- if path.description %}
+            <p class="aether-path__desc">{{ path.description }}</p>
+          {%- endif %}
+        </header>
+
+        {%- if path.posts and path.posts.length %}
+          <ol class="aether-path__list">
+            {%- for p in path.posts %}
+              <li>
+                <a href="{{ url_for(p.url) }}">
+                  <span class="aether-path__step">{{ aether_pad(loop.index) }}</span>
+                  <span class="aether-path__body">
+                    <span class="aether-path__title">{{ p.title }}</span>
+                    {%- if p.category %}<span class="aether-path__cat">{{ p.category }}</span>{% endif %}
+                  </span>
+                  <span class="aether-path__arr">→</span>
+                </a>
+              </li>
+            {%- endfor %}
+          </ol>
+        {%- elif path.url %}
+          <a class="aether-path__cta" href="{{ url_for(path.url) }}">{{ path.cta }}</a>
+        {%- endif %}
+      </article>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}

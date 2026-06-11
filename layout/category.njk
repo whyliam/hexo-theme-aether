@@ -1,34 +1,45 @@
 {% extends '_layout.njk' %}
-{% import '_macro/post-collapse.njk' as post_template with context %}
 {% import '_macro/sidebar.njk' as sidebar_template with context %}
 
 {% block title %}{{ __('title.category') }}: {{ page.category }} | {{ title }}{% endblock %}
 
-{% block class %}category posts-collapse{% endblock %}
+{% block class %}category aether-archive{% endblock %}
 
 {% block content %}
+  {%- if theme.scheme === 'Aether' %}
+  <section class="aether-archive-hero">
+    <span class="aether-archive-label">{{ __('title.category') }}</span>
+    <h1 class="aether-archive-title">{{ page.category }}</h1>
+    <p class="aether-archive-desc">{{ page.posts.length }} 篇文章</p>
+  </section>
 
-  {######################}
-  {### CATEGORY BLOCK ###}
-  {######################}
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">
-          {{- page.category }}
-          <small>{{ __('title.category') }}</small>
-        </h1>
-      </div>
+  {%- set current_year = '' %}
+  {%- for post in page.posts.toArray() %}
+    {%- set year = date(post.date, 'YYYY') %}
+    {%- if year !== current_year %}
+      {%- if current_year %}</div>{%- endif %}
+      {%- set current_year = year %}
+      <div class="aether-archive-year-group">
+        <h2 class="aether-archive-year">{{ current_year }}</h2>
+    {%- endif %}
+    <article class="aether-archive-item">
+      <time class="aether-archive-date" datetime="{{ moment(post.date).format() }}">{{ date(post.date, 'MM-DD') }}</time>
+      <a class="aether-archive-link" href="{{ url_for(post.path) }}">{{ post.title or __('post.untitled') }}</a>
+    </article>
+  {%- endfor %}
+  {%- if current_year %}</div>{%- endif %}
 
-      {{ post_template.render(page.posts) }}
+  {%- else %}
+  {% import '_macro/post-collapse.njk' as post_template with context %}
+  <div class="post-block"><div class="post-content">
+    <div class="collection-title">
+      <h1 class="collection-header">{{ page.category }} <small>{{ __('title.category') }}</small></h1>
     </div>
-  </div>
-  {##########################}
-  {### END CATEGORY BLOCK ###}
-  {##########################}
+    {{ post_template.render(page.posts) }}
+  </div></div>
+  {%- endif %}
 
   {%- include '_partials/pagination.njk' -%}
-
 {% endblock %}
 
 {% block sidebar %}

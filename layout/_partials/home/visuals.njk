@@ -1,0 +1,40 @@
+{%- set cfg = theme.aether.visuals -%}
+{%- set items = aether_visuals(cfg.limit) -%}
+{%- if items and items.length %}
+<section class="aether-section{% if cfg.compact %} aether-visuals-compact{% endif %}" id="aether-visuals" data-aether-reveal>
+  {%- if not cfg.compact %}
+    <div class="aether-sec-label">
+      {%- set parts = (cfg.section_label or '07 / 影像').split('/') -%}
+      <span class="num">{{ parts[0] | trim }}</span>
+      {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+    </div>
+  {%- endif %}
+
+  <div class="aether-sec-head">
+    <h2>{{ cfg.title | safe }}</h2>
+    {%- if cfg.more_url %}
+      <a class="aether-more" href="{{ url_for(cfg.more_url) }}">{{ cfg.more_text or '查看全部' }} <span class="arr">→</span></a>
+    {%- endif %}
+  </div>
+
+  <div class="aether-visuals">
+    {%- for v in items %}
+      {%- set cover = v.cover or (v.photos and v.photos[0]) -%}
+      <a class="aether-visual {% if cover %}has-bg{% else %}no-bg{% endif %}" href="{{ aether_post_url(v) }}"
+         {%- if cover %} style="--cover: url('{{ url_for(cover) }}')" {% endif -%}>
+        {%- if cover %}
+        <div class="aether-v-img" style="background-image: url('{{ url_for(cover) }}'); background-size: cover; background-position: center;"></div>
+        {%- else %}
+        <div class="aether-v-img aether-v-placeholder">
+          <span>{{ (v.location or v.title) | truncate(20) }}</span>
+        </div>
+        {%- endif %}
+        <div class="aether-v-meta">
+          <span>{{ (v.location or v.title) | upper }}</span>
+          <span>{{ date(v.date, 'YYYY-MM') }}</span>
+        </div>
+      </a>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}

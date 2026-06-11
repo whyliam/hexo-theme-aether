@@ -1,0 +1,112 @@
+// Aether — Menu
+// ==================================================
+// .site-nav 在 .aether-header-row 中部，desktop 横排，hover 下划线动画。
+// mobile 走 NexT 默认的 hide-by-default + toggle 展开。
+
+.site-nav {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+
+  +tablet-mobile() {
+    site-nav-hide-by-default();
+  }
+}
+
+.menu {
+  align-items: center;
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+
+  +tablet-mobile() {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+  }
+}
+
+.menu-item {
+  display: inline-block;
+  flex: 0 0 auto;
+  list-style: none;
+  margin: 0;
+  white-space: nowrap;
+
+  a {
+    background: transparent;
+    border-bottom: 0;
+    color: var(--aether-ink-2);
+    display: inline-block;
+    font-family: var(--aether-ff-sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    padding: 6px 0;
+    position: relative;
+    transition: color var(--aether-fast) var(--aether-ease);
+    white-space: nowrap;
+
+    &::after {
+      background: var(--aether-ink);
+      bottom: 2px;
+      content: '';
+      display: block;
+      height: 1px;
+      left: 0;
+      position: absolute;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--aether-base) var(--aether-ease);
+      width: 100%;
+    }
+
+    &:hover,
+    &.menu-item-active {
+      background: transparent;
+      color: var(--aether-ink);
+    }
+
+    &:hover::after,
+    &.menu-item-active::after {
+      transform: scaleX(1);
+    }
+  }
+
+  // Aether 编辑式风格不使用菜单图标
+  i[class^='fa'] {
+    display: none;
+  }
+
+  .badge {
+    background: var(--aether-paper-tint);
+    border-radius: 999px;
+    color: var(--aether-muted);
+    font-family: var(--aether-ff-mono);
+    font-size: 10px;
+    margin-left: 4px;
+    padding: 1px 6px;
+  }
+
+  // 移除 NexT main-menu 当前项的圆点指示器（Aether 用下划线）
+  &.menu-item-active::after {
+    display: none;
+  }
+}
+
+if (not hexo-config('menu_settings.badges')) {
+  .main-menu .menu-item-active::after {
+    background: initial;
+    border-radius: initial;
+    content: initial;
+    height: initial;
+    margin-top: initial;
+    position: initial;
+    right: initial;
+    top: initial;
+    width: initial;
+  }
+}

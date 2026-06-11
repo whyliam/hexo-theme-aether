@@ -1,0 +1,104 @@
+{% extends '_layout.njk' %}
+{% import '_macro/sidebar.njk' as sidebar_template with context %}
+
+{% block title %}{{ page.title or '关于' }} | {{ title }}{% endblock %}
+
+{% block class %}page aether-about{% endblock %}
+
+{% block content %}
+  <article class="aether-about__article" lang="{{ page.lang }}">
+
+    {#- ============== HERO ============== -#}
+    <header class="aether-about__hero">
+      {%- if page.eyebrow or page.kicker %}
+        <div class="aether-about__eyebrow">{{ page.eyebrow or page.kicker }}</div>
+      {%- else %}
+        <div class="aether-about__eyebrow">关于 · {{ aether_iso_date(page.date or page.updated) }}</div>
+      {%- endif %}
+
+      <h1 class="aether-about__title">
+        {%- if page.headline -%}
+          {{ page.headline | safe }}
+        {%- else -%}
+          {{ page.title }}
+        {%- endif -%}
+      </h1>
+
+      {%- if page.lede %}
+        <p class="aether-about__lede">{{ page.lede | safe }}</p>
+      {%- endif %}
+    </header>
+
+    {#- ============== NOW (Currently / Recently / Always) ============== -#}
+    {%- if page.now %}
+      <section class="aether-about__now">
+        <div class="aether-about__sec-label">
+          <span class="num">01</span><span class="sep">/</span><span>当下</span>
+        </div>
+        <div class="aether-about__now-grid">
+          {%- if page.now.currently %}
+            <div class="aether-about__now-card">
+              <h3>正在做</h3>
+              <ul>{% for item in page.now.currently %}<li>{{ item | safe }}</li>{% endfor %}</ul>
+            </div>
+          {%- endif %}
+          {%- if page.now.recently %}
+            <div class="aether-about__now-card">
+              <h3>最近做过</h3>
+              <ul>{% for item in page.now.recently %}<li>{{ item | safe }}</li>{% endfor %}</ul>
+            </div>
+          {%- endif %}
+          {%- if page.now.always %}
+            <div class="aether-about__now-card">
+              <h3>一直在做</h3>
+              <ul>{% for item in page.now.always %}<li>{{ item | safe }}</li>{% endfor %}</ul>
+            </div>
+          {%- endif %}
+        </div>
+      </section>
+    {%- endif %}
+
+    {#- ============== FACTS table ============== -#}
+    {%- if page.facts %}
+      <section class="aether-about__facts">
+        <div class="aether-about__sec-label">
+          <span class="num">02</span><span class="sep">/</span><span>基本事实</span>
+        </div>
+        <dl class="aether-about__facts-list">
+          {%- for f in page.facts %}
+            <div>
+              <dt>{{ f.k }}</dt>
+              <dd>{{ f.v | safe }}</dd>
+            </div>
+          {%- endfor %}
+        </dl>
+      </section>
+    {%- endif %}
+
+    {#- ============== Long-form body (markdown) ============== -#}
+    {%- if page.content and page.content.trim() %}
+      <section class="aether-about__body post-body">
+        {{ page.content }}
+      </section>
+    {%- endif %}
+
+    {#- ============== CONTACT ============== -#}
+    {%- if page.contact %}
+      <section class="aether-about__contact">
+        <div class="aether-about__sec-label">
+          <span class="num">03</span><span class="sep">/</span><span>联系方式</span>
+        </div>
+        <ul class="aether-about__contact-list">
+          {%- for c in page.contact %}
+            <li><a href="{{ c.url }}" {% if c.url and c.url.startsWith('http') %}target="_blank" rel="noopener"{% endif %}>
+              <span>{{ c.label }}</span><span class="aether-about__contact-arr">→</span>
+            </a></li>
+          {%- endfor %}
+        </ul>
+      </section>
+    {%- endif %}
+
+  </article>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

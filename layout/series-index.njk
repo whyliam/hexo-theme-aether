@@ -1,0 +1,43 @@
+{% extends '_layout.njk' %}
+
+{% block title %}{{ page.title or '系列' }} | {{ title }}{% endblock %}
+
+{% block class %}page aether-series-index{% endblock %}
+
+{% block content %}
+  <article class="aether-series-detail">
+    <header class="aether-series-detail__hero">
+      <div class="aether-series-detail__eyebrow">{{ page.eyebrow or ('系列 · ' + page.series_list.length + ' 个长期主题') }}</div>
+      <h1 class="aether-series-detail__title">{% if page.headline %}{{ page.headline | safe }}{% else %}系列文章{% endif %}</h1>
+      <p class="aether-series-detail__lede">{{ page.lede or '长期写作里逐渐成型的主线 — 按主题而非时间组织。每个系列是一条独立路径，可以一篇接一篇读下去。' }}</p>
+    </header>
+
+    <section class="aether-si-grid">
+      {%- for s in page.series_list %}
+        <a class="aether-si-card{% if loop.first %} is-featured{% endif %}" href="{{ url_for('/series/' + s.slug + '/') }}">
+          <div class="aether-si-card__head">
+            <span class="aether-si-card__num">S-{{ aether_pad(loop.index) }}</span>
+            <span class="aether-si-card__stat">{{ s.count }} 篇</span>
+          </div>
+          <h2 class="aether-si-card__title">{{ s.name }}</h2>
+          <div class="aether-si-card__meta">
+            <span>{{ aether_iso_date(s.first_date) }} — {{ aether_iso_date(s.latest_date) }}</span>
+          </div>
+          {%- if s.recent_posts and s.recent_posts.length %}
+            <ul class="aether-si-card__recent">
+              {%- for p in s.recent_posts %}
+                <li>
+                  <span class="aether-si-card__dot"></span>
+                  <span class="aether-si-card__post-title">{{ p.title }}</span>
+                </li>
+              {%- endfor %}
+            </ul>
+          {%- endif %}
+          <span class="aether-si-card__cta">阅读系列 →</span>
+        </a>
+      {%- endfor %}
+    </section>
+  </article>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

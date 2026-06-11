@@ -1,0 +1,36 @@
+{#-
+  Aether ⌘K command palette
+  Mounted once at body end (via _layout.njk). Hidden until opened by
+  ⌘K / Ctrl+K or by clicking `.aether-search-btn`. Lazy-fetches
+  /aether-search.json on first open.
+-#}
+{%- if theme.scheme === 'Aether' and theme.aether.cmdk and theme.aether.cmdk.enable !== false -%}
+{%- set cfg = theme.aether.cmdk -%}
+<div class="aether-cmdk" id="aether-cmdk" hidden role="dialog" aria-modal="true" aria-label="搜索档案">
+  <div class="aether-cmdk__backdrop" data-cmdk-close></div>
+  <div class="aether-cmdk__panel" role="combobox" aria-expanded="true">
+    <div class="aether-cmdk__inputbar">
+      <span class="aether-cmdk__prompt">⌘K</span>
+      <input class="aether-cmdk__input" type="text" autocomplete="off" spellcheck="false"
+             placeholder="{{ cfg.placeholder or '搜索档案 — 文章、系列、笔记、影像…' }}"
+             aria-label="搜索" />
+      <kbd class="aether-cmdk__esc" data-cmdk-close>ESC</kbd>
+    </div>
+    <div class="aether-cmdk__filters" role="tablist">
+      <button class="is-on" data-cmdk-filter="all" type="button">全部</button>
+      <button data-cmdk-filter="post" type="button">文章</button>
+      <button data-cmdk-filter="series" type="button">系列</button>
+      <button data-cmdk-filter="visual" type="button">影像</button>
+      <button data-cmdk-filter="note" type="button">短札</button>
+      <button data-cmdk-filter="page" type="button">页面</button>
+    </div>
+    <div class="aether-cmdk__status" aria-live="polite"></div>
+    <ul class="aether-cmdk__results" role="listbox"></ul>
+    <div class="aether-cmdk__hint">
+      <span><kbd>↑</kbd><kbd>↓</kbd> 导航</span>
+      <span><kbd>↵</kbd> 打开</span>
+      <span><kbd>esc</kbd> 关闭</span>
+    </div>
+  </div>
+</div>
+{%- endif -%}

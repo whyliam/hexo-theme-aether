@@ -1,0 +1,190 @@
+// Variables of Aether scheme
+// ==================================================
+// Aether 是 NexT 体系下的第 5 个 scheme，定位"个人知识档案馆"。
+// 这里覆盖 base.styl 已有的 Stylus 变量；_colors.styl 会自动暴露为 CSS vars。
+// 静态稿额外引入的 token（--surface / --muted / --border / --accent-tint 等）
+// 由 _schemes/Aether/index.styl 顶部的 :root 块定义。
+
+
+// ---------- 调色：纸白 + 墨色 + 单 accent ----------
+// 参照静态稿 oklch 系统，转换为 hex 备 Stylus 编译兼容
+$paper                    = #faf8f3;    // bg     —— 纸白底，带极淡暖意
+$paper-tint               = #f4f0e8;    // tint   —— 区块底
+$surface                  = #ffffff;    // surface
+$surface-2                = #f6f1e6;    // 次级面（hover / accent-tint 等）
+
+$ink                      = #181818;    // fg     —— 主文字
+$ink-2                    = #2a2a2a;    // fg-2
+$ink-muted                = #6b6660;    // muted（次要文本）
+$ink-muted-2              = #8e8a84;    // muted-2
+
+// 2027 灰色分层补充：填充 rule → muted 之间和 muted → ink 之间的空档
+$ink-muted-light          = #9a9590;    // 极弱提示、装饰文字、placeholder
+$ink-muted-deep           = #4a4640;    // 三级标题 / 深 meta（深于 muted、淡于 ink）
+
+$rule                     = #e7e1d3;    // border（主分隔线，1px 清晰）
+$rule-2                   = #d6cfbe;    // border-2（强调分隔）
+
+// Accent：克制的中性墨蓝（编辑/档案气质），不是营销红
+$accent                   = #2a3a6b;
+$accent-hover             = #3a4e8a;
+$accent-tint              = #eef0f7;
+
+
+// ---------- Dark mode（暂保留 NexT 默认 dark token，Aether v1 不做精修 dark） ----------
+$paper-dark               = #18181a;
+$surface-dark             = #1f1f22;
+$ink-dark                 = #ece6da;
+$ink-muted-dark           = #8e8a84;
+$rule-dark                = #2f2f33;
+
+
+// ---------- 覆盖 base.styl 的 scaffolding token ----------
+$body-bg-color            = $paper;
+$body-bg-color-dark       = $paper-dark;
+$content-bg-color         = $paper;        // Aether 没有"卡片浮于灰底"的层次，content 与 body 同色
+$content-bg-color-dark    = $paper-dark;
+$card-bg-color            = $surface;
+$card-bg-color-dark       = $surface-dark;
+
+$text-color               = $ink;
+$text-color-dark          = $ink-dark;
+
+$link-color               = $ink;
+$link-color-dark          = $ink-dark;
+$link-hover-color         = $accent;
+$link-hover-color-dark    = lighten($accent, 30%);
+$link-decoration-color    = $ink-muted;
+
+$blockquote-color         = $ink-muted;
+$blockquote-color-dark    = $ink-muted-dark;
+
+$border-color             = $rule;
+
+$selection-bg             = $accent;
+$selection-color          = $paper;
+$selection-bg-dark        = lighten($accent, 30%);
+$selection-color-dark     = $paper-dark;
+
+$menu-item-bg-color       = transparent;       // Aether 导航无背景填充
+$menu-item-bg-color-dark  = transparent;
+
+
+// ---------- Header / Site meta ----------
+$brand-color              = $ink;              // Aether 顶栏在纸白底，brand 用墨色不是白
+$brand-hover-color        = $accent;
+$brand-color-dark         = $ink-dark;
+$brand-hover-color-dark   = lighten($accent, 30%);
+$brand-padding            = 0;
+
+$subtitle-color           = $ink-muted;
+$site-subtitle-color      = $ink-muted;
+$site-subtitle-margin     = 8px 0 0;
+
+
+// ---------- Layout 尺寸（编辑式宽度，比 NexT 默认窄一些） ----------
+$content-desktop          = 760px;
+$content-desktop-large    = 920px;
+$content-desktop-largest  = 1200px;
+
+$content-desktop-padding  = 32px;
+$content-tablet-padding   = 20px;
+$content-mobile-padding   = 16px;
+
+
+// ---------- Sidebar（仅 post 页用，宽度收窄） ----------
+$sidebar-width            = hexo-config('sidebar.width_dual_column') is a 'unit' ? hexo-config('sidebar.width_dual_column') : 240;
+$sidebar-width-dual-column = unit($sidebar-width, 'px');
+$content-wrap             = 'calc(100% - %s)' % unit($sidebar-width + $sidebar-offset, 'px');
+
+$sidebar-nav-color        = var(--text-color);
+$sidebar-nav-hover-color  = $accent;
+$sidebar-highlight        = $accent;
+
+$site-author-image-width        = 96px;
+$site-author-image-border-width = 1px;
+$site-author-image-border-color = $rule;
+
+$site-author-name-margin        = 12px 0 0;
+$site-author-name-color         = var(--text-color);
+$site-author-name-weight        = 500;
+
+$site-description-font-size     = $font-size-smaller;
+$site-description-color         = $ink-muted;
+$site-description-margin-top    = 6px;
+
+$site-state-item-count-font-size = $font-size-medium;
+$site-state-item-name-font-size  = $font-size-smaller;
+$site-state-item-name-color      = $ink-muted;
+
+
+// ---------- Buttons（默认按钮：墨色实心 + 圆角 2px，呼应 hero CTA） ----------
+$btn-default-radius                  = 2px;
+$btn-default-bg                      = $ink;
+$btn-default-bg-dark                 = $ink-dark;
+$btn-default-color                   = $paper;
+$btn-default-color-dark              = $paper-dark;
+$btn-default-border-color            = $ink;
+$btn-default-border-color-dark       = $ink-dark;
+$btn-default-hover-bg                = $accent;
+$btn-default-hover-bg-dark           = $accent;
+$btn-default-hover-color             = $paper;
+$btn-default-hover-color-dark        = $paper;
+$btn-default-hover-border-color      = $accent;
+$btn-default-hover-border-color-dark = $accent;
+
+
+// ---------- Pagination ----------
+$pagination-border              = $rule;
+$pagination-link-bg             = transparent;
+$pagination-link-color          = $link-color;
+$pagination-link-border         = $rule;
+$pagination-link-hover-bg       = transparent;
+$pagination-link-hover-color    = $accent;
+$pagination-link-hover-border   = $accent;
+$pagination-active-bg           = $ink;
+$pagination-active-color        = $paper;
+$pagination-active-border       = $ink;
+$pagination-border-dark              = $rule-dark;
+$pagination-link-border-dark         = $rule-dark;
+$pagination-link-hover-border-dark   = $accent-dark;
+$pagination-active-bg-dark           = $paper-dark;
+$pagination-active-color-dark        = $ink-dark;
+$pagination-active-border-dark       = $paper-dark;
+
+
+// ---------- Border / box-shadow（Aether 无卡片阴影，hairline 风格） ----------
+$box-shadow-inner               = initial;
+$box-shadow                     = initial;
+$border-radius-inner            = initial;
+$border-radius                  = 4px;
+
+
+// ---------- Badges / Tags（细胶囊样式） ----------
+$badge-padding                  = 2px 8px;
+$badge-border-radius            = 999px;
+$badge-background               = transparent;
+$badge-color                    = $ink-muted;
+$badge-text-shadow              = none;
+
+
+// ---------- Tag cloud ----------
+$tag-cloud-start                = $ink-muted-2;
+$tag-cloud-end                  = $ink;
+$tag-cloud-start-dark           = $ink-muted-dark;
+$tag-cloud-end-dark             = $ink-dark;
+
+
+// ---------- Post separator ----------
+$post-eof-margin-top            = 64px;
+$post-eof-margin-bottom         = 48px;
+$posts-collapse-margin          = 32px;
+
+
+// ---------- Back to top ----------
+$b2t-opacity                    = .6;
+$b2t-opacity-hover              = 1;
+$b2t-color                      = $paper;
+$b2t-bg-color                   = $ink;
+$b2t-color-dark                 = $ink-dark;
+$b2t-bg-color-dark              = $paper-dark;

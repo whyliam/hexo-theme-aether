@@ -1,0 +1,67 @@
+{%- set cfg = theme.aether.notes_visuals or {} -%}
+{%- set ncfg = theme.aether.notes or {} -%}
+{%- set vcfg = theme.aether.visuals or {} -%}
+{%- set notes = aether_notes(cfg.notes_limit or 3) -%}
+{%- set visuals = aether_visuals(cfg.visuals_limit or 4) -%}
+{%- if (notes and notes.length) or (visuals and visuals.length) %}
+<section class="aether-section" id="aether-personal" data-aether-reveal>
+  <div class="aether-sec-label">
+    {%- set parts = (cfg.section_label or '05 / 思考与影像').split('/') -%}
+    <span class="num">{{ parts[0] | trim }}</span>
+    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+  </div>
+  <div class="aether-sec-head">
+    <h2>{{ cfg.title or '思考碎片与影像记录' | safe }}</h2>
+    {%- if cfg.subtitle %}
+      <p class="aether-sec-subtitle">{{ cfg.subtitle }}</p>
+    {%- endif %}
+  </div>
+
+  <div class="aether-nv-split{% if not (notes and notes.length) or not (visuals and visuals.length) %} is-single{% endif %}">
+    {%- if notes and notes.length %}
+    <div class="aether-nv-notes">
+      <div class="aether-nv-label">
+        <span>短札</span>
+        <a href="{{ url_for(ncfg.more_url or '/categories/Notes-Essays/') }}">全部 <span class="arr">→</span></a>
+      </div>
+      {%- for note in notes %}
+        <a class="aether-note" href="{{ aether_post_url(note) }}">
+          <div class="aether-ndate">{{ date(note.date, 'YYYY-MM-DD') }}</div>
+          <h3>{{ note.title }}</h3>
+          {%- set sum = aether_summary(note, 60) -%}
+          {%- if sum %}<p>{{ sum }}</p>{% endif %}
+        </a>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+
+    {%- if visuals and visuals.length %}
+    <div class="aether-nv-visuals">
+      <div class="aether-nv-label">
+        <span>影像</span>
+        <a href="{{ url_for(vcfg.more_url or '/visuals/') }}">全部 <span class="arr">→</span></a>
+      </div>
+      <div class="aether-nv-grid">
+        {%- for v in visuals %}
+          {%- set cover = v.cover or (v.photos and v.photos[0]) -%}
+          <a class="aether-visual {% if cover %}has-bg{% else %}no-bg{% endif %}" href="{{ aether_post_url(v) }}"
+             {%- if cover %} style="--cover: url('{{ url_for(cover) }}')" {% endif -%}>
+            {%- if cover %}
+            <div class="aether-v-img" style="background-image: url('{{ url_for(cover) }}'); background-size: cover; background-position: center;"></div>
+            {%- else %}
+            <div class="aether-v-img aether-v-placeholder">
+              <span>{{ (v.location or v.title) | truncate(20) }}</span>
+            </div>
+            {%- endif %}
+            <div class="aether-v-meta">
+              <span>{{ (v.location or v.title) | upper }}</span>
+              <span>{{ date(v.date, 'YYYY-MM') }}</span>
+            </div>
+          </a>
+        {%- endfor %}
+      </div>
+    </div>
+    {%- endif %}
+  </div>
+</section>
+{%- endif %}

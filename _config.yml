@@ -37,10 +37,11 @@ custom_file_path:
 # ---------------------------------------------------------------
 
 # Schemes
-scheme: Muse
+#scheme: Muse
 #scheme: Mist
 #scheme: Pisces
 #scheme: Gemini
+scheme: Aether
 
 # Dark Mode
 darkmode: true
@@ -102,13 +103,11 @@ open_graph:
 # Value before `||` delimiter is the target link, value after `||` delimiter is the name of Font Awesome icon.
 # External url should start with http:// or https://
 menu:
-  #home: / || fa fa-home
-  #about: /about/ || fa fa-user
-  #tags: /tags/ || fa fa-tags
-  #categories: /categories/ || fa fa-th
-  #archives: /archives/ || fa fa-archive
-  #schedule: /schedule/ || fa fa-calendar
-  #sitemap: /sitemap.xml || fa fa-sitemap
+  首页: / || fa fa-home
+  写作: /archives/ || fa fa-pencil-alt
+  系列: /series/ || fa fa-layer-group
+  影像: /visuals/ || fa fa-camera-retro
+  关于: /about/ || fa fa-user
   #commonweal: /404/ || fa fa-heartbeat
 
 # Enable / Disable menu icons / item badges.
@@ -404,8 +403,8 @@ reading_progress:
   # Available values: top | bottom
   position: top
   reversed: false
-  color: "#37c6c0"
-  height: 3px
+  color: "#2a3a6b"
+  height: 2px
 
 # Bookmark Support
 bookmark:
@@ -607,7 +606,7 @@ lazyload: false
 # Automatically insert whitespace between CJK and half-width characters.
 # For more information: https://github.com/vinta/pangu.js
 # Server-side plugin: https://github.com/next-theme/hexo-pangu
-pangu: false
+pangu: true
 
 # Prefetch links based on what is in the user's viewport.
 # For more information: https://getquick.link
@@ -913,3 +912,160 @@ vendors:
 css: css
 js: js
 images: images
+
+
+# ===============================================================
+# Aether scheme - Custom modules
+# ===============================================================
+# These fields only render when scheme: Aether is enabled.
+# Each module is opt-in via `enable: true` and silently hidden when data is missing.
+# Override per-site in your `_config.aether.yml` (alt theme config).
+aether:
+  # Top header
+  brand:
+    text: AETHER          # Used as logo text on Aether home/post pages
+    dot: true             # Show accent dot suffix
+
+  # Default menu (used only when site `menu:` is empty)
+  # Override per-site by setting top-level `menu:` in your site config.
+  menu:
+
+  # Show 2px reading-progress bar at top of post pages
+  reading_progress: true
+
+  # Hero section (home only)
+  hero:
+    enable: true
+    eyebrow: '个人知识档案 · 始于 2010'
+    identity: '我是 Liam，产品经理与独立开发者，长期记录 AI Agent、产品判断、知识系统与生活观察。'
+    # Multi-line allowed via \n; <em>...</em> renders italic accent.
+    title: "记录 AI 系统、产品判断\n与长期思考，<em>以及缓慢形成的\n生活档案。</em>"
+    # Short stance statement — what this site is, what it isn't. Avoid generic blog blurbs.
+    description: '我不写评测，不追热点。我写那些五年后还值得被回看的判断。'
+    actions:
+      - text: 开始阅读
+        url: '#aether-latest'
+        variant: primary
+      - text: 阅读路径
+        url: '#aether-start-here'
+        variant: default
+      - text: 关于我
+        url: '/about/'
+        variant: ghost
+    side_panel:
+      enable: true
+      title: 我正在长期追踪
+      updated: '2026-06'
+      items:
+        - title: 'AI Coding Harness'
+          subtitle: '从 Copilot 到完整接管的工程系统'
+          url: '/categories/AI-Systems/'
+        - title: 'Agent 边界与运行时'
+          subtitle: 'Agent 越聪明，越要明确不该做什么'
+          url: '/categories/AI-Systems/'
+        - title: 'Obsidian 知识系统'
+          subtitle: '把笔记从仓库升级为思考工具'
+          url: '/categories/Notes-Essays/'
+        - title: 'Aether Blog Theme'
+          subtitle: '个人知识档案馆的版式实验'
+          url: '/categories/Product-Intelligence/'
+    meta_stats: []        # [{ label, value }]. When empty, auto-counts from site.posts/categories/tags.
+
+  # Knowledge index (legacy 4 category cards)
+  # Kept for back-compat. New sites should prefer `paths` below.
+  kindex:
+    enable: false         # Disabled by default — see `paths` for the curated replacement
+    section_label: '03 / 知识地图'
+    title: '知识地图 — 四条长期主线。'
+    items: []             # [{ index, category, title, description, count, latest_date, tags[], url }]
+
+  # Reading Paths — curated entry points for new visitors
+  # Each item is a "if you're X, start here" path with 1-5 hand-picked posts.
+  # Posts are resolved by slug/path/permalink against site.posts; missing entries are silently dropped.
+  # When a path has `url` instead of `posts`, it renders as a single-link CTA card.
+  paths:
+    enable: true
+    section_label: '03 / 阅读路径'
+    title: '不知道从哪开始？<em>试试这几条路径。</em>'
+    items:
+      - intent: '如果你第一次来'
+        description: '先用 3 篇文章建立坐标系，理解我在写什么。'
+        # Resolution order: posts → category → tag → series → url
+        posts: []         # [{ slug: '2024/05/29/ai-coding-evolution', title: 'override (optional)' }]
+        category: 'AI & Systems'
+        limit: 3
+      - intent: '如果你想了解我的产品判断'
+        description: '关于 AI 时代产品组织、决策方法、判断力的精选。'
+        posts: []
+        category: 'Product & Intelligence'
+        limit: 3
+      - intent: '如果你想了解我怎么管理知识'
+        description: 'Obsidian、长期写作系统、个人行动框架。'
+        posts: []
+        category: 'Notes & Essays'
+        limit: 3
+  # Latest writing (chronological list)
+  latest:
+    enable: true
+    section_label: '05 / 最新文章'
+    title: '最近更新。'
+    limit: 4
+    show_filter_chips: false
+
+  # Series & projects. Explicit post.series wins; stable Newsletter / AI Coding /
+  # Agent / Obsidian signals are recognized when legacy posts omit the field.
+  series:
+    enable: true
+    section_label: '04 / 长期系列'
+    title: '长期系列 — 持续追踪的问题。'
+    series_items: []      # [{ name, count, posts: [{ index, title, url }] }]
+    project_items: []     # [{ name, status, description, link }]
+
+  # Notes stream (short reflections)
+  notes:
+    enable: true
+    section_label: '06 / 短札'
+    title: '短札 — 思考碎片。'
+    limit: 4
+
+  # Visuals (compact entry — not a full gallery on home).
+  # Posts in category "Travel & Visuals" are included when type: visual is absent.
+  visuals:
+    enable: true
+    section_label: '07 / 影像'
+    title: '旅行与影像：一些城市、路途和观看方式。'
+    more_text: '查看完整影像档案'
+    more_url: '/visuals/'
+    limit: 6
+    compact: true
+
+  # Newsletter / subscribe block
+  newsletter:
+    enable: true
+    text: 关注更新
+    channels:
+      - { label: 'RSS', url: '/atom.xml' }
+      - { label: 'Newsletter', url: '/newsletter/' }
+      - { label: 'GitHub', url: 'https://github.com/whyliam', external: true }
+
+  # Footer
+  footer:
+    tagline: '这里是长期档案，不是内容流。'
+    columns: []           # [{ heading, links: [{ label, url }] }]
+
+  # ⌘K command palette
+  cmdk:
+    enable: true
+    placeholder: '搜索档案 — 文章、系列、笔记、影像…'
+    recent_count: 4
+    fallback_url: '/search/'
+
+  # Post bottom CTA — "follow the archive" persistent strip after every post.
+  # Renders only when scheme === Aether and post is a regular essay (not visual/note unless `enable_all`).
+  cta:
+    enable: true
+    eyebrow: '持续追踪'
+    title: '想持续看到这类文章？'
+    description: '这里没有营销列表，只有一份缓慢生长的写作档案。挑一个最不打扰你的方式跟下去。'
+    enable_all: false      # If true, also render on notes and visuals
+    channels: []           # [{ label, url, hint? }]. Empty falls back to theme.follow_me / site.social.

@@ -1,0 +1,181 @@
+// Aether — Sidebar (post 页右侧 sticky，简化版)
+// ==================================================
+// Aether 只在 post 页显示 sidebar（首页 _config.aether.yml 设 sidebar.display: 'remove'）。
+// 风格：无卡片背景、无阴影、hairline 分隔，主要承载 TOC。
+
+// Mobile: hide sidebar completely — Aether doesn't use the drawer pattern
++tablet-mobile() {
+  .sidebar {
+    display: none !important;
+  }
+  .sidebar-toggle {
+    display: none !important;
+  }
+}
+
++desktop() {
+  .sidebar {
+    background: transparent;
+    height: auto;
+    position: sticky;
+    top: 84px;              // 64px header + 20 呼吸空间
+    width: 100%;
+  }
+
+  .sidebar-toggle {
+    display: none;          // 桌面端不需要切换
+  }
+
+  .sidebar-inner {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: var(--aether-ink);
+    margin-top: 0;
+    max-height: 'calc(100vh - 120px)' % ();
+    overflow-y: auto;
+    padding: 0;
+    visibility: visible !important;
+    width: 100%;
+
+    .sidebar-panel {
+      opacity: 1 !important;
+      transform: none !important;
+      visibility: visible !important;
+    }
+
+    .post-toc-wrap { display: block !important; }
+    .site-overview-wrap { display: none; }
+
+    // 自定义滚动条（细 hairline）
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--aether-rule);
+    }
+  }
+
+  // 隐藏 sidebar 的 tab 导航（文章目录/站点概览），Aether 只显示 TOC
+  .sidebar-nav { display: none; }
+
+  // 关闭 NexT 的 sidebar dotted border
+  .sidebar .sidebar-button {
+    border-bottom: 0;
+    border-top: 1px solid var(--aether-rule);
+    margin-top: 16px;
+    padding-top: 16px;
+
+    button {
+      background: transparent;
+      border: 0;
+      color: var(--aether-accent);
+      display: block;
+      font-family: var(--aether-ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      padding: 0;
+      text-transform: uppercase;
+      width: 100%;
+
+      &:hover {
+        background: none;
+        border: 0;
+        color: var(--aether-accent-hover);
+      }
+    }
+  }
+
+  .site-state-item {
+    padding: 0 8px;
+  }
+}
+
+
+// ---------- TOC ----------
+.post-toc {
+  font-family: var(--aether-ff-sans);
+  font-size: 13px;
+  line-height: 1.55;
+
+  .nav-item {
+    list-style: none;
+  }
+
+  a {
+    border-bottom: 0;
+    color: var(--aether-muted);
+    display: block;
+    padding: 4px 0 4px 12px;
+    position: relative;
+    transition: color var(--aether-fast) var(--aether-ease);
+
+    &::before {
+      background: var(--aether-rule);
+      content: '';
+      height: 12px;
+      left: 0;
+      position: absolute;
+      top: 8px;
+      transition: background var(--aether-fast) var(--aether-ease);
+      width: 1px;
+    }
+
+    &:hover {
+      color: var(--aether-ink);
+
+      &::before { background: var(--aether-muted); }
+    }
+  }
+
+  .active > a {
+    color: var(--aether-accent);
+    font-weight: 500;
+
+    &::before { background: var(--aether-accent); }
+  }
+}
+
+// TOC heading（"On this page"）
+.sidebar-nav-toc,
+.post-toc-wrap > p {
+  color: var(--aether-muted-2);
+  font-family: var(--aether-ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+
+// ---------- 作者卡片（简化）----------
+.site-author-image {
+  border-color: var(--aether-rule);
+  border-radius: 999px;
+}
+
+.site-author-name {
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-sans);
+  font-weight: 500;
+}
+
+.site-description {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-sans);
+}
+
+// social links
+.links-of-author-item a {
+  border-bottom: 0;
+  border-radius: 2px;
+  color: var(--aether-muted);
+  padding: 0 6px;
+
+  &:hover {
+    background: var(--aether-paper-tint);
+    color: var(--aether-ink);
+  }
+}

@@ -1,0 +1,56 @@
+{% extends '_layout.njk' %}
+{% import '_macro/sidebar.njk' as sidebar_template with context %}
+
+{% block title %}{{ page.series_name }} · 系列 | {{ title }}{% endblock %}
+
+{% block class %}page aether-series-page{% endblock %}
+
+{% block content %}
+  <article class="aether-series-detail">
+    <header class="aether-series-detail__hero">
+      <div class="aether-series-detail__eyebrow">系列 · {{ page.series_posts.length }} 篇</div>
+      <h1 class="aether-series-detail__title">{{ page.series_name }}</h1>
+      {%- if page.description %}
+        <p class="aether-series-detail__lede">{{ page.description }}</p>
+      {%- endif %}
+
+      {%- set first = page.series_posts[0] -%}
+      {%- set last = page.series_posts[page.series_posts.length - 1] -%}
+      <dl class="aether-series-detail__meta">
+        <div><dt>起始</dt><dd>{{ aether_iso_date(first.date) }}</dd></div>
+        <div><dt>最近更新</dt><dd>{{ aether_iso_date(last.date) }}</dd></div>
+        <div><dt>篇数</dt><dd>{{ page.series_posts.length }}</dd></div>
+      </dl>
+    </header>
+
+    <section class="aether-series-detail__list">
+      <div class="aether-series-detail__sec-label">
+        <span class="num">01</span><span class="sep">/</span><span>阅读顺序</span>
+      </div>
+
+      <ol class="aether-series-detail__posts">
+        {%- for p in page.series_posts %}
+          <li>
+            <a href="{{ url_for(p.path) }}">
+              <span class="aether-series-detail__num">{{ p.index }}</span>
+              <span class="aether-series-detail__body">
+                <span class="aether-series-detail__post-title">{{ p.title }}</span>
+                {%- if p.description %}
+                  <span class="aether-series-detail__post-desc">{{ p.description }}</span>
+                {%- endif %}
+                <span class="aether-series-detail__post-meta">
+                  <span>{{ aether_iso_date(p.date) }}</span>
+                  <span>·</span>
+                  <span>{{ aether_reading_time(p) }} 分钟</span>
+                </span>
+              </span>
+              <span class="aether-series-detail__arr">→</span>
+            </a>
+          </li>
+        {%- endfor %}
+      </ol>
+    </section>
+  </article>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

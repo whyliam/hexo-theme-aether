@@ -54,4 +54,16 @@ module.exports = hexo => {
   }
 
   parse(hexo.theme.config.menu);
+
+  // Aether: provide a sensible default menu when scheme === 'Aether' and no menu has been configured.
+  // This avoids the "empty topbar" failure mode on a fresh install.
+  const themeCfg = hexo.theme.config;
+  const isAether = themeCfg.scheme === 'Aether';
+  if (isAether && main_menu.length === 0) {
+    const aetherDefault = (themeCfg.aether && themeCfg.aether.menu) || {
+      '首页': '/ || fa fa-home',
+      '归档': '/archives/ || fa fa-archive'
+    };
+    parse(aetherDefault);
+  }
 };

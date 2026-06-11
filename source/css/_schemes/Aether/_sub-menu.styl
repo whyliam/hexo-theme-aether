@@ -1,0 +1,41 @@
+// Aether — Sub-menu (分类 / 归档 / 标签页顶部的次级导航)
+// ==================================================
+
+.sub-menu {
+  border-bottom: 1px solid var(--aether-rule);
+  margin: 0 0 24px;
+  padding: 8px 0;
+
+  .menu-item {
+    display: inline-block;
+
+    a {
+      background: transparent;
+      color: var(--aether-muted);
+      font-family: var(--aether-ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      margin: 4px 14px 4px 0;
+      padding: 0;
+      text-transform: uppercase;
+
+      &::after {
+        display: none;          // sub-menu 不用下划线动画，靠颜色区分
+      }
+
+      &:hover {
+        background: transparent;
+        color: var(--aether-ink);
+      }
+    }
+  }
+
+  .menu-item-active {
+    border-bottom-color: var(--aether-accent);
+    color: var(--aether-accent);
+
+    a {
+      color: var(--aether-accent);
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{%- set cfg = theme.aether.building -%}
+{%- set items = cfg.items -%}
+{%- if items and items.length %}
+<section class="aether-section" id="aether-building" data-aether-reveal>
+  <div class="aether-sec-label">
+    {%- set parts = (cfg.section_label or '03 / Building').split('/') -%}
+    <span class="num">{{ parts[0] | trim }}</span>
+    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
+  </div>
+  <div class="aether-sec-head">
+    <div>
+      <h2>{{ cfg.title | safe }}</h2>
+      {%- if cfg.subtitle %}
+        <p class="aether-sec-subtitle">{{ cfg.subtitle }}</p>
+      {%- endif %}
+    </div>
+    {%- if cfg.more_url %}
+      <a class="aether-more" href="{{ url_for(cfg.more_url) }}">{{ cfg.more_text or '全部项目' }} <span class="arr">→</span></a>
+    {%- endif %}
+  </div>
+
+  <div class="aether-building-grid">
+    {%- for item in items %}
+      <a class="aether-building-card" href="{{ url_for(item.url or '#') }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>
+        <div class="aether-bc-head">
+          <span class="aether-bc-num">{{ aether_pad(loop.index) }}</span>
+          {%- if item.status %}
+            <span class="aether-bc-status {{ item.status_variant or 'is-live' }}">{{ item.status }}</span>
+          {%- endif %}
+        </div>
+        <h3 class="aether-bc-title">{{ item.name }}</h3>
+        {%- if item.description %}
+          <p class="aether-bc-desc">{{ item.description }}</p>
+        {%- endif %}
+        <div class="aether-bc-foot">
+          <span class="aether-bc-arr">→</span>
+        </div>
+      </a>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}
