@@ -48,10 +48,10 @@ hexo.extend.generator.register('aether-series', function(locals) {
     const recent = items.slice(-3).reverse();
     seriesList.push({
       name,
-      slug       : slugify(name),
-      count      : items.length,
-      latest_date: items[items.length - 1].date,
-      first_date : items[0].date,
+      slug        : slugify(name),
+      count       : items.length,
+      latest_date : items[items.length - 1].date,
+      first_date  : items[0].date,
       recent_posts: recent.map(p => ({
         title: p.title,
         path : p.path,
