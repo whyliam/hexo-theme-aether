@@ -1,198 +1,96 @@
-<div align="right">
-  Language:
-  🇺🇸
-  <a title="Chinese" href="docs/zh-CN/README.md">🇨🇳</a>
-  <a title="Russian" href="docs/ru/README.md">🇷🇺</a>
-</div>
+# Aether
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/next-theme/theme-next-docs/v8.13.0/source/images/next-schemes-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/next-theme/theme-next-docs/v8.13.0/source/images/next-schemes.png">
-  <img alt="NexT preview" src="https://raw.githubusercontent.com/next-theme/theme-next-docs/v8.13.0/source/images/next-schemes.png">
-</picture>
+> 基于 NexT v8.27.0 的个人知识档案馆主题，为长期写作者设计。
 
-<a title="NexT website" href="https://theme-next.js.org"><img align="right" alt="NexT logo" width="100" height="100" src="https://raw.githubusercontent.com/next-theme/hexo-theme-next/master/source/images/logo.svg"></a>
+把博客当作低维护成本的个人内容系统——编辑式首页自动组装、系列聚合、影像归档、⌘K 全站搜索。Aether 不追求功能堆砌，而是为「持续输出十年」的写作者提供一套有秩序的内容容器。
 
-# NexT
+## 特性
 
-> NexT is a high quality elegant [Hexo](https://hexo.io) theme. It is crafted from scratch with love.
+- 📐 **编辑式首页** — 6 模块自动组装（Hero / Start Here / Building / Latest / Notes & Visuals / Subscribe）
+- 📚 **系列聚合** — 通过 `series` 字段自动生成系列索引页与导航
+- 📷 **影像归档** — `type: visual` 专属画廊布局，独立于文章流
+- 📝 **短札系统** — `type: note` 用于碎片化思考与每日记录
+- 🔍 **⌘K 全站搜索** — 命令面板式搜索，支持文章、系列、标签
+- 🌙 **深色模式** — 自动跟随系统 + 手动切换，平滑无闪烁
+- 🎨 **2027 设计趋势** — 排版驱动、灰色分层、呼吸感留白
+- ♿ **无障碍** — `focus-visible`、`prefers-reduced-motion`、语义 HTML
+- 🇨🇳 **中文优化** — pangu.js 自动空格、中英混排衬线正文
+- 📖 **ToC 追踪** — IntersectionObserver 实现的目录高亮
 
-[![NPM version](https://img.shields.io/npm/v/hexo-theme-next?color=red&logo=npm&style=for-the-badge)](https://www.npmjs.com/package/hexo-theme-next)
-[![NPM Downloads](https://img.shields.io/npm/dm/hexo-theme-next?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/hexo-theme-next)
-[![Required Hexo version](https://img.shields.io/badge/hexo-%3E=7.0.0-blue?style=for-the-badge&logo=hexo)](https://hexo.io)
-[![License](https://img.shields.io/badge/license-%20AGPL-orange?style=for-the-badge&logo=gnu)](https://github.com/next-theme/hexo-theme-next/blob/master/LICENSE.md)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/next-theme/hexo-theme-next/linter.yml?branch=master&label=test&logo=github&style=for-the-badge)](https://github.com/next-theme/hexo-theme-next/actions?query=workflow%3ALinter)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/next-theme/hexo-theme-next/tester.yml?branch=master&logo=github&style=for-the-badge)](https://github.com/next-theme/hexo-theme-next/actions?query=workflow%3ATester)
-[![Coverage Status](https://img.shields.io/coveralls/github/next-theme/hexo-theme-next?logo=coveralls&style=for-the-badge)](https://coveralls.io/github/next-theme/hexo-theme-next)
-
-## Live Preview
-
-<p align="center">
-  💟 <a href="https://theme-next.js.org/muse/">Muse</a> | 🔯 <a href="https://theme-next.js.org/mist/">Mist</a> | ♓️ <a href="https://theme-next.js.org/pisces/">Pisces</a> | ♊️ <a href="https://theme-next.js.org">Gemini</a>
-<br>
-<br>
-  More NexT examples <a href="https://github.com/next-theme/awesome-next#live-preview">here</a>.
-</p>
-
-## Installation
-
-If you're using Hexo 5.0 or later, the simplest way to install is through npm:
+## 快速开始
 
 ```sh
+# 1. 克隆主题到 Hexo 项目
 cd hexo-site
-npm install hexo-theme-next
+git clone https://github.com/your-org/hexo-theme-aether themes/aether
+
+# 2. 启用主题（修改站点 _config.yml）
+echo "theme: aether" >> _config.yml
+
+# 3. 复制并编辑主题配置
+cp themes/aether/_config.yml _config.aether.yml
+
+# 4. 启动本地预览
+hexo s
 ```
 
-Or you can clone the entire repository:
+## 内容类型
 
-```sh
-cd hexo-site
-git clone https://github.com/next-theme/hexo-theme-next themes/next
+Aether 提供三种内容类型，对应不同的写作节奏：
+
+```yaml
+# 长文 / 文章（默认）
+---
+title: 关于 Agent Runtime 的思考
+date: 2026-06-01
+categories: [AI & Systems]
+series: agent-runtime
+---
+
+# 影像归档
+---
+title: 京都行记
+date: 2026-04-12
+type: visual
+cover: /images/kyoto.jpg
+---
+
+# 短札 / 碎片
+---
+title: 今日所思
+date: 2026-06-10
+type: note
+---
 ```
 
-See [detailed installation instructions][docs-installation-url] if you want any other variant.
+## 首页模块
 
-After the installation, open Hexo config file and set `theme` variable to `next`.
+首页由 6 个模块自动组装，所有数据从文章 frontmatter 推导，无需手动维护：
 
-```yml
-theme: next
-```
+| 模块 | 说明 |
+| --- | --- |
+| **Hero** | 头图 + 标语 + 个人介绍 |
+| **Start Here** | 精选入门文章（`featured: true`） |
+| **Building** | 当前在做的项目卡片 |
+| **Latest** | 最新文章流 |
+| **Notes & Visuals** | 短札 + 影像双栏聚合 |
+| **Subscribe** | Newsletter 订阅入口 |
 
-## Configuration
+详细配置见 [docs/AETHER.md](docs/AETHER.md)。
 
-It is not recommended to directly modify any files in the NexT theme. Because this may cause errors (e.g. merge conflicts), and the modified files may be discarded when upgrading the theme.
+## 文档
 
-At present, NexT encourages users to use the [Alternate Theme Config][docs-configuration-url] to configure NexT. And it's easy to customize the layout or style of NexT using [Custom Files][docs-custom-files-url].
+- 📖 [完整配置文档](docs/AETHER.md) — 所有模块、字段、自定义项
+- 📐 [设计分析](DESIGN_ANALYSIS.md) — 设计语言与排版决策
+- 📋 [改造工作日志](BLOG_REDESIGN_WORKLOG.md) — 实现细节与权衡
 
-## Plugins
+## 技术栈
 
-Plugins extend and expand the functionality of NexT. Some advanced features may require third-party libraries or additional configuration, giving you the flexibility to create a truly personalized website.
+- [Hexo](https://hexo.io) 8.1.1+
+- [NexT](https://theme-next.js.org) 8.27.0（Aether Scheme）
+- [Stylus](https://stylus-lang.com) / [Nunjucks](https://mozilla.github.io/nunjucks/)
+- Node.js ≥ 18.18
 
-Configuring these plugins is very easy. For example, if you want to enable `pjax` on your site, just set `pjax` to `true` in NexT config file:
+## License
 
-```yml
-# Easily enable fast Ajax navigation on your website.
-# For more information: https://github.com/next-theme/pjax
-pjax: true
-```
-
-### Configure CDN
-
-Third-party plugins are loaded from [CDNJS](https://cdnjs.com) CDN by default. We also provide other optional CDNs, including the famous [UNPKG](https://unpkg.com) and [jsDelivr](https://www.jsdelivr.com).
-
-For example, if you want to use `unpkg` instead of `cdnjs` as the default CDN provider, you need to edit the following settings in NexT config file:
-
-```yml
-vendors:
-  # ...
-  # Some contents...
-  # ...
-  plugins: unpkg
-```
-
-## Update
-
-The NexT theme will continue to release new versions to include new features and bug fixes. Please read the [release notes][docs-release-url] before updating the theme. You can update NexT by the following command.
-
-Install the latest version through npm:
-
-```sh
-cd hexo-site
-npm install hexo-theme-next@latest
-```
-
-Or update to the latest master branch:
-
-```sh
-cd themes/next
-git pull
-```
-
-**If you want to update from v5.x / v7.x to the latest version, read [this][docs-upgrade-url].**
-
-## Community
-
-Connect with us and be part of our growing community!
-
-* **Telegram Group (Chinese Language)**: [Click here to join!](https://t.me/theme_next_cn)
-* **Discord Server**: [Join our Discord!](https://discord.gg/qmkgkY3jaG)
-* **Gitter**: [Join our Gitter chats!][gitter-url]
-* **ChatGPT**: [NexT Mentor][gpt-url]
-
-## Feedback
-
-* Visit the [Awesome NexT][awesome-next-url] list to share plugins and tutorials with other users.
-* Join our [GitHub discussions][discussions-url].
-* [Add or improve translation][i18n-url] in few seconds.
-* Report a bug in [GitHub Issues][issues-bug-url].
-* Request a new feature on [GitHub][issues-feat-url].
-* Vote for [popular feature requests][feat-req-vote-url].
-
-## Contributing
-
-We welcome you to join the development of NexT. Please see [contributing document][contributing-document-url]. 🤗
-
-Also, we welcome Issue or PR to our [official-plugins][official-plugins-url].
-
-## Contributors
-
-[![Contributors][contributors-image]][contributors-url]
-
-## Thanks
-
-NexT send special thanks to these great services that sponsor our core infrastructure:
-
-<a href="https://github.com"><img height="40" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png"></a>
-
-> GitHub allows us to host the Git repository and run the test suite.
-
-<a href="https://www.netlify.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" height="40" srcset="https://www.netlify.com/v3/img/components/full-logo-dark.svg">
-    <source media="(prefers-color-scheme: light)" height="40" srcset="https://www.netlify.com/v3/img/components/full-logo-light.svg">
-    <img alt="Netlify Logo" height="40" src="https://www.netlify.com/v3/img/components/full-logo-light.svg">
-  </picture>
-</a>
-
-> Netlify allows us to distribute the documentation.
-
-<a href="https://crowdin.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" height="40" srcset="https://support.crowdin.com/assets/logos/core-logo/svg/crowdin-core-logo-cWhite.svg">
-    <source media="(prefers-color-scheme: light)" height="40" srcset="https://support.crowdin.com/assets/logos/core-logo/svg/crowdin-core-logo-cDark.svg">
-    <img alt="Netlify Logo" height="40" src="https://support.crowdin.com/assets/logos/core-logo/svg/crowdin-core-logo-cDark.svg">
-  </picture>
-</a>
-
-> Crowdin allows us to translate conveniently the documentation.
-
-<a href="https://cdnjs.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" height="40" srcset="https://raw.githubusercontent.com/cdnjs/brand/master/logo/source/light-brackets.svg">
-    <source media="(prefers-color-scheme: light)" height="40" srcset="https://raw.githubusercontent.com/cdnjs/brand/master/logo/source/dark-brackets.svg">
-    <img alt="CDNJS Logo" height="40" src="https://raw.githubusercontent.com/cdnjs/brand/master/logo/source/dark-brackets.svg">
-  </picture>
-</a>
-
-> Thanks CDNJS for providing public CDN service.
-
-[docs-installation-url]: https://theme-next.js.org/docs/getting-started/installation.html
-[docs-configuration-url]: https://theme-next.js.org/docs/getting-started/configuration.html
-[docs-custom-files-url]: https://theme-next.js.org/docs/advanced-settings/custom-files.html
-[docs-release-url]: https://github.com/next-theme/hexo-theme-next/releases
-[docs-upgrade-url]: https://theme-next.js.org/docs/getting-started/upgrade.html
-
-[awesome-next-url]: https://github.com/next-theme/awesome-next
-[discussions-url]: https://github.com/next-theme/hexo-theme-next/discussions
-[gitter-url]: https://app.gitter.im/#/room/#next:gitter.im
-[gpt-url]: https://chatgpt.com/g/g-68286c2fc1f48191aee3e87c94a89431-next-mentor
-[i18n-url]: https://crowdin.com/project/hexo-theme-next
-
-[issues-bug-url]: https://github.com/next-theme/hexo-theme-next/issues/new?assignees=&labels=Bug&template=bug-report.md
-[issues-feat-url]: https://github.com/next-theme/hexo-theme-next/issues/new?assignees=&labels=Feature+Request&template=feature-request.md
-[feat-req-vote-url]: https://github.com/next-theme/hexo-theme-next/issues?q=is%3Aopen+is%3Aissue+label%3A%22Feature+Request%22
-
-[contributing-document-url]: https://github.com/next-theme/hexo-theme-next/blob/master/.github/CONTRIBUTING.md
-[official-plugins-url]: https://github.com/next-theme
-[contributors-image]: https://raw.githubusercontent.com/next-theme/contributors/master/contributors.svg
-[contributors-url]: https://github.com/next-theme/hexo-theme-next/blob/master/docs/AUTHORS.md
+[AGPL-3.0](LICENSE.md) — 基于 NexT 主题构建，遵循其原始许可。
