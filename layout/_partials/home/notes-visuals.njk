@@ -44,6 +44,7 @@
       <div class="aether-nv-grid">
         {%- for v in visuals %}
           {%- set cover = v.cover or (v.photos and v.photos[0]) -%}
+          {%- if not cover %}{% continue %}{% endif %}
           <a class="aether-visual {% if cover %}has-bg{% else %}no-bg{% endif %}" href="{{ aether_post_url(v) }}"
              {%- if cover %} style="--cover: url('{{ url_for(cover) }}')" {% endif -%}>
             {%- if cover %}

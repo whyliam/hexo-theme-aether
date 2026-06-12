@@ -23,8 +23,7 @@ function isExplicitType(post, kind) {
 }
 
 function isVisualPost(post) {
-  return isExplicitType(post, 'visual')
-    || hasTaxonomy(post && post.categories, ['Travel & Visuals', 'Travel-Visuals']);
+  return isExplicitType(post, 'visual');
 }
 
 function isNotePost(post) {
@@ -63,9 +62,7 @@ function inferredSeriesName(post) {
   ) {
     return 'Obsidian Knowledge System';
   }
-  if (/2016.*设计年鉴|design-yearbook-of-2016/i.test(identity)) {
-    return '2016 设计年鉴';
-  }
+
   return null;
 }
 

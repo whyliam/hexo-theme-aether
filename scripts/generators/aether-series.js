@@ -42,14 +42,14 @@ hexo.extend.generator.register('aether-series', function(locals) {
   // Index page at /series/
   const seriesList = [];
   groups.forEach((items, name) => {
-    items.sort((a, b) => a.date - b.date);
-    const recent = items.slice(-3).reverse();
+    items.sort((a, b) => b.date - a.date);
+    const recent = items.slice(0, 3);
     seriesList.push({
       name,
       slug        : slugifySeries(name),
       count       : items.length,
-      latest_date : items[items.length - 1].date,
-      first_date  : items[0].date,
+      latest_date : items[0].date,
+      first_date  : items[items.length - 1].date,
       recent_posts: recent.map(p => ({
         title: p.title,
         path : p.path,
@@ -73,7 +73,7 @@ hexo.extend.generator.register('aether-series', function(locals) {
   // One page per series
   groups.forEach((items, name) => {
     const slug = slugifySeries(name);
-    items.sort((a, b) => a.date - b.date);
+    items.sort((a, b) => b.date - a.date);
 
     out.push({
       path  : `series/${slug}/index.html`,
