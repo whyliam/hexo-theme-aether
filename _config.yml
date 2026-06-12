@@ -679,7 +679,7 @@ comments:
   # Available values: tabs | buttons
   style: tabs
   # Choose a comment system to be displayed by default.
-  # Available values: disqus | disqusjs | livere | gitalk | utterances | isso
+  # Available values: disqus | disqusjs | livere | gitalk | utterances | isso | waline
   active:
   # Setting `true` means remembering the comment system selected by the visitor.
   storage: true
@@ -750,6 +750,23 @@ utterances:
 # Isso
 # For more information: https://isso-comments.de
 isso: # <data_isso>
+
+# Waline
+# For more information: https://waline.js.org
+waline:
+  enable: false
+  serverURL: # Waline server URL
+  # Available values: ['nick', 'mail', 'link'] | false
+  meta:
+    - nick
+    - mail
+    - link
+  requiredMeta:
+    - nick
+  login: enable
+  wordLimit: 0
+  pageSize: 10
+  dark: auto
 
 
 # ---------------------------------------------------------------
