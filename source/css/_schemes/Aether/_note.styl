@@ -1,0 +1,358 @@
+// Aether — short note detail
+// Social-post rhythm for type: note. Regular essays keep the editorial layout.
+// Detail page: lightweight topbar + centered card, no full header/footer/sidebar.
+
+body.aether-note-page-body {
+  .main-inner {
+    max-width: 640px;
+    padding-top: 24px;
+  }
+
+  .main {
+    max-width: 760px;
+    padding-top: 56px;
+  }
+
+  .footer {
+    display: none;
+  }
+
+  .headband {
+    display: none;
+  }
+
+  .header {
+    display: none;
+  }
+
+  .aether-reading-progress {
+    display: none;
+  }
+
+  // Lightweight topbar
+  .aether-note-topbar {
+    align-items: center;
+    display: flex;
+    height: 52px;
+    justify-content: space-between;
+    max-width: 640px;
+    padding: 0 24px;
+    margin: 0 auto;
+  }
+
+  .aether-note-topbar__left {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+  }
+
+  .aether-note-topbar__back {
+    align-items: center;
+    border-radius: 999px;
+    color: var(--aether-muted);
+    display: inline-flex;
+    height: 36px;
+    justify-content: center;
+    transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+    width: 36px;
+
+    &:hover {
+      background: var(--aether-accent-tint);
+      color: var(--aether-accent);
+    }
+  }
+
+  .aether-note-topbar__label {
+    color: var(--aether-muted);
+    font-family: var(--aether-ff-sans);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--aether-ink);
+    }
+  }
+
+  // Centered card canvas
+  .aether-note-canvas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.post-block.aether-note-detail {
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.aether-note-detail .aether-note-header {
+  border-bottom: 0;
+  margin: 0;
+  padding: 24px 24px 0;
+}
+
+.aether-note-identity {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.aether-note-avatar {
+  align-items: center;
+  background: var(--aether-accent);
+  border-radius: 50%;
+  color: var(--aether-paper);
+  display: inline-flex;
+  flex: 0 0 44px;
+  font-family: var(--aether-ff-sans);
+  font-size: 17px;
+  font-weight: 650;
+  height: 44px;
+  justify-content: center;
+  overflow: hidden;
+  width: 44px;
+
+  img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+}
+
+.aether-note-author {
+  min-width: 0;
+
+  strong {
+    color: var(--aether-ink);
+    display: block;
+    font-family: var(--aether-ff-sans);
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+}
+
+.aether-note-meta {
+  align-items: center;
+  color: var(--aether-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--aether-ff-sans);
+  font-size: 12px;
+  gap: 6px;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.aether-note-permalink {
+  align-items: center;
+  border-radius: 50%;
+  color: var(--aether-muted);
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  margin-left: auto;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+  width: 36px;
+
+  &:hover {
+    background: var(--aether-accent-tint);
+    color: var(--aether-accent);
+  }
+}
+
+.aether-note-title {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.posts-expand .aether-note-detail .post-body {
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-sans);
+  font-size: 17px;
+  letter-spacing: -.004em;
+  line-height: 1.62;
+  overflow-wrap: anywhere;
+  padding: 18px 24px 14px 80px;
+  text-align: left !important;
+
+  p {
+    margin: 0 0 1em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  blockquote {
+    background: transparent;
+    border-left: 2px solid var(--aether-rule-2);
+    border-radius: 0;
+    font-style: normal;
+    margin: 18px 0;
+    padding: 0 0 0 16px;
+  }
+
+  a:not(.btn) {
+    color: var(--aether-accent);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.aether-note-detail .post-footer {
+  margin: 0;
+  padding: 0 24px 0 80px;
+}
+
+.aether-note-footer {
+  margin: 0;
+}
+
+.aether-note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0 0 16px;
+  text-align: left;
+
+  a {
+    background: var(--aether-paper-tint);
+    border: 0;
+    border-radius: 999px;
+    color: var(--aether-muted-deep);
+    font-family: var(--aether-ff-sans);
+    font-size: 12px;
+    letter-spacing: 0;
+    margin: 0;
+    padding: 5px 10px;
+
+    &:hover {
+      background: var(--aether-accent-tint);
+      color: var(--aether-accent);
+    }
+  }
+}
+
+.aether-note-actions {
+  align-items: center;
+  border-top: 1px solid var(--aether-rule);
+  display: flex;
+  gap: 8px;
+  min-height: 52px;
+}
+
+.aether-note-action {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--aether-muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--aether-ff-sans);
+  font-size: 13px;
+  gap: 7px;
+  min-height: 36px;
+  padding: 7px 10px;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+
+  &:hover {
+    background: var(--aether-accent-tint);
+    color: var(--aether-accent);
+  }
+
+  i {
+    font-size: 14px;
+  }
+
+  &.is-copied {
+    color: var(--aether-accent);
+  }
+}
+
+.aether-comments-anchor {
+  display: block;
+  position: relative;
+  top: -88px;
+  visibility: hidden;
+}
+
+body.aether-note-page-body .comments {
+  border-top: 1px solid var(--aether-rule);
+  margin-top: 36px;
+  padding-top: 32px;
+}
+
+// Series nav inside note pages
+body.aether-note-page-body .aether-series-nav {
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  body.aether-note-page-body .main {
+    padding: 16px 14px 0;
+  }
+
+  body.aether-note-page-body .main-inner {
+    padding-top: 8px;
+  }
+
+  .aether-note-topbar {
+    padding: 0 16px;
+  }
+
+  .post-block.aether-note-detail {
+    border-radius: 10px;
+  }
+
+  .aether-note-detail .aether-note-header {
+    padding: 18px 18px 0;
+  }
+
+  .aether-note-avatar {
+    flex-basis: 40px;
+    height: 40px;
+    width: 40px;
+  }
+
+  .posts-expand .aether-note-detail .post-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 16px 18px 12px 70px;
+  }
+
+  .aether-note-detail .post-footer {
+    padding: 0 18px 0 70px;
+  }
+}
+
+@media (max-width: 420px) {
+  .posts-expand .aether-note-detail .post-body, .aether-note-detail .post-footer {
+    padding-left: 18px;
+  }
+
+  .aether-note-topbar__label {
+    display: none;
+  }
+}

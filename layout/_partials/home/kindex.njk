@@ -3,7 +3,7 @@
 {%- if items and items.length %}
 <section class="aether-section" id="aether-kindex">
   <div class="aether-sec-label">
-    {%- set parts = (cfg.section_label or '03 / 知识地图').split('/') -%}
+    {%- set parts = (cfg and cfg.section_label or '03 / 知识地图').split('/') -%}
     <span class="num">{{ parts[0] | trim }}</span>
     {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
   </div>

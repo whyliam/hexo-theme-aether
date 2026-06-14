@@ -1,8 +1,11 @@
 {%- if page.comments %}
-  {%- if theme.injects.comment.length == 1 %}
+  {%- if theme.scheme === 'Aether' and page.type === 'note' %}
+    <span class="aether-comments-anchor" id="comments" aria-hidden="true"></span>
+  {%- endif %}
+  {%- if theme.injects and theme.injects.comment.length == 1 %}
     {%- set inject_item = theme.injects.comment[0] %}
     {{ partial(inject_item.layout, inject_item.locals, inject_item.options) }}
-  {%- elif theme.injects.comment.length > 1 %}
+  {%- elif theme.injects and theme.injects.comment.length > 1 %}
     {%- if theme.comments.style == 'buttons' %}
       <div class="comment-button-group">
         {%- for inject_item in theme.injects.comment %}

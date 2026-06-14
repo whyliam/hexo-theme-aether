@@ -3,7 +3,7 @@
 {%- if items and items.length %}
 <section class="aether-section aether-paths-wrap" id="aether-paths" data-aether-reveal>
   <div class="aether-sec-label">
-    {%- set parts = (cfg.section_label or '03 / 阅读路径').split('/') -%}
+    {%- set parts = (cfg and cfg.section_label or '03 / 阅读路径').split('/') -%}
     <span class="num">{{ parts[0] | trim }}</span>
     {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
   </div>

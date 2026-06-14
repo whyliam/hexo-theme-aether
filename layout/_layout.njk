@@ -5,7 +5,9 @@
   {%- include '_partials/head/head-unique.njk' -%}
   <title>{% block title %}{% endblock %}</title>
   {{ partial('_third-party/analytics/index.njk', {}, {cache: theme.cache.enable}) }}
+  {%- if not (theme.scheme === 'Aether' and page.type === 'note') %}
   {{ partial('_scripts/index.njk', {}, {cache: theme.cache.enable}) }}
+  {%- endif %}
   {{ partial('_third-party/index.njk', {}, {cache: theme.cache.enable}) }}
   {{ partial('_third-party/statistics/index.njk', {}, {cache: theme.cache.enable}) }}
   {%- include '_third-party/math/index.njk' -%}
@@ -16,10 +18,29 @@
   </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}{% if theme.scheme === 'Aether' %} data-aether{% endif %}>
+<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable or (theme.scheme === 'Aether' and page.type === 'note') %} class="{% if theme.motion.enable %}use-motion{% endif %}{% if theme.scheme === 'Aether' and page.type === 'note' %}{% if theme.motion.enable %} {% endif %}aether-note-page-body{% endif %}"{% endif %}{% if theme.scheme === 'Aether' %} data-aether{% endif %}>
+{%- if theme.scheme === 'Aether' and page.type === 'note' %}
+  {#- 短札页：轻量 chrome — 无完整 header/footer/sidebar -#}
+  <header class="aether-note-topbar">
+    <div class="aether-note-topbar__left">
+      <a class="aether-note-topbar__back" href="{{ url_for('/') }}" aria-label="返回首页">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </a>
+      <a class="aether-note-topbar__label" href="{{ url_for('/categories/Notes-Essays/') }}">短札</a>
+    </div>
+    <button class="aether-dark-toggle" type="button" aria-label="切换深色模式">☾</button>
+  </header>
+
+  <main class="main aether-note-canvas">
+    <div class="main-inner {% block class %}{% endblock %}">
+      {% block content %}{% endblock %}
+      {%- include '_partials/comments.njk' -%}
+    </div>
+  </main>
+{% else %}
   <div class="headband"></div>
 
-  {%- if theme.scheme === 'Aether' and theme.aether and theme.aether.reading_progress %}
+  {%- if theme.scheme === 'Aether' and theme.aether and theme.aether.reading_progress and page.type !== 'note' %}
   <div class="aether-reading-progress" aria-hidden="true"><span></span></div>
   {%- endif %}
 
@@ -107,11 +128,13 @@
   </footer>
 
   {{ partial('_partials/widgets.njk', {}, {cache: theme.cache.enable}) }}
+{% endif %}
 
   {%- if theme.scheme === 'Aether' -%}
     {%- include '_partials/cmdk.njk' -%}
   {%- endif -%}
 
+  {{ partial('_scripts/index.njk', {}, {cache: theme.cache.enable}) }}
   {{- next_inject('bodyEnd') }}
 </body>
 </html>

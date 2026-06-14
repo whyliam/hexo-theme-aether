@@ -70,7 +70,7 @@ describe('aether-cmdk-index', () => {
     data.entries.find(e => e.title === 'P').kind.should.equal('post');
   });
 
-  it('classifies category-inferred visuals', () => {
+  it('keeps category-only posts as regular posts', () => {
     const posts = [
       {
         title     : 'Paris',
@@ -81,7 +81,7 @@ describe('aether-cmdk-index', () => {
     ];
     const result = run(makeLocals(posts));
     const data = JSON.parse(result[0].data);
-    data.entries.find(e => e.title === 'Paris').kind.should.equal('visual');
+    data.entries.find(e => e.title === 'Paris').kind.should.equal('post');
   });
 
   it('includes series entries', () => {

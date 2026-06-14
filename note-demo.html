@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aether 短札详情页 Demo</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --aether-paper:       #faf8f3;
+  --aether-paper-tint:  #f4f0e8;
+  --aether-surface:     #ffffff;
+  --aether-surface-2:   #f6f1e6;
+  --aether-ink:         #181818;
+  --aether-muted:       #6b6660;
+  --aether-muted-light: #9a9590;
+  --aether-muted-deep:  #4a4640;
+  --aether-rule:        #e7e1d3;
+  --aether-rule-2:      #d6cfbe;
+  --aether-accent:      #2a3a6b;
+  --aether-accent-hover:#3a4e8a;
+  --aether-accent-tint: #eef0f7;
+  --aether-ff-sans:     'Geist', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --aether-ease:        cubic-bezier(.2,.7,.2,1);
+  --aether-fast:        120ms;
+}
+
+[data-color-scheme='dark'] {
+  --aether-paper:       #141416;
+  --aether-paper-tint:  #1a1a1e;
+  --aether-surface:     #1c1c20;
+  --aether-surface-2:   #26262c;
+  --aether-ink:         #ece8e0;
+  --aether-muted:       #8a8580;
+  --aether-muted-deep:  #aaa5a0;
+  --aether-rule:        #2e2e34;
+  --aether-rule-2:      #3a3a42;
+  --aether-accent:      #7b8fc7;
+  --aether-accent-tint: #1e2638;
+}
+
+body {
+  background: var(--aether-paper);
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background 200ms, color 200ms;
+}
+
+/* ── Topbar ── */
+.aether-note-topbar {
+  align-items: center;
+  display: flex;
+  height: 52px;
+  justify-content: space-between;
+  max-width: 640px;
+  padding: 0 24px;
+  margin: 0 auto;
+}
+.aether-note-topbar__left {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+}
+.aether-note-topbar__back {
+  align-items: center;
+  border-radius: 999px;
+  color: var(--aether-muted);
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+  width: 36px;
+}
+.aether-note-topbar__back:hover {
+  background: var(--aether-accent-tint);
+  color: var(--aether-accent);
+}
+.aether-note-topbar__label {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.aether-note-topbar__label:hover {
+  color: var(--aether-ink);
+}
+.dark-toggle {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--aether-rule);
+  border-radius: 999px;
+  color: var(--aether-muted);
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+  font-size: 16px;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+}
+.dark-toggle:hover {
+  background: var(--aether-accent-tint);
+  color: var(--aether-accent);
+}
+
+/* ── Canvas ── */
+.aether-note-canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  padding-top: 24px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+.main-inner {
+  max-width: 640px;
+  width: 100%;
+  padding: 0 24px;
+}
+
+/* ── Note Card ── */
+.post-block.aether-note-detail {
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.aether-note-detail .aether-note-header {
+  border-bottom: 0;
+  margin: 0;
+  padding: 24px 24px 0;
+}
+.aether-note-identity {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+.aether-note-avatar {
+  align-items: center;
+  background: var(--aether-accent);
+  border-radius: 50%;
+  color: var(--aether-paper);
+  display: inline-flex;
+  flex: 0 0 44px;
+  font-size: 17px;
+  font-weight: 650;
+  height: 44px;
+  justify-content: center;
+  overflow: hidden;
+  width: 44px;
+}
+.aether-note-avatar img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+.aether-note-author strong {
+  color: var(--aether-ink);
+  display: block;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.aether-note-meta {
+  align-items: center;
+  color: var(--aether-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 12px;
+  gap: 6px;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+.aether-note-permalink {
+  align-items: center;
+  border-radius: 50%;
+  color: var(--aether-muted);
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  margin-left: auto;
+  text-decoration: none;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+  width: 36px;
+}
+.aether-note-permalink:hover {
+  background: var(--aether-accent-tint);
+  color: var(--aether-accent);
+}
+.aether-note-title {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ── Body ── */
+.post-body {
+  color: var(--aether-ink);
+  font-family: var(--aether-ff-sans);
+  font-size: 17px;
+  letter-spacing: -.004em;
+  line-height: 1.62;
+  overflow-wrap: anywhere;
+  padding: 18px 24px 14px 24px;
+}
+.post-body p { margin: 0 0 1em; }
+.post-body p:last-child { margin-bottom: 0; }
+.post-body blockquote {
+  background: transparent;
+  border-left: 2px solid var(--aether-rule-2);
+  font-style: normal;
+  margin: 18px 0;
+  padding: 0 0 0 16px;
+  color: var(--aether-muted-deep);
+}
+.post-body a:not(.btn) {
+  color: var(--aether-accent);
+  text-decoration: none;
+}
+.post-body a:not(.btn):hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Footer ── */
+.post-footer {
+  margin: 0;
+  padding: 0 24px 0;
+}
+.aether-note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 0 16px;
+}
+.aether-note-tags a {
+  background: var(--aether-paper-tint);
+  border-radius: 999px;
+  color: var(--aether-muted-deep);
+  font-size: 12px;
+  padding: 5px 10px;
+  text-decoration: none;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+}
+.aether-note-tags a:hover {
+  background: var(--aether-accent-tint);
+  color: var(--aether-accent);
+}
+.aether-note-actions {
+  align-items: center;
+  border-top: 1px solid var(--aether-rule);
+  display: flex;
+  gap: 8px;
+  min-height: 52px;
+}
+.aether-note-action {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--aether-muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  gap: 7px;
+  min-height: 36px;
+  padding: 7px 10px;
+  transition: background-color var(--aether-fast) var(--aether-ease), color var(--aether-fast) var(--aether-ease);
+}
+.aether-note-action:hover {
+  background: var(--aether-accent-tint);
+  color: var(--aether-accent);
+}
+.aether-note-action.is-copied {
+  color: var(--aether-accent);
+}
+
+/* ── Series Nav ── */
+.aether-series-nav {
+  margin-top: 40px;
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: 14px;
+  overflow: hidden;
+  width: 100%;
+}
+.aether-series-nav__head {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--aether-rule);
+}
+.aether-series-nav__eyebrow {
+  font-size: 11px;
+  font-family: var(--aether-ff-sans);
+  letter-spacing: .04em;
+  color: var(--aether-muted-light);
+  text-transform: uppercase;
+}
+.aether-series-nav__title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.aether-series-nav__title a {
+  color: var(--aether-accent);
+  text-decoration: none;
+}
+.aether-series-nav__progress {
+  height: 3px;
+  background: var(--aether-paper-tint);
+  border-radius: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+.aether-series-nav__bar {
+  display: block;
+  height: 100%;
+  background: var(--aether-accent);
+  border-radius: 3px;
+}
+.aether-series-nav__cards {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+}
+.aether-series-nav__card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--aether-rule);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color var(--aether-fast) var(--aether-ease);
+}
+.aether-series-nav__card:hover {
+  border-color: var(--aether-accent);
+}
+.aether-series-nav__label {
+  font-size: 11px;
+  color: var(--aether-muted);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.aether-series-nav__post-title {
+  font-size: 13px;
+  color: var(--aether-ink);
+  line-height: 1.4;
+}
+.aether-series-nav__card.is-disabled {
+  opacity: .4;
+  border-style: dashed;
+}
+
+/* ── Comparison ── */
+.comparison-toggle {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 13px;
+  color: var(--aether-muted);
+}
+.comparison-toggle a {
+  color: var(--aether-accent);
+  text-decoration: none;
+  margin: 0 12px;
+}
+.comparison-toggle a:hover {
+  text-decoration: underline;
+}
+.comparison-note { display: block; }
+.comparison-blog { display: none; }
+body.show-blog .comparison-note { display: none; }
+body.show-blog .comparison-blog { display: block; }
+
+/* ── Blog-style (old) for comparison ── */
+.blog-header {
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: 14px;
+  padding: 32px 28px;
+  margin-bottom: 20px;
+}
+.blog-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.blog-meta {
+  font-size: 13px;
+  color: var(--aether-muted);
+  display: flex;
+  gap: 16px;
+}
+.blog-body {
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: 14px;
+  padding: 28px;
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.blog-footer {
+  background: var(--aether-surface);
+  border: 1px solid var(--aether-rule);
+  border-radius: 14px;
+  padding: 20px 28px;
+}
+.blog-footer .post-nav {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.blog-footer .post-nav a {
+  color: var(--aether-accent);
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+<div class="comparison-toggle">
+  <a href="#" id="toggle-view" onclick="event.preventDefault(); toggleView();">
+    切换视图：短札卡片 ↔ 旧博客样式
+  </a>
+</div>
+
+<!-- ═══ New: Social Note Card ═══ -->
+<div class="comparison-note">
+  <header class="aether-note-topbar">
+    <div class="aether-note-topbar__left">
+      <a class="aether-note-topbar__back" href="#" aria-label="返回首页">←</a>
+      <a class="aether-note-topbar__label" href="#">短札</a>
+    </div>
+    <button class="dark-toggle" type="button" onclick="toggleDark()" aria-label="切换深色模式">☾</button>
+  </header>
+
+  <div class="aether-note-canvas">
+    <div class="main-inner">
+      <div class="post-block aether-note-detail">
+        <article class="post-content aether-note-post">
+          <header class="post-header aether-note-header">
+            <div class="aether-note-identity">
+              <div class="aether-note-avatar" aria-hidden="true">
+                <span>L</span>
+              </div>
+              <div class="aether-note-author">
+                <strong>行权 · Liam</strong>
+                <div class="aether-note-meta">
+                  <time>2026-06-14 10:32</time>
+                  <span>·</span>
+                  <span>短札</span>
+                </div>
+              </div>
+              <a class="aether-note-permalink" href="#" aria-label="短札永久链接">🔗</a>
+            </div>
+            <h1 class="post-title aether-note-title" itemprop="name headline">看到 Karpathy 去 Anthropic 的消息</h1>
+          </header>
+
+          <div class="post-body">
+            <p>Karpathy 从 OpenAI 跳到 Anthropic 这事挺有意思的。感觉 AI 领域的顶尖人才正在形成新的格局——不是在大厂里做工程，而是去那些真正在 push 边界的地方。</p>
+            <p>Anthropic 的 Constitutional AI 路线确实比纯 RLHF 更有意思，至少在 safety 的叙事上比 "align or die" 更具体一些。</p>
+            <blockquote>对齐不是加个过滤器那么简单，而是要在训练时就嵌进去。</blockquote>
+            <p>个人也在想类似的事——做产品的 alignment 和做模型的 alignment 本质上是同一个问题，只是尺度不同。</p>
+          </div>
+
+          <footer class="post-footer">
+            <div class="aether-note-tags">
+              <a href="#">#AI</a>
+              <a href="#">#Anthropic</a>
+              <a href="#">#思考</a>
+            </div>
+
+            <div class="aether-note-actions" aria-label="短札操作">
+              <a href="#comments" class="aether-note-action">
+                <span>💬</span>
+                <span>评论</span>
+              </a>
+              <button type="button" class="aether-note-action" onclick="copyLink(this)" aria-label="复制短札链接">
+                <span>📋</span>
+                <span aria-live="polite">复制链接</span>
+              </button>
+            </div>
+          </footer>
+        </article>
+      </div>
+
+      <!-- Series Navigation -->
+      <aside class="aether-series-nav" aria-label="继续阅读本系列">
+        <div class="aether-series-nav__head">
+          <div class="aether-series-nav__eyebrow">继续这条路径 · 02 / 04</div>
+          <h2 class="aether-series-nav__title">
+            <a href="#">AI 行业观察</a>
+          </h2>
+          <div class="aether-series-nav__progress">
+            <span class="aether-series-nav__bar" style="width: 50%"></span>
+          </div>
+        </div>
+        <div class="aether-series-nav__cards">
+          <a class="aether-series-nav__card is-prev" href="#">
+            <span class="aether-series-nav__label">← 上一篇</span>
+            <span class="aether-series-nav__post-title">Claude Code 改变了我的开发习惯</span>
+          </a>
+          <a class="aether-series-nav__card is-next" href="#">
+            <span class="aether-series-nav__label">下一篇 →</span>
+            <span class="aether-series-nav__post-title">Agent 的 memory 架构到底在解决什么问题</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Old: Blog-style (for comparison) ═══ -->
+<div class="comparison-blog">
+  <div class="aether-note-canvas">
+    <div class="main-inner">
+      <div class="blog-header">
+        <h1>看到 Karpathy 去 Anthropic 的消息</h1>
+        <div class="blog-meta">
+          <span>📅 2026-06-14</span>
+          <span>📁 AI & Systems</span>
+          <span>⏱ 3 分钟</span>
+        </div>
+      </div>
+
+      <div class="blog-body">
+        <p>Karpathy 从 OpenAI 跳到 Anthropic 这事挺有意思的。感觉 AI 领域的顶尖人才正在形成新的格局——不是在大厂里做工程，而是去那些真正在 push 边界的地方。</p>
+        <p>Anthropic 的 Constitutional AI 路线确实比纯 RLHF 更有意思，至少在 safety 的叙事上比 "align or die" 更具体一些。</p>
+        <p>个人也在想类似的事——做产品的 alignment 和做模型的 alignment 本质上是同一个问题，只是尺度不同。</p>
+      </div>
+
+      <div class="blog-footer">
+        <div style="margin-bottom: 16px;">
+          <a href="#" style="margin-right: 8px;">#AI</a>
+          <a href="#" style="margin-right: 8px;">#Anthropic</a>
+          <a href="#">#思考</a>
+        </div>
+        <div class="post-nav">
+          <a href="#">← Claude Code 改变了我的开发习惯</a>
+          <a href="#">Agent 的 memory 架构到底在解决什么问题 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleView() {
+  document.body.classList.toggle('show-blog');
+  const isBlog = document.body.classList.contains('show-blog');
+  document.getElementById('toggle-view').textContent = isBlog
+    ? '切换视图：短札卡片 ← 旧博客样式'
+    : '切换视图：短札卡片 → 旧博客样式';
+}
+
+function toggleDark() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-color-scheme') || 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-color-scheme', next);
+  document.querySelector('.dark-toggle').textContent = next === 'dark' ? '☀' : '☾';
+}
+
+function copyLink(btn) {
+  const span = btn.querySelector('span:last-child');
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    span.textContent = '已复制';
+    btn.classList.add('is-copied');
+    setTimeout(() => {
+      span.textContent = '复制链接';
+      btn.classList.remove('is-copied');
+    }, 1600);
+  });
+}
+</script>
+</body>
+</html>

@@ -7,7 +7,7 @@
 {%- if has_series or has_projects %}
 <section class="aether-section" id="aether-series" data-aether-reveal>
   <div class="aether-sec-label">
-    {%- set parts = (cfg.section_label or '05 / 系列与项目').split('/') -%}
+    {%- set parts = (cfg and cfg.section_label or '05 / 系列与项目').split('/') -%}
     <span class="num">{{ parts[0] | trim }}</span>
     {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
   </div>

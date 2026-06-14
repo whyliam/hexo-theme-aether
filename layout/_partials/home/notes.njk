@@ -3,7 +3,7 @@
 {%- if notes and notes.length %}
 <section class="aether-section" id="aether-notes" data-aether-reveal>
   <div class="aether-sec-label">
-    {%- set parts = (cfg.section_label or '06 / 短札').split('/') -%}
+    {%- set parts = (cfg and cfg.section_label or '06 / 短札').split('/') -%}
     <span class="num">{{ parts[0] | trim }}</span>
     {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
   </div>

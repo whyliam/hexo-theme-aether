@@ -6,6 +6,15 @@
 {% block class %}page aether-series-page{% endblock %}
 
 {% block content %}
+  {%- if not page.series_posts or not page.series_posts.length %}
+  <article class="aether-series-detail">
+    <header class="aether-series-detail__hero">
+      <div class="aether-series-detail__eyebrow">系列 · 0 篇</div>
+      <h1 class="aether-series-detail__title">{{ page.series_name }}</h1>
+      <p class="aether-series-detail__lede">该系列暂无文章。</p>
+    </header>
+  </article>
+  {%- else %}
   <article class="aether-series-detail">
     <header class="aether-series-detail__hero">
       <div class="aether-series-detail__eyebrow">系列 · {{ page.series_posts.length }} 篇</div>
@@ -14,18 +23,18 @@
         <p class="aether-series-detail__lede">{{ page.description }}</p>
       {%- endif %}
 
-      {%- set first = page.series_posts[0] -%}
-      {%- set last = page.series_posts[page.series_posts.length - 1] -%}
+      {%- set latest = page.series_posts[0] -%}
+      {%- set first = page.series_posts[page.series_posts.length - 1] -%}
       <dl class="aether-series-detail__meta">
         <div><dt>起始</dt><dd>{{ aether_iso_date(first.date) }}</dd></div>
-        <div><dt>最近更新</dt><dd>{{ aether_iso_date(last.date) }}</dd></div>
+        <div><dt>最近更新</dt><dd>{{ aether_iso_date(latest.date) }}</dd></div>
         <div><dt>篇数</dt><dd>{{ page.series_posts.length }}</dd></div>
       </dl>
     </header>
 
     <section class="aether-series-detail__list">
       <div class="aether-series-detail__sec-label">
-        <span class="num">01</span><span class="sep">/</span><span>阅读顺序</span>
+        <span class="num">01</span><span class="sep">/</span><span>最新文章</span>
       </div>
 
       <ol class="aether-series-detail__posts">
@@ -51,6 +60,7 @@
       </ol>
     </section>
   </article>
+  {%- endif %}
 {% endblock %}
 
 {% block sidebar %}{% endblock %}

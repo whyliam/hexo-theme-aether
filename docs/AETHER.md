@@ -111,7 +111,7 @@ camera: Fujifilm X-T5
 ---
 ```
 
-未填写 `type` 时，分类为 `Travel & Visuals` 的文章也会进入影像页；显式 `type: visual` 始终优先。
+影像页只收录显式设置 `type: visual`（或 `layout: visual`）的文章，分类本身不会改变内容类型。
 
 ### 短札
 
@@ -358,7 +358,7 @@ theme_config:
 |---|---|---|
 | 系列索引 | `/series/` | 有显式 `series`，或命中稳定系列识别规则 |
 | 系列详情 | `/series/<slug>/` | 同上，每个系列一个页面 |
-| 影像页 | `/visuals/` | 有 `type: visual`，或分类为 `Travel & Visuals` |
+| 影像页 | `/visuals/` | 有 `type: visual` 或 `layout: visual` |
 | 搜索索引 | `/aether-search.json` | `cmdk.enable` 不为 false |
 
 ### 需要手动创建的页面

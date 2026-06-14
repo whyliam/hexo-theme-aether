@@ -1,7 +1,7 @@
 {
-  "name": "hexo-theme-next",
-  "version": "8.27.0",
-  "description": "Elegant and powerful theme for Hexo.",
+  "name": "hexo-theme-aether",
+  "version": "0.1.0",
+  "description": "Aether — an editorial, knowledge-archival Hexo theme.",
   "main": "package.json",
   "files": [
     "docs",
@@ -26,19 +26,19 @@
   "keywords": [
     "hexo",
     "theme",
-    "next"
+    "aether"
   ],
   "dependencies": {
     "css": "^3.0.0",
     "hexo-util": "^4.0.0",
     "js-yaml": "^4.1.1"
   },
-  "author": "NexT (https://theme-next.js.org)",
+  "author": "行权 · Liam",
   "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/next-theme/hexo-theme-next/issues"
   },
-  "homepage": "https://theme-next.js.org",
+  "homepage": "https://naaln.com",
   "devDependencies": {
     "@next-theme/eslint-config": "^0.0.5",
     "c8": "10.1.3",

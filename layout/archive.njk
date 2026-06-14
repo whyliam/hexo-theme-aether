@@ -10,7 +10,12 @@
   <section class="aether-archive-hero">
     <span class="aether-archive-label">写作</span>
     <h1 class="aether-archive-title">{{ site.posts.length }} 篇文章</h1>
-    <p class="aether-archive-desc">始于 {{ date(site.posts.sort('date').toArray()[0].date, 'YYYY') }}，记录至今。</p>
+    {%- set first_post = site.posts.sort('date').toArray()[0] %}
+    {%- if first_post %}
+    <p class="aether-archive-desc">始于 {{ date(first_post.date, 'YYYY') }}，记录至今。</p>
+    {%- else %}
+    <p class="aether-archive-desc">记录至今。</p>
+    {%- endif %}
   </section>
 
   {%- set current_year = '' %}

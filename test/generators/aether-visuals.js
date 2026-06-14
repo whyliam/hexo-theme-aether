@@ -92,7 +92,7 @@ describe('aether-visuals', () => {
   });
 
   it('returns empty when explicitly disabled', () => {
-    hexo.theme.config.aether = { visuals_page: { enable: false } };
+    hexo.theme.config.aether = { visuals: { enable: false } };
     const posts = [{ title: 'V', date: new Date('2026-06-01'), path: 'v/', type: 'visual' }];
     run(makeLocals(posts)).should.have.length(0);
     hexo.theme.config.aether = {};
@@ -116,7 +116,7 @@ describe('aether-visuals', () => {
     result[0].data.visual_posts[0].title.should.equal('LayoutVisual');
   });
 
-  it('uses Travel & Visuals category when type is absent', () => {
+  it('does not infer visual type from category', () => {
     const posts = [
       {
         title     : 'Paris',
@@ -126,6 +126,6 @@ describe('aether-visuals', () => {
       }
     ];
     const result = run(makeLocals(posts));
-    result[0].data.visual_posts[0].title.should.equal('Paris');
+    result.should.have.length(0);
   });
 });

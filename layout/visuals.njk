@@ -16,7 +16,7 @@
       {%- for v in page.visual_posts %}
         <a class="aether-visuals-archive__card" href="{{ url_for(v.path) }}">
           <span class="aether-visuals-archive__cover{% if v.cover %} has-bg{% endif %}"
-                {% if v.cover %}style="background-image: url('{{ v.cover }}');"{% endif %}></span>
+                {% if v.cover %}style="background-image: url('{{ url_for(v.cover) }}');"{% endif %}></span>
           <span class="aether-visuals-archive__meta">
             <span class="aether-visuals-archive__num">V-{{ v.index }}</span>
             <span class="aether-visuals-archive__date">{{ aether_iso_date(v.date) }}</span>

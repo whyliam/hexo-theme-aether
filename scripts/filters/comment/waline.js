@@ -16,12 +16,12 @@ module.exports = hexo => {
           el: '#waline',
           serverURL: '${config.waline.serverURL}',
           ${config.waline.locale ? `locale: ${JSON.stringify(config.waline.locale)},` : ''}
-          ${config.waline.dark ? `dark: '${config.waline.dark}',` : ''}
+          ${config.waline.dark !== undefined ? `dark: ${JSON.stringify(config.waline.dark)},` : ''}
           ${config.waline.meta ? `meta: ${JSON.stringify(config.waline.meta)},` : ''}
           ${config.waline.requiredMeta ? `requiredMeta: ${JSON.stringify(config.waline.requiredMeta)},` : ''}
-          ${config.waline.login ? `login: '${config.waline.login}',` : ''}
-          ${config.waline.wordLimit ? `wordLimit: ${config.waline.wordLimit},` : ''}
-          ${config.waline.pageSize ? `pageSize: ${config.waline.pageSize},` : ''}
+          ${config.waline.login !== undefined ? `login: ${JSON.stringify(config.waline.login)},` : ''}
+          ${config.waline.wordLimit !== undefined ? `wordLimit: ${JSON.stringify(config.waline.wordLimit)},` : ''}
+          ${config.waline.pageSize !== undefined ? `pageSize: ${JSON.stringify(config.waline.pageSize)},` : ''}
           ${config.waline.imageUploader !== undefined ? `imageUploader: ${config.waline.imageUploader},` : ''}
           ${config.waline.highlighter !== undefined ? `highlighter: ${config.waline.highlighter},` : ''}
           ${config.waline.texRenderer !== undefined ? `texRenderer: ${config.waline.texRenderer},` : ''}

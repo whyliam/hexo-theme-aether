@@ -1,6 +1,6 @@
 {%- include 'vendors.njk' -%}
 
-{%- if theme.injects.comment.length > 1 %}
+{%- if theme.injects and theme.injects.comment.length > 1 %}
   {{- next_js('comments.js') }}
 {%- endif %}
 

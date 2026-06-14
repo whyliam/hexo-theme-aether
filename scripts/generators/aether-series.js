@@ -5,7 +5,7 @@
  * For every distinct `post.series` value, generate a `/series/<slug>/`
  * page rendered with `layout/series.njk`. Each page receives:
  *   page.series_name   — the human-readable series name
- *   page.series_posts  — chronological list of posts in this series
+ *   page.series_posts  — reverse-chronological list of posts in this series
  *   page.title         — same as series_name (used by NexT head)
  *   page.layout        — 'series'
  */

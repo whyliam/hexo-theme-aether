@@ -123,6 +123,7 @@ describe('aether-series', () => {
     const seriesPage = result.find(r => r.layout === 'series');
     seriesPage.data.series_posts.should.have.length(2);
     seriesPage.data.series_posts[0].index.should.equal('01');
-    seriesPage.data.series_posts[0].title.should.equal('First');
+    seriesPage.data.series_posts[0].title.should.equal('Second');
+    seriesPage.data.series_posts[1].title.should.equal('First');
   });
 });

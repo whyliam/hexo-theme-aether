@@ -46,14 +46,8 @@
           {%- set cover = v.cover or (v.photos and v.photos[0]) -%}
           {%- if cover %}
           <a class="aether-visual has-bg" href="{{ aether_post_url(v) }}"
-             {%- if cover %} style="--cover: url('{{ url_for(cover) }}')" {% endif -%}>
-            {%- if cover %}
+             style="--cover: url('{{ url_for(cover) }}')">
             <div class="aether-v-img" style="background-image: url('{{ url_for(cover) }}'); background-size: cover; background-position: center;"></div>
-            {%- else %}
-            <div class="aether-v-img aether-v-placeholder">
-              <span>{{ (v.location or v.title) | truncate(20) }}</span>
-            </div>
-            {%- endif %}
             <div class="aether-v-meta">
               <span>{{ (v.location or v.title) | upper }}</span>
               <span>{{ date(v.date, 'YYYY-MM') }}</span>

@@ -1,11 +1,12 @@
 {##################}
 {### POST BLOCK ###}
 {##################}
-<div class="post-block">
+{%- set is_aether_note = theme.scheme === 'Aether' and post.type === 'note' and not is_index -%}
+<div class="post-block{% if is_aether_note %} aether-note-detail{% endif %}">
   {# Gallery support #}
   {{ post_gallery(post.photos) }}
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="{{ post.lang }}">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content{% if is_aether_note %} aether-note-post{% endif %}" lang="{{ post.lang }}">
     <link itemprop="mainEntityOfPage" href="{{ post.permalink }}">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -24,6 +25,33 @@
     </span>
 
     {%- if post.header !== false %}
+      {%- if is_aether_note %}
+      <header class="post-header aether-note-header">
+        <div class="aether-note-identity">
+          <div class="aether-note-avatar" aria-hidden="true">
+            {%- if theme.avatar and theme.avatar.url %}
+              <img src="{{ url_for(theme.avatar.url) }}" alt="">
+            {%- else %}
+              <span>{{ (author or title or 'A') | first }}</span>
+            {%- endif %}
+          </div>
+          <div class="aether-note-author">
+            <strong>{{ author }}</strong>
+            <div class="aether-note-meta">
+              <time title="{{ full_date(post.date) }}" itemprop="dateCreated datePublished" datetime="{{ moment(post.date).format() }}">
+                {{ date(post.date, 'YYYY-MM-DD HH:mm') }}
+              </time>
+              <span aria-hidden="true">·</span>
+              <span>短札</span>
+            </div>
+          </div>
+          <a class="aether-note-permalink" href="{{ post.permalink }}" aria-label="短札永久链接" title="短札永久链接">
+            <i class="fa fa-link" aria-hidden="true"></i>
+          </a>
+        </div>
+        <h1 class="post-title aether-note-title" itemprop="name headline">{{ post.title }}</h1>
+      </header>
+      {%- else %}
       <header class="post-header">
         <{% if is_index %}h2{% else %}h1{% endif %} class="post-title{% if post.direction and post.direction.toLowerCase() === 'rtl' %} rtl{% endif %}" itemprop="name headline">
           {# Link posts #}
@@ -57,6 +85,7 @@
           {%- endif %}
         </div>
       </header>
+      {%- endif %}
     {%- endif %}
 
     {#################}
@@ -105,48 +134,73 @@
       {% else %}
         {{- next_inject('postBodyEnd') }}
 
-        {%- if post.reward_settings.enable %}
-          {{ partial('_partials/post/post-reward.njk') }}
-        {%- endif %}
+        {%- if is_aether_note %}
+          <div class="aether-note-footer">
+            {%- if post.tags and post.tags.length %}
+              <div class="post-tags aether-note-tags">
+                {%- for tag in post.tags.toArray() %}
+                  <a href="{{ url_for(tag.path) }}" rel="tag">#{{ tag.name }}</a>
+                {%- endfor %}
+              </div>
+            {%- endif %}
 
-        {%- if theme.creative_commons.license and theme.creative_commons.post and post.copyright !== false %}
-          {{ partial('_partials/post/post-copyright.njk') }}
-        {%- endif %}
-
-        {%- if theme.follow_me %}
-          {{ partial('_partials/post/post-followme.njk', {}, {cache: theme.cache.enable}) }}
-        {%- endif %}
-
-        {%- if post.tags and post.tags.length %}
-          {%- set tag_indicate = '<i class="fa fa-tag"></i>' if theme.tag_icon else '#' %}
-          <div class="post-tags">
-            {%- for tag in post.tags.toArray() %}
-              <a href="{{ url_for(tag.path) }}" rel="tag">{{ tag_indicate }} {{ tag.name }}</a>
-            {%- endfor %}
-          </div>
-        {%- endif %}
-
-        {{ partial('_partials/post/post-share.njk', {}, {cache: theme.cache.enable}) }}
-
-        {%- if theme.post_navigation and (post.prev or post.next) %}
-          {%- set prev = post.prev if theme.post_navigation === 'right' else post.next %}
-          {%- set next = post.next if theme.post_navigation === 'right' else post.prev %}
-          <div class="post-nav">
-            <div class="post-nav-item">
-              {%- if prev %}
-                <a href="{{ url_for(prev.path) }}" rel="prev" title="{{ escape_html('' + (prev.title or '')) }}">
-                  <i class="fa fa-angle-left"></i> {{ prev.title }}
+            <div class="aether-note-actions" aria-label="短札操作">
+              {%- if post.comments %}
+                <a href="#comments" class="aether-note-action">
+                  <i class="far fa-comment" aria-hidden="true"></i>
+                  <span>评论</span>
                 </a>
               {%- endif %}
-            </div>
-            <div class="post-nav-item">
-              {%- if next %}
-                <a href="{{ url_for(next.path) }}" rel="next" title="{{ escape_html('' + (next.title or '')) }}">
-                  {{ next.title }} <i class="fa fa-angle-right"></i>
-                </a>
-              {%- endif %}
+              <button type="button" class="aether-note-action" data-aether-note-copy data-copy-url="{{ post.permalink }}" aria-label="复制短札链接">
+                <i class="far fa-copy" aria-hidden="true"></i>
+                <span aria-live="polite">复制链接</span>
+              </button>
             </div>
           </div>
+        {%- else %}
+          {%- if post.reward_settings.enable %}
+            {{ partial('_partials/post/post-reward.njk') }}
+          {%- endif %}
+
+          {%- if theme.creative_commons.license and theme.creative_commons.post and post.copyright !== false %}
+            {{ partial('_partials/post/post-copyright.njk') }}
+          {%- endif %}
+
+          {%- if theme.follow_me %}
+            {{ partial('_partials/post/post-followme.njk', {}, {cache: theme.cache.enable}) }}
+          {%- endif %}
+
+          {%- if post.tags and post.tags.length %}
+            {%- set tag_indicate = '<i class="fa fa-tag"></i>' if theme.tag_icon else '#' %}
+            <div class="post-tags">
+              {%- for tag in post.tags.toArray() %}
+                <a href="{{ url_for(tag.path) }}" rel="tag">{{ tag_indicate }} {{ tag.name }}</a>
+              {%- endfor %}
+            </div>
+          {%- endif %}
+
+          {{ partial('_partials/post/post-share.njk', {}, {cache: theme.cache.enable}) }}
+
+          {%- if theme.post_navigation and (post.prev or post.next) %}
+            {%- set prev = post.prev if theme.post_navigation === 'right' else post.next %}
+            {%- set next = post.next if theme.post_navigation === 'right' else post.prev %}
+            <div class="post-nav">
+              <div class="post-nav-item">
+                {%- if prev %}
+                  <a href="{{ url_for(prev.path) }}" rel="prev" title="{{ escape_html('' + (prev.title or '')) }}">
+                    <i class="fa fa-angle-left"></i> {{ prev.title }}
+                  </a>
+                {%- endif %}
+              </div>
+              <div class="post-nav-item">
+                {%- if next %}
+                  <a href="{{ url_for(next.path) }}" rel="next" title="{{ escape_html('' + (next.title or '')) }}">
+                    {{ next.title }} <i class="fa fa-angle-right"></i>
+                  </a>
+                {%- endif %}
+              </div>
+            </div>
+          {%- endif %}
         {%- endif %}
 
       {%- endif %}

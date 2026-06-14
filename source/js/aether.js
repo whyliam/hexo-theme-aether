@@ -6,6 +6,7 @@
  * 4. Scroll reveal — IntersectionObserver fade-up for sections
  * 5. Hero entrance choreography — staggered cascade
  * 6. Dark mode toggle + localStorage persistence
+ * 7. Short-note actions
  */
 (function () {
   'use strict';
@@ -33,15 +34,10 @@
     compute();
   }
 
-  // ── 2. ⌘K fallback ──
+  // ── 2. ⌘K fallback (no-op — Cmd+K module handles search; only show a toast if absent) ──
   function setupCmdKFallback() {
     if (document.getElementById('aether-cmdk')) return;
-    document.addEventListener('keydown', (e) => {
-      if ((e.key || '').toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        window.location.href = '/search/';
-      }
-    });
+    // Cmd+K module is optional; if absent, do nothing rather than redirect to a non-existent /search/
   }
 
   // ── 3. Header scroll ──
@@ -137,6 +133,50 @@
     });
   }
 
+  // ── 7. Short-note actions ──
+  function setupNoteActions() {
+    $$('[data-aether-note-copy]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const label = $('span', button);
+        const original = label ? label.textContent : '';
+        const originalAriaLabel = button.getAttribute('aria-label');
+        const text = button.dataset.copyUrl || window.location.href;
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const input = document.createElement('textarea');
+            input.value = text;
+            input.setAttribute('readonly', '');
+            input.style.position = 'fixed';
+            input.style.opacity = '0';
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            input.remove();
+          }
+
+          if (label) label.textContent = '已复制';
+          button.setAttribute('aria-label', '短札链接已复制');
+          button.classList.add('is-copied');
+          window.setTimeout(() => {
+            if (label) label.textContent = original;
+            if (originalAriaLabel) button.setAttribute('aria-label', originalAriaLabel);
+            button.classList.remove('is-copied');
+          }, 1600);
+        } catch {
+          if (label) label.textContent = '复制失败';
+          button.setAttribute('aria-label', '短札链接复制失败');
+          window.setTimeout(() => {
+            if (label) label.textContent = original;
+            if (originalAriaLabel) button.setAttribute('aria-label', originalAriaLabel);
+          }, 1600);
+        }
+      });
+    });
+  }
+
   onReady(() => {
     setupReadingProgress();
     setupCmdKFallback();
@@ -144,5 +184,6 @@
     setupScrollReveal();
     setupHeroEntrance();
     setupDarkMode();
+    setupNoteActions();
   });
 })();

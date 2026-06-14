@@ -15,7 +15,7 @@ hexo.extend.generator.register('aether-visuals', function(locals) {
   if (scheme !== 'Aether') return [];
 
   const aether = hexo.theme.config && hexo.theme.config.aether;
-  if (aether && aether.visuals_page && aether.visuals_page.enable === false) return [];
+  if (aether && aether.visuals && aether.visuals.enable === false) return [];
 
   const posts = locals.posts.toArray().filter(isVisualPost);
   if (!posts.length) return [];

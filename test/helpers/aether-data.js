@@ -141,7 +141,7 @@ describe('aether-data', () => {
       callHelper('aether_visuals', [], ctx).should.have.length(5);
     });
 
-    it('uses Travel & Visuals category when type is absent', () => {
+    it('does not infer visual type from category', () => {
       const posts = [
         {
           title     : 'Paris',
@@ -151,7 +151,7 @@ describe('aether-data', () => {
         }
       ];
       const ctx = baseCtx(posts);
-      callHelper('aether_visuals', [], ctx)[0].title.should.equal('Paris');
+      callHelper('aether_visuals', [], ctx).should.have.length(0);
     });
   });
 
