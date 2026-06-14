@@ -121,7 +121,7 @@ title: 关于 Context Window 的一个直觉
 date: 2026-06-08
 type: note
 categories:
-  - Notes & Essays
+  - Notes & Reflections
 ---
 ```
 
@@ -226,7 +226,7 @@ theme_config:
           limit: 3
         - intent: 理解长期写作与知识系统
           description: 知识管理、写作方法与 Obsidian 实践
-          category: 'Notes & Essays'
+          category: 'Notes & Reflections'
           limit: 3
 ```
 
@@ -426,7 +426,7 @@ Aether 建议一级分类不超过 4 个：
 ```
 AI & Systems           — AI、工具与系统
 Product & Intelligence — 产品、数据与判断
-Notes & Essays         — 札记、随笔与复盘
+Notes & Reflections    — 札记、随笔与复盘
 Travel & Visuals       — 旅行、摄影与观看
 ```
 

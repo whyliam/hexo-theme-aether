@@ -28,8 +28,8 @@ const stripTags = (html = '') => String(html).replace(/<[^>]*>/g, ' ').replace(/
 const CAT_ZH = {
   'AI & Systems'          : 'AI 与系统',
   'AI-Systems'            : 'AI 与系统',
-  'Notes & Essays'        : '笔记与随笔',
-  'Notes-Essays'          : '笔记与随笔',
+  'Notes & Reflections'   : '笔记与随笔',
+  'Notes-Reflections'     : '笔记与随笔',
   'Product & Intelligence': '产品与判断',
   'Product-Intelligence'  : '产品与判断',
   'Travel & Visuals'      : '旅行与影像',

@@ -982,7 +982,7 @@ aether:
           url: '/categories/AI-Systems/'
         - title: 'Obsidian 知识系统'
           subtitle: '把笔记从仓库升级为思考工具'
-          url: '/categories/Notes-Essays/'
+          url: '/categories/Notes-Reflections/'
         - title: 'Aether Blog Theme'
           subtitle: '个人知识档案馆的版式实验'
           url: '/categories/Product-Intelligence/'
@@ -1019,7 +1019,7 @@ aether:
       - intent: '如果你想了解我怎么管理知识'
         description: 'Obsidian、长期写作系统、个人行动框架。'
         posts: []
-        category: 'Notes & Essays'
+        category: 'Notes & Reflections'
         limit: 3
   # Latest writing (chronological list)
   latest:

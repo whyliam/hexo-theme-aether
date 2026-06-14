@@ -255,7 +255,7 @@ describe('aether-data', () => {
         { name : 'AI & Systems', count: 50, posts: [
           { title: 'P1', date: new Date('2026-06-01'), description: 'Desc' }
         ] },
-        { name : 'Notes & Essays', count: 30, posts: [
+        { name : 'Notes & Reflections', count: 30, posts: [
           { title: 'P2', date: new Date('2026-05-01') }
         ] }
       ];
