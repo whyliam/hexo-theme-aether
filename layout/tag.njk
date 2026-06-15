@@ -24,9 +24,6 @@
     {%- endif %}
     <article class="aether-archive-item">
       <time class="aether-archive-date" datetime="{{ moment(post.date).format() }}">{{ date(post.date, 'MM-DD') }}</time>
-      {%- if post.categories and post.categories.length %}
-      <span class="aether-archive-cat">{{ post.categories.toArray()[0].name }}</span>
-      {%- endif %}
       <a class="aether-archive-link" href="{{ url_for(post.path) }}">{{ post.title or __('post.untitled') }}</a>
     </article>
   {%- endfor %}

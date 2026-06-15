@@ -38,9 +38,6 @@
         {%- if post.categories and post.categories.length %}
         <span class="aether-archive-cat">{{ post.categories.toArray()[0].name }}</span>
         {%- endif %}
-        {%- if post.tags and post.tags.length %}
-        <span class="aether-archive-tag">{{ post.tags.toArray()[0].name }}</span>
-        {%- endif %}
       </span>
     </article>
   {%- endfor %}

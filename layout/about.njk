@@ -68,7 +68,12 @@
           {%- for f in page.facts %}
             <div>
               <dt>{{ f.k }}</dt>
-              <dd>{{ f.v | safe }}</dd>
+              {%- if f.k == 'Writing' and site.posts.length > 0 %}
+                {%- set earliest = site.posts.sort('date').toArray()[0] %}
+                <dd>{{ site.posts.length }}+ essays · since {{ date(earliest.date, 'YYYY') }}</dd>
+              {%- else %}
+                <dd>{{ f.v | safe }}</dd>
+              {%- endif %}
             </div>
           {%- endfor %}
         </dl>
