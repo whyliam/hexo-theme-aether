@@ -575,6 +575,7 @@ figure.highlight {
   th {
     background: var(--aether-paper-tint);
     border: 1px solid var(--aether-rule);
+    color: var(--aether-ink);
     font-weight: 600;
     padding: 10px 14px;
     text-align: left;
@@ -582,7 +583,12 @@ figure.highlight {
 
   td {
     border: 1px solid var(--aether-rule);
+    color: var(--aether-ink);
     padding: 10px 14px;
+  }
+
+  tr:nth-child(even) td {
+    background: var(--aether-surface);
   }
 
   tr:hover td {
@@ -813,11 +819,37 @@ figure.highlight .copy-btn {
   letter-spacing: 0.08em;
   color: var(--aether-accent);
   flex-shrink: 0;
-  min-width: 100px;
-  max-width: 180px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.aether-archive-tag {
+  font-family: var(--aether-ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--aether-muted);
+  flex-shrink: 0;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &::before {
+    content: '#';
+    opacity: 0.5;
+    margin-right: 1px;
+  }
+}
+
+.aether-cat-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+  max-width: 40%;
 }
 
 .aether-archive-link {
@@ -832,6 +864,13 @@ figure.highlight .copy-btn {
 
   &:hover {
     color: var(--aether-accent);
+  }
+}
+
+// 归档页小屏隐藏分类+标签，给标题留空间
+@media (max-width: 768px) {
+  .aether-cat-tag {
+    display: none;
   }
 }
 

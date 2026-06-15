@@ -5,9 +5,6 @@
   {%- include '_partials/head/head-unique.njk' -%}
   <title>{% block title %}{% endblock %}</title>
   {{ partial('_third-party/analytics/index.njk', {}, {cache: theme.cache.enable}) }}
-  {%- if not (theme.scheme === 'Aether' and page.type === 'note') %}
-  {{ partial('_scripts/index.njk', {}, {cache: theme.cache.enable}) }}
-  {%- endif %}
   {{ partial('_third-party/index.njk', {}, {cache: theme.cache.enable}) }}
   {{ partial('_third-party/statistics/index.njk', {}, {cache: theme.cache.enable}) }}
   {%- include '_third-party/math/index.njk' -%}
@@ -32,11 +29,7 @@
   </header>
 
   <main class="main aether-note-canvas">
-    <div class="main-inner {% block class %}{% endblock %}">
-      {% block content %}{% endblock %}
-      {%- include '_partials/comments.njk' -%}
-    </div>
-  </main>
+    <div class="main-inner post posts-expand">
 {% else %}
   <div class="headband"></div>
 
@@ -74,8 +67,15 @@
 
     <div class="main-inner {% block class %}{% endblock %}">
       {%- include '_partials/header/sub-menu.njk' -%}
+{% endif %}
+
       {% block content %}{% endblock %}
       {%- include '_partials/comments.njk' -%}
+
+{%- if theme.scheme === 'Aether' and page.type === 'note' %}
+    </div>
+  </main>
+{% else %}
     </div>
   </main>
 

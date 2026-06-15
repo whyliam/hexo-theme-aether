@@ -3,6 +3,15 @@
 // Detail page: lightweight topbar + centered card, no full header/footer/sidebar.
 
 body.aether-note-page-body {
+  // Override motion visibility: note pages have no .column/.footer so
+  // the anime.js timeline may break before post-block becomes visible.
+  .post-block,
+  .post-header,
+  .post-body,
+  .comments {
+    visibility: visible !important;
+  }
+
   .main-inner {
     max-width: 640px;
     padding-top: 24px;
