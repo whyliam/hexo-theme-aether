@@ -21,42 +21,27 @@
     {%- set _next = _siblings[_idx + 1] -%}
     {%- set _prev = _siblings[_idx - 1] -%}
 
-<aside class="aether-series-nav" aria-label="继续阅读本系列">
+<nav class="aether-series-nav" aria-label="继续阅读本系列">
   <div class="aether-series-nav__head">
-    <div class="aether-series-nav__eyebrow">继续这条路径 · {{ aether_pad(_idx + 1) }} / {{ aether_pad(_siblings.length) }}</div>
-    <h2 class="aether-series-nav__title">
-      <a href="{{ url_for('/series/') }}">{{ page.series }}</a>
-    </h2>
-    <div class="aether-series-nav__progress">
-      <span class="aether-series-nav__bar" style="--p: {{ ((_idx + 1) / _siblings.length * 100) | round }}%"></span>
-    </div>
+    <a class="aether-series-nav__title" href="{{ url_for('/series/') }}">{{ page.series }}</a>
+    <span class="aether-series-nav__position">{{ _idx + 1 }} / {{ _siblings.length }}</span>
+    {%- if not _next %}<span class="aether-series-nav__status">已到最新</span>{% endif %}
+    <a class="aether-series-nav__all" href="{{ url_for('/series/') }}">全部系列 <span aria-hidden="true">↗</span></a>
   </div>
-
   <div class="aether-series-nav__cards">
     {%- if _prev %}
-      <a class="aether-series-nav__card is-prev" href="{{ url_for(_prev.path) }}">
-        <span class="aether-series-nav__label">← 上一篇</span>
-        <span class="aether-series-nav__post-title">{{ _prev.title }}</span>
-      </a>
-    {%- else %}
-      <div class="aether-series-nav__card is-disabled">
-        <span class="aether-series-nav__label">起点</span>
-        <span class="aether-series-nav__post-title">— 这就是系列的开始 —</span>
-      </div>
+    <a class="aether-series-nav__card is-prev" href="{{ url_for(_prev.path) }}" rel="prev">
+      <span class="aether-series-nav__label">← 上一篇</span>
+      <span class="aether-series-nav__post-title">{{ _prev.title }}</span>
+    </a>
     {%- endif %}
-
     {%- if _next %}
-      <a class="aether-series-nav__card is-next" href="{{ url_for(_next.path) }}">
-        <span class="aether-series-nav__label">下一篇 →</span>
-        <span class="aether-series-nav__post-title">{{ _next.title }}</span>
-      </a>
-    {%- else %}
-      <div class="aether-series-nav__card is-disabled">
-        <span class="aether-series-nav__label">最新</span>
-        <span class="aether-series-nav__post-title">— 已读到本系列最新一篇 —</span>
-      </div>
+    <a class="aether-series-nav__card is-next" href="{{ url_for(_next.path) }}" rel="next">
+      <span class="aether-series-nav__label">下一篇 →</span>
+      <span class="aether-series-nav__post-title">{{ _next.title }}</span>
+    </a>
     {%- endif %}
   </div>
-</aside>
+</nav>
   {%- endif -%}
 {%- endif -%}
