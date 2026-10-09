@@ -1,5 +1,2 @@
-{%- if theme.waline.enable %}
-<div class="comments" id="comments">
-  <div id="waline"></div>
-</div>
-{%- endif %}
+{{ next_data('waline', theme.waline) }}
+{{ next_js('third-party/comments/waline.js') }}
