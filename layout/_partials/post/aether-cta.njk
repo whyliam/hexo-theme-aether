@@ -17,32 +17,20 @@
     {%- set channels = _tmp -%}
   {%- endif -%}
 
-<aside class="aether-post-cta" aria-label="持续追踪档案">
-  <div class="aether-post-cta__head">
-    {%- if cfg.eyebrow %}<span class="aether-post-cta__eyebrow">{{ cfg.eyebrow }}</span>{% endif %}
-    {%- if cfg.title %}<h2>{{ cfg.title | safe }}</h2>{% endif %}
-    {%- if cfg.description %}<p>{{ cfg.description }}</p>{% endif %}
-  </div>
-
-  {%- if channels and channels.length %}
+<aside class="aether-post-cta" aria-label="关注更新">
+  <span class="aether-post-cta__eyebrow">{{ cfg.compact_title or '关注更新' }}</span>
   <div class="aether-post-cta__channels">
-    {%- for ch in channels %}
-      <a class="aether-post-cta__channel" href="{{ ch.url }}"
+    {%- if channels and channels.length %}
+      {%- for ch in channels %}
+      <a class="aether-post-cta__channel" href="{{ ch.url }}" title="{{ ch.label }}"
          {% if ch.url and ch.url.startsWith('http') %}target="_blank" rel="noopener"{% endif %}>
-        <span class="aether-post-cta__label">{{ ch.label }}</span>
-        {%- if ch.hint %}<span class="aether-post-cta__hint">{{ ch.hint }}</span>{% endif %}
-        <span class="aether-post-cta__arr">→</span>
+        <span>{{ ch.short_label or ch.label.split(' · ')[0] }}</span><span class="aether-post-cta__arr" aria-hidden="true">↗</span>
       </a>
-    {%- endfor %}
+      {%- endfor %}
+    {%- else %}
+      <a class="aether-post-cta__channel" href="{{ url_for('/atom.xml') }}">RSS <span aria-hidden="true">↗</span></a>
+    {%- endif %}
   </div>
-  {%- else %}
-  <div class="aether-post-cta__empty">
-    <a class="aether-post-cta__channel" href="{{ url_for('/atom.xml') }}">
-      <span class="aether-post-cta__label">RSS</span>
-      <span class="aether-post-cta__arr">→</span>
-    </a>
-  </div>
-  {%- endif %}
 </aside>
 
   {%- endif -%}

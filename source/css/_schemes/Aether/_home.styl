@@ -1477,102 +1477,48 @@ $home-pad-x = clamp(20px, 4vw, 56px);
 // "Follow the archive" strip — injected via theme_inject into postBodyEnd.
 // Lives inside the post body container, so it inherits the article width.
 .aether-post-cta {
-  background: var(--aether-surface);
-  border: 1px solid var(--aether-rule);
-  border-radius: var(--aether-r-lg);
-  display: grid;
-  gap: 28px;
-  grid-template-columns: 1.2fr 1fr;
-  margin: 56px 0 24px;
-  padding: 32px clamp(24px, 4vw, 40px);
-
-  +tablet-mobile() {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-}
-
-.aether-post-cta__head {
-  > * + * { margin-top: 10px; }
-
-  h2 {
-    color: var(--aether-ink);
-    font-family: var(--aether-ff-serif);
-    font-size: clamp(20px, 2vw, 26px);
-    font-weight: 500;
-    letter-spacing: -0.018em;
-    margin: 0;
-  }
-
-  p {
-    color: var(--aether-muted);
-    font-family: var(--aether-ff-sans);
-    font-size: 13.5px;
-    line-height: 1.6;
-    margin: 0;
-    max-width: 50ch;
-  }
+  align-items: baseline;
+  border-top: 1px solid var(--aether-rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 4px 20px;
+  margin: 24px 0 0;
+  padding: 12px 0 0;
 }
 
 .aether-post-cta__eyebrow {
   color: var(--aether-muted);
-  display: inline-block;
-  font-family: var(--aether-ff-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--aether-ff-sans);
+  font-size: 12px;
+  line-height: 2;
 }
 
-.aether-post-cta__channels,
-.aether-post-cta__empty {
-  align-content: start;
-  display: grid;
-  gap: 6px;
+.aether-post-cta__channels {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0 20px;
 }
 
 .aether-post-cta__channel {
   align-items: center;
-  background: var(--aether-paper);
-  border: 1px solid var(--aether-rule);
-  border-radius: var(--aether-r-md);
-  color: var(--aether-ink);
-  display: grid;
+  border: 0;
+  color: var(--aether-ink-2);
+  display: inline-flex;
   font-family: var(--aether-ff-sans);
-  gap: 10px;
-  grid-template-columns: auto 1fr 14px;
-  padding: 11px 16px;
-  transition: all var(--aether-base) var(--aether-ease);
-
-  &:hover {
-    background: var(--aether-ink);
-    border-color: var(--aether-ink);
-    color: var(--aether-paper);
-
-    .aether-post-cta__hint { color: unquote('color-mix(in srgb, var(--aether-paper) 70%, transparent)'); }
-    .aether-post-cta__arr  { color: var(--aether-paper); transform: translateX(4px); }
-  }
-}
-
-.aether-post-cta__label {
-  font-family: var(--aether-ff-sans);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.aether-post-cta__hint {
-  color: var(--aether-muted);
-  font-family: var(--aether-ff-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-align: right;
-}
-
-.aether-post-cta__arr {
-  color: var(--aether-muted-2);
-  font-family: var(--aether-ff-mono);
   font-size: 13px;
-  transition: transform var(--aether-base) var(--aether-ease), color var(--aether-base) var(--aether-ease);
+  gap: 4px;
+  min-height: 32px;
+  padding: 4px 0;
+  transition: color var(--aether-fast) var(--aether-ease);
+
+  &:hover { color: var(--aether-accent); }
+  &:focus-visible { outline: 2px solid var(--aether-accent); outline-offset: 4px; }
 }
+
+.aether-post-cta__arr { color: var(--aether-muted); font-size: 11px; }
 
 
 // ============================ FOOTER ============================

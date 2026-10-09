@@ -128,7 +128,15 @@
 
         {{ partial('_partials/post/post-share.njk', {}, {cache: theme.cache.enable}) }}
 
-        {%- if theme.post_navigation and (post.prev or post.next) %}
+        {%- set has_series_navigation = false -%}
+          {%- if theme.scheme === 'Aether' and post.series -%}
+            {%- for sibling in site.posts.toArray() -%}
+              {%- if sibling.series === post.series and sibling.path !== post.path -%}
+                {%- set has_series_navigation = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if theme.post_navigation and (post.prev or post.next) and not has_series_navigation %}
           {%- set prev = post.prev if theme.post_navigation === 'right' else post.next %}
           {%- set next = post.next if theme.post_navigation === 'right' else post.prev %}
           <div class="post-nav">
