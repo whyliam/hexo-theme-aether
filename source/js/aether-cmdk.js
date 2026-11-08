@@ -1,10 +1,11 @@
+/* eslint no-use-before-define: ["error", { "functions": false }] */
 /* Aether — ⌘K command palette client
  *
  * Lazy-loads /aether-search.json on first open, runs a tiny substring +
  * acronym scorer client-side, renders results with keyboard navigation.
  * No external dependencies (no Fuse.js, no lunr).
  */
-(function () {
+(function() {
   'use strict';
 
   const PALETTE_SEL = '#aether-cmdk';
@@ -22,6 +23,7 @@
   const filters  = [...palette.querySelectorAll('[data-cmdk-filter]')];
   const closeEls = [...palette.querySelectorAll('[data-cmdk-close]')];
 
+  let returnFocus = null;
   let entries = null;
   let loadingPromise = null;
   let activeFilter = 'all';
@@ -34,7 +36,7 @@
     if (loadingPromise) return loadingPromise;
     setStatus('正在加载档案索引…');
     loadingPromise = fetch(INDEX_URL, { cache: 'force-cache' })
-      .then(r => r.ok ? r.json() : Promise.reject(new Error('Index ' + r.status)))
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error('Index ' + r.status))))
       .then(data => {
         entries = data.entries || [];
         setStatus(entries.length + ' 条目已索引');
@@ -50,14 +52,17 @@
 
   // ---------- Open / close ----------
   function open() {
+    if (isOpen()) return;
+    returnFocus = document.activeElement;
     palette.hidden = false;
     document.documentElement.classList.add('aether-cmdk-open');
-    requestAnimationFrame(() => input.focus());
+    input.focus({ preventScroll: true });
     load().then(() => render(input.value));
   }
   function close() {
     palette.hidden = true;
     document.documentElement.classList.remove('aether-cmdk-open');
+    returnFocus?.focus({ preventScroll: true });
     input.value = '';
     cursor = 0;
   }
@@ -68,8 +73,9 @@
   // ---------- Filters ----------
   filters.forEach(btn => {
     btn.addEventListener('click', () => {
-      filters.forEach(b => b.classList.remove('is-on'));
+      filters.forEach(b => { b.classList.remove('is-on'); b.setAttribute('aria-pressed', 'false'); });
       btn.classList.add('is-on');
+      btn.setAttribute('aria-pressed', 'true');
       activeFilter = btn.dataset.cmdkFilter;
       cursor = 0;
       render(input.value);
@@ -127,13 +133,14 @@
     lastResults = results;
     cursor = Math.min(cursor, Math.max(0, results.length - 1));
     if (!results.length) {
+      input.removeAttribute('aria-activedescendant');
       list.innerHTML = '<li class="aether-cmdk__empty">没有匹配项 — 试试别的关键词或切换过滤器。</li>';
       setStatus('0 个结果');
       return;
     }
     setStatus(results.length + ' 个结果');
     list.innerHTML = results.map((r, idx) => `
-      <li class="aether-cmdk__item${idx === cursor ? ' is-on' : ''}" data-idx="${idx}" data-path="${r.path}">
+      <li class="aether-cmdk__item${idx === cursor ? ' is-on' : ''}" id="aether-result-${idx}" role="option" aria-selected="${idx === cursor}" data-idx="${idx}" data-path="${escapeHtml(r.path)}">
         <span class="aether-cmdk__kind">${KIND_LABEL[r.kind] || r.kind}</span>
         <span class="aether-cmdk__body">
           <span class="aether-cmdk__title">${escapeHtml(r.title)}</span>
@@ -142,12 +149,13 @@
         ${r.date ? '<span class="aether-cmdk__date">' + r.date + '</span>' : ''}
       </li>
     `).join('');
+    input.setAttribute('aria-activedescendant', 'aether-result-' + cursor);
   }
 
   function setStatus(s) { if (status) status.textContent = s; }
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c =>
-      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' })[c]);
   }
 
   // ---------- Keyboard ----------
@@ -156,7 +164,7 @@
     render(input.value);
   });
 
-  list.addEventListener('mousemove', (e) => {
+  list.addEventListener('mousemove', e => {
     const li = e.target.closest('.aether-cmdk__item');
     if (!li) return;
     const idx = +li.dataset.idx;
@@ -166,34 +174,41 @@
     }
   });
 
-  list.addEventListener('click', (e) => {
+  list.addEventListener('click', e => {
     const li = e.target.closest('.aether-cmdk__item');
     if (!li) return;
     pickResult(+li.dataset.idx);
   });
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
+    if (e.isComposing) return;
     if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       isOpen() ? close() : open();
       return;
     }
     if (!isOpen()) return;
-    if (e.key === 'Escape')      { e.preventDefault(); close(); }
-    else if (e.key === 'ArrowDown'){ e.preventDefault(); cursor = Math.min(cursor + 1, lastResults.length - 1); updateCursor(); }
-    else if (e.key === 'ArrowUp')  { e.preventDefault(); cursor = Math.max(cursor - 1, 0); updateCursor(); }
-    else if (e.key === 'Enter')    { e.preventDefault(); pickResult(cursor); }
+    if (e.key === 'Tab') {
+      const focusable = [...palette.querySelectorAll('button, input, a[href], [tabindex="0"]')].filter(el => el.getClientRects().length);
+      const index = focusable.indexOf(document.activeElement);
+      const next = e.shiftKey ? (index - 1 + focusable.length) % focusable.length : (index + 1) % focusable.length;
+      e.preventDefault();
+      focusable[next]?.focus();
+      return;
+    }
+    if (e.key === 'Escape') { e.preventDefault(); close(); } else if (e.key === 'ArrowDown' && e.target === input) { e.preventDefault(); cursor = Math.max(0, Math.min(cursor + 1, lastResults.length - 1)); updateCursor(); } else if (e.key === 'ArrowUp' && e.target === input) { e.preventDefault(); cursor = Math.max(cursor - 1, 0); updateCursor(); } else if (e.key === 'Enter' && e.target === input) { e.preventDefault(); pickResult(cursor); }
   });
 
   function updateCursor() {
     const items = list.querySelectorAll('.aether-cmdk__item');
-    items.forEach((el, i) => el.classList.toggle('is-on', i === cursor));
+    items.forEach((el, i) => { el.classList.toggle('is-on', i === cursor); el.setAttribute('aria-selected', String(i === cursor)); });
+    if (items[cursor]) input.setAttribute('aria-activedescendant', 'aether-result-' + cursor);
     const active = items[cursor];
     if (active && active.scrollIntoView) {
       const rect = active.getBoundingClientRect();
       const parent = list.getBoundingClientRect();
       if (rect.bottom > parent.bottom) active.scrollIntoView({ block: 'nearest' });
-      else if (rect.top < parent.top)  active.scrollIntoView({ block: 'nearest' });
+      else if (rect.top < parent.top) active.scrollIntoView({ block: 'nearest' });
     }
   }
 
@@ -206,15 +221,14 @@
 
   // ---------- Recent ----------
   function getRecent() {
-    try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]').slice(0, RECENT_MAX); }
-    catch (e) { return []; }
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]').slice(0, RECENT_MAX); } catch { return []; }
   }
   function pushRecent(path) {
     try {
       const prev = getRecent().filter(p => p !== path);
       const next = [path, ...prev].slice(0, RECENT_MAX);
       localStorage.setItem(RECENT_KEY, JSON.stringify(next));
-    } catch (e) { /* swallow */ }
+    } catch { /* swallow */ }
   }
 
   // ---------- External trigger (.aether-search-btn) ----------

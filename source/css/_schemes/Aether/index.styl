@@ -183,15 +183,7 @@ a {
 // 2a) 无障碍 — 键盘焦点统一样式
 // ==================================================
 // 仅键盘导航触发，鼠标点击不显示，避免视觉噪音
-:focus { outline: none; }
-
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-[tabindex]:focus-visible,
-[role='button']:focus-visible {
+:focus { outline: none; }a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible, [role='button']:focus-visible {
   outline: 2px solid var(--aether-accent);
   outline-offset: 2px;
   border-radius: var(--aether-r-sm);
@@ -199,9 +191,7 @@ textarea:focus-visible,
 
 // 已有自定义边框 / 背景的胶囊（tag、pill）使用 box-shadow 形态焦点环，
 // 避免 outline 与 border-radius 999px 视觉冲突
-.tag-cloud a:focus-visible,
-.aether-pill:focus-visible,
-.aether-search-btn:focus-visible {
+.tag-cloud a:focus-visible, .aether-pill:focus-visible, .aether-search-btn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--aether-paper), 0 0 0 4px var(--aether-accent);
 }
@@ -245,7 +235,7 @@ textarea:focus-visible,
   font-family: var(--aether-ff-serif);
   font-size: clamp(28px, 3.4vw, 44px);
   font-weight: 500;
-  letter-spacing: -0.018em;
+  letter-spacing: -.018em;
   line-height: 1.18;
   margin-bottom: 14px;
   overflow-wrap: break-word;
@@ -256,7 +246,7 @@ textarea:focus-visible,
   color: var(--aether-muted);
   font-family: var(--aether-ff-mono);
   font-size: clamp(11px, 1.5vw, 12px);
-  letter-spacing: 0.10em;
+  letter-spacing: .1em;
   margin-top: 8px;
   text-align: left;
   text-transform: uppercase;
@@ -279,6 +269,18 @@ textarea:focus-visible,
 
 .posts-expand .post-meta {
   justify-content: flex-start;
+  gap: 6px 18px;
+  font-family: var(--aether-ff-sans);
+  letter-spacing: 0;
+  text-transform: none;
+
+  .post-meta-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    &::before { display: none; }
+  }
 
   a {
     color: var(--aether-muted);
@@ -295,23 +297,17 @@ textarea:focus-visible,
 .posts-expand .post-body {
   font-family: var(--aether-ff-serif);
   font-size: 17px;
-  letter-spacing: 0.01em;
+  letter-spacing: .01em;
   line-height: 1.72;
 
   h2, h3, h4, h5, h6 {
     font-family: var(--aether-ff-sans);
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -.01em;
     line-height: 1.3;
   }
 
-  h2 { font-size: 26px; margin-top: 56px; margin-bottom: 20px; }
-  h3 { font-size: 21px; margin-top: 40px; margin-bottom: 16px; }
-  h4 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; }
-
-  p { margin: 0 0 1.8em; }
-
-  blockquote {
+  h2 { font-size: 26px; margin-top: 56px; margin-bottom: 20px; }h3 { font-size: 21px; margin-top: 40px; margin-bottom: 16px; }h4 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; }p { margin: 0 0 1.8em; }blockquote {
     background: var(--aether-paper-tint);
     border-left: 3px solid var(--aether-accent);
     border-radius: 0 var(--aether-r-sm) var(--aether-r-sm) 0;
@@ -328,7 +324,7 @@ textarea:focus-visible,
     border-radius: 3px;
     color: var(--aether-accent);
     font-family: var(--aether-ff-mono);
-    font-size: 0.9em;
+    font-size: .9em;
     padding: 1px 6px;
   }
 
@@ -354,12 +350,12 @@ textarea:focus-visible,
   }
 
   li {
-    margin-bottom: 0.4em;
+    margin-bottom: .4em;
     line-height: 1.65;
   }
 
   li > ul, li > ol {
-    margin-top: 0.4em;
+    margin-top: .4em;
     margin-bottom: 0;
   }
 
@@ -368,7 +364,7 @@ textarea:focus-visible,
     li::marker {
       color: var(--aether-muted);
       font-family: var(--aether-ff-mono);
-      font-size: 0.9em;
+      font-size: .9em;
     }
   }
 
@@ -380,8 +376,7 @@ textarea:focus-visible,
 }
 
 // 封面图：不强插占位，且收窄到正文宽度，加节奏间距
-.posts-expand .post-block .post-body img,
-.posts-expand .post-block .post-body figure {
+.posts-expand .post-block .post-body img, .posts-expand .post-block .post-body figure {
   border-radius: var(--aether-r-md);
   display: block;
   margin: 24px auto 32px;
@@ -420,7 +415,7 @@ textarea:focus-visible,
   .page-number, .prev, .next, .extend {
     font-family: var(--aether-ff-mono);
     font-size: 12px;
-    letter-spacing: 0.06em;
+    letter-spacing: .06em;
     margin: 0 6px;
     padding: 6px 12px;
     color: var(--aether-muted);
@@ -457,7 +452,7 @@ textarea:focus-visible,
 // Tag cloud
 .tag-cloud a {
   font-family: var(--aether-ff-mono);
-  letter-spacing: 0.02em;
+  letter-spacing: .02em;
 }
 
 
@@ -503,7 +498,7 @@ textarea:focus-visible,
 
 // Fancybox overlay — match Aether palette
 .fancybox__container {
-  --fancybox-bg: rgba(20, 20, 22, 0.92);
+  --fancybox-bg: rgba(20, 20, 22, .92);
 }
 
 
@@ -532,7 +527,7 @@ figure.highlight {
     border-bottom: 1px solid var(--aether-rule);
     font-family: var(--aether-ff-mono);
     font-size: 11px;
-    letter-spacing: 0.06em;
+    letter-spacing: .06em;
     padding: 8px 20px;
     text-transform: uppercase;
   }
@@ -542,7 +537,7 @@ figure.highlight {
     border-radius: var(--aether-r-sm);
     font-family: var(--aether-ff-mono);
     font-size: 11px;
-    letter-spacing: 0.04em;
+    letter-spacing: .04em;
     opacity: 0;
     transition: opacity var(--aether-fast) var(--aether-ease);
   }
@@ -559,7 +554,7 @@ figure.highlight {
   border-radius: 3px;
   color: var(--aether-accent);
   font-family: var(--aether-ff-mono);
-  font-size: 0.88em;
+  font-size: .88em;
   padding: 2px 6px;
 }
 
@@ -598,9 +593,7 @@ figure.highlight {
   }
 }
 
-figure.highlight table,
-figure.highlight table tr,
-figure.highlight table td {
+figure.highlight table, figure.highlight table tr, figure.highlight table td {
   background: transparent;
   border: none;
 }
@@ -705,10 +698,10 @@ figure.highlight .copy-btn {
     display: inline-block;
     font-family: var(--aether-ff-mono) !important;
     font-size: 13px !important;
-    letter-spacing: 0.02em;
+    letter-spacing: .02em;
     margin: 4px 6px 4px 0;
     padding: 4px 14px;
-    transition: all var(--aether-fast) var(--aether-ease);
+    transition: color var(--aether-fast) var(--aether-ease), background-color var(--aether-fast) var(--aether-ease), border-color var(--aether-fast) var(--aether-ease);
 
     &:hover {
       background: var(--aether-accent);
@@ -720,8 +713,7 @@ figure.highlight .copy-btn {
 
 // 归档页 — Aether 编辑式
 .aether-archive {
-  .post-block,
-  .posts-collapse {
+  .post-block, .posts-collapse {
     display: none;
   }
 }
@@ -737,7 +729,7 @@ figure.highlight .copy-btn {
   font-family: var(--aether-ff-mono);
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: .12em;
   color: var(--aether-muted);
   margin-bottom: 12px;
 }
@@ -746,7 +738,7 @@ figure.highlight .copy-btn {
   font-family: var(--aether-ff-serif);
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -.02em;
   line-height: 1.15;
   color: var(--aether-ink);
   margin: 0 0 8px;
@@ -767,7 +759,7 @@ figure.highlight .copy-btn {
   font-family: var(--aether-ff-serif);
   font-size: 28px;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -.01em;
   color: var(--aether-ink);
   margin: 0 0 16px;
   padding-bottom: 12px;
@@ -790,10 +782,10 @@ figure.highlight .copy-btn {
   gap: 16px;
   padding: 10px 0;
   border-bottom: 1px solid var(--aether-rule);
-  transition: background-color 0.15s;
+  transition: background-color .15s;
 
   &:hover {
-    background-color: var(--aether-bg-alt, oklch(96% 0.004 250));
+    background-color: var(--aether-bg-alt, oklch(96% .004 250));
   }
 }
 
@@ -809,7 +801,7 @@ figure.highlight .copy-btn {
   font-family: var(--aether-ff-mono);
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: .08em;
   color: var(--aether-accent);
   flex-shrink: 0;
   min-width: 100px;
@@ -840,7 +832,7 @@ figure.highlight .copy-btn {
     font-family: var(--aether-ff-serif);
     font-size: 28px;
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -.01em;
     margin: 48px 0 24px;
 
     &::before {
@@ -933,19 +925,7 @@ figure.highlight .copy-btn {
 // Print styles
 // ==================================================
 @media print {
-  .aether-header-row,
-  .aether-footer,
-  .aether-reading-progress,
-  .aether-dark-toggle,
-  .aether-search-btn,
-  .aether-cmdk,
-  .sidebar,
-  .back-to-top,
-  .post-nav,
-  .aether-cta-strip,
-  .aether-series-nav,
-  .aether-post-cta,
-  .pagination {
+  .aether-header-row, .aether-footer, .aether-reading-progress, .aether-dark-toggle, .aether-search-btn, .aether-cmdk, .sidebar, .back-to-top, .post-nav, .aether-cta-strip, .aether-series-nav, .aether-post-cta, .pagination {
     display: none !important;
   }
 
@@ -955,8 +935,7 @@ figure.highlight .copy-btn {
     font-size: 11pt !important;
   }
 
-  .main,
-  .main-inner {
+  .main, .main-inner {
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -991,4 +970,14 @@ figure.highlight .copy-btn {
     page-break-inside: avoid;
     font-size: 9pt !important;
   }
+}
+
+@import "_reading-home";
+
+.aether-post-issue, .aether-row__issue {
+  color: var(--aether-muted);
+  font-family: var(--aether-ff-sans);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0 0 8px;
 }

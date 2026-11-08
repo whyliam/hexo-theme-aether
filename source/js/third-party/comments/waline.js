@@ -1,8 +1,8 @@
 /* global NexT, CONFIG */
 
 (() => {
-  let instance;
-  let client;
+  let instance,
+      client;
   document.addEventListener('page:loaded', async () => {
     instance?.destroy();
     instance = null;
@@ -25,17 +25,17 @@
       if (!element.isConnected) return;
       instance = init({
         ...config,
-        el: element,
-        path: location.pathname,
-        lang: config.lang || CONFIG.page.lang || 'zh-CN',
+        el          : element,
+        path        : location.pathname,
+        lang        : config.lang || CONFIG.page.lang || 'zh-CN',
         requiredMeta: config.requiredMeta || config.requiredFields || [],
-        pageview: Boolean(config.visitor),
-        comment: Boolean(config.comment_count)
+        pageview    : Boolean(config.visitor),
+        comment     : Boolean(config.comment_count)
       });
     } catch (error) {
       client = null;
       element.textContent = '评论加载失败，请刷新页面重试。';
-      console.error('Failed to load Waline', error);
+      console.warn('Failed to load Waline', error);
     }
   });
 })();

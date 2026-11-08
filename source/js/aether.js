@@ -7,15 +7,15 @@
  * 5. Hero entrance choreography — staggered cascade
  * 6. Dark mode toggle + localStorage persistence
  */
-(function () {
+(function() {
   'use strict';
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-  const onReady = (fn) =>
-    document.readyState === 'loading'
+  const onReady = fn =>
+    (document.readyState === 'loading'
       ? document.addEventListener('DOMContentLoaded', fn, { once: true })
-      : fn();
+      : fn());
 
   // ── 1. Reading progress ──
   function setupReadingProgress() {
@@ -36,7 +36,7 @@
   // ── 2. ⌘K fallback ──
   function setupCmdKFallback() {
     if (document.getElementById('aether-cmdk')) return;
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if ((e.key || '').toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         window.location.href = '/search/';
@@ -51,7 +51,7 @@
     const update = () => {
       const y = window.scrollY;
       header.classList.toggle('is-scrolled', y > 8);
-      header.classList.toggle('is-compact', y > 120);
+
     };
     window.addEventListener('scroll', update, { passive: true });
     update();
@@ -63,10 +63,10 @@
     if (!targets.length) return;
 
     // Mark all as hidden initially
-    targets.forEach((el) => { el.classList.add('aether-reveal--hidden'); });
+    targets.forEach(el => { el.classList.add('aether-reveal--hidden'); });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
           const delay = parseInt(el.dataset.aetherRevealDelay || '0', 10);
@@ -79,7 +79,7 @@
       });
     }, { threshold: 0.01, rootMargin: '0px 0px 80px 0px' });
 
-    targets.forEach((el) => observer.observe(el));
+    targets.forEach(el => observer.observe(el));
   }
 
   // ── 5. Hero entrance choreography ──
@@ -88,7 +88,7 @@
     if (!hero) return;
 
     const steps = $$('[data-hero-step]', hero);
-    steps.forEach((el) => { el.classList.add('aether-hero-step--hidden'); });
+    steps.forEach(el => { el.classList.add('aether-hero-step--hidden'); });
 
     // Cascade after a tiny initial delay
     requestAnimationFrame(() => {
@@ -130,7 +130,7 @@
     });
 
     // Listen for system changes (only if no manual override)
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (!localStorage.getItem(STORAGE_KEY)) {
         applyScheme(e.matches ? 'dark' : 'light');
       }
@@ -138,11 +138,35 @@
   }
 
   onReady(() => {
+    document.querySelectorAll('.aether-visual img').forEach(img => {
+      const card = img.closest('.aether-visual');
+      let timer;
+      const failed = () => card.classList.add('is-unavailable');
+      img.addEventListener('error', () => { clearTimeout(timer); failed(); }, { once: true });
+      img.addEventListener('load', () => { clearTimeout(timer); card.classList.remove('is-unavailable'); }, { once: true });
+      if (img.complete) { if (!img.naturalWidth) failed(); return; }
+      // Bound the blank state only when the reader reaches the photographs.
+      const observer = new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) return;
+        if (!img.naturalWidth) timer = setTimeout(failed, 8000);
+        observer.disconnect();
+      });
+      observer.observe(img);
+    });
+    const menuToggle = $('.site-nav-toggle .toggle');
+    if (menuToggle) {
+      menuToggle.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); menuToggle.click(); }
+      });
+      new MutationObserver(() => {
+        menuToggle.setAttribute('aria-expanded', String(document.body.classList.contains('site-nav-on')));
+      }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
     setupReadingProgress();
     setupCmdKFallback();
     setupHeaderScroll();
-    setupScrollReveal();
-    setupHeroEntrance();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setupScrollReveal();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setupHeroEntrance();
     setupDarkMode();
   });
 })();

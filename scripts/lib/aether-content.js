@@ -79,7 +79,20 @@ function slugifySeries(name) {
     || 'series';
 }
 
+// Presentation only: keep canonical titles, URLs and search identities intact.
+function newsletterIssue(post) {
+  const match = String((post && post.title) || '').match(/^L(\d+)[_:：]\s*/i);
+  return match && inferredSeriesName(post) === 'Newsletter 周刊' ? match[1] : '';
+}
+
+function displayTitle(post) {
+  const title = String((post && post.title) || '');
+  return newsletterIssue(post) ? title.replace(/^L\d+[_:：]\s*/i, '') : title;
+}
+
 module.exports = {
+  displayTitle,
+  newsletterIssue,
   inferredSeriesName,
   isNotePost,
   isRegularPost,

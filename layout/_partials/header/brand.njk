@@ -1,6 +1,6 @@
 <div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="{{ __('accessibility.nav_toggle') }}" role="button">
+    <div class="toggle" aria-label="{{ __('accessibility.nav_toggle') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %}>
       {%- if theme.menu %}
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
@@ -28,10 +28,16 @@
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="{{ __('menu.search') }}" role="button">
+    {%- if theme.scheme === 'Aether' and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
+      <button class="toggle aether-mobile-search" type="button" aria-label="搜索" data-aether-cmdk-trigger>
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+    {%- else %}
+    <div class="toggle popup-trigger" aria-label="{{ __('menu.search') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %}>
       {%- if theme.algolia_search.enable or theme.local_search.enable %}
         <i class="fa fa-search fa-fw fa-lg"></i>
       {%- endif %}
     </div>
+    {%- endif %}
   </div>
 </div>

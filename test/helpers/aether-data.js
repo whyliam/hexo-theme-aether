@@ -50,6 +50,22 @@ describe('aether-data', () => {
     };
   }
 
+  describe('newsletter presentation', () => {
+    it('separates the issue from a newsletter heading without changing the post', () => {
+      const post = { title: 'L144_门禁：智能正在变便宜', series: 'Newsletter 周刊' };
+      callHelper('aether_post_issue', [post], baseCtx([])).should.equal('144');
+      callHelper('aether_display_title', [post], baseCtx([])).should.equal('门禁：智能正在变便宜');
+      post.title.should.equal('L144_门禁：智能正在变便宜');
+    });
+
+    it('preserves ordinary titles and explicitly different series', () => {
+      for (const post of [{ title: '知识管理' }, { title: 'L2_协议', series: '网络协议' }]) {
+        callHelper('aether_display_title', [post], baseCtx([])).should.equal(post.title);
+        callHelper('aether_post_issue', [post], baseCtx([])).should.equal('');
+      }
+    });
+  });
+
   // ---------- stripTags (tested via aether_summary) ----------
   describe('aether_summary', () => {
     it('strips HTML tags', () => {
@@ -152,6 +168,56 @@ describe('aether-data', () => {
       ];
       const ctx = baseCtx(posts);
       callHelper('aether_visuals', [], ctx)[0].title.should.equal('Paris');
+    });
+  });
+
+  describe('aether_series_selection', () => {
+    it('features the configured identity and orders other series by accumulated writing', () => {
+      const items = [{ name: 'One', count: 1 }, { name: 'Journal', slug: 'journal', count: 145 }, { name: 'Archive', count: 12 }];
+      const result = callHelper('aether_series_selection', [items, 'journal'], baseCtx([]));
+      result.featured.name.should.equal('Journal');
+      result.others.map(item => item.name).should.deep.equal(['Archive', 'One']);
+      items[0].name.should.equal('One');
+    });
+    it('does not invent a featured series when the configured identity is absent', () => {
+      const result = callHelper('aether_series_selection', [[{ name: 'One', count: 1 }], 'Missing'], baseCtx([]));
+      (result.featured === null).should.equal(true);
+      result.others.should.have.length(1);
+      callHelper('aether_series_selection', [[], 'Journal'], baseCtx([])).others.should.have.length(0);
+    });
+  });
+
+  describe('aether_visual_cover', () => {
+    it('respects curated photography order, skips missing posts, and deduplicates', () => {
+      const posts = [
+        { title: 'Paris', path: '2013/paris/' },
+        { title: 'Barcelona', path: '2014/barcelona/' }
+      ];
+      const ctx = baseCtx(posts, { theme: { aether: { visuals: { posts: ['/2014/barcelona/', '/missing/', '/2013/paris/', '/2014/barcelona/'] } } } });
+      callHelper('aether_visuals', [], ctx).map(post => post.title).should.deep.equal(['Barcelona', 'Paris']);
+      callHelper('aether_visuals', [1], ctx).map(post => post.title).should.deep.equal(['Barcelona']);
+    });
+    it('prefers an editorial cover over embedded images', () => {
+      callHelper('aether_visual_cover', [{ cover: '/cover.jpg', content: '<img src="/body.jpg">' }], baseCtx([])).should.equal('/cover.jpg');
+    });
+    it('supports photo arrays and article image fallback', () => {
+      callHelper('aether_visual_cover', [{ photos: [{ url: '/photo.jpg' }] }], baseCtx([])).should.equal('/photo.jpg');
+      callHelper('aether_visual_cover', [{ content: '<p>Travel</p><img alt="sea" src="/sea.jpg">' }], baseCtx([])).should.equal('/sea.jpg');
+    });
+    it('upgrades the confirmed image host without changing unrelated URLs', () => {
+      callHelper('aether_visual_cover', [{ cover: 'http://pics.naaln.com/blog/photo.jpg' }], baseCtx([])).should.equal('https://pics.naaln.com/blog/photo.jpg');
+      callHelper('aether_visual_cover', [{ content: '<img src="http://pics.naaln.com/blog/sea.jpg">' }], baseCtx([])).should.equal('https://pics.naaln.com/blog/sea.jpg');
+      callHelper('aether_visual_cover', [{ cover: 'http://example.org/photo.jpg' }], baseCtx([])).should.equal('http://example.org/photo.jpg');
+    });
+    it('keeps missing photography empty instead of inventing a cover', () => {
+      callHelper('aether_visual_cover', [{}], baseCtx([])).should.equal('');
+    });
+    it('excludes typography articles from homepage photography', () => {
+      const posts = [
+        { title: 'Font', categories: ['Travel & Visuals'], tags: ['Typography'] },
+        { title: 'Sea', categories: ['Travel & Visuals'], tags: ['Photography'] }
+      ];
+      callHelper('aether_visuals', [], baseCtx(posts)).map(post => post.title).should.deep.equal(['Sea']);
     });
   });
 

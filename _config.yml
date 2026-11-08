@@ -923,7 +923,7 @@ images: images
 aether:
   # Top header
   brand:
-    text: AETHER          # Used as logo text on Aether home/post pages
+    text:                 # Defaults to the site title, matching the header
     dot: true             # Show accent dot suffix
 
   # Default menu (used only when site `menu:` is empty)
@@ -936,6 +936,9 @@ aether:
   # Hero section (home only)
   hero:
     enable: true
+    # Desktop ambient folio; mobile/reduced-motion/low-power always use a static image.
+    motion: true
+    caption: 写作，让思考慢慢成形。
     eyebrow: '个人知识档案 · 始于 2010'
     identity: '我是 Liam，产品经理与独立开发者，长期记录 AI Agent、产品判断、知识系统与生活观察。'
     # Multi-line allowed via \n; <em>...</em> renders italic accent.
@@ -1009,7 +1012,7 @@ aether:
     enable: true
     section_label: '05 / 最新文章'
     title: '最近更新。'
-    limit: 4
+    limit: 3
     show_filter_chips: false
 
   # Series & projects. Explicit post.series wins; stable Newsletter / AI Coding /
@@ -1018,6 +1021,8 @@ aether:
     enable: true
     section_label: '04 / 长期系列'
     title: '长期系列 — 持续追踪的问题。'
+    featured:            # Exact series name or slug; shown as the single editorial lead.
+    featured_description:
     series_items: []      # [{ name, count, posts: [{ index, title, url }] }]
     project_items: []     # [{ name, status, description, link }]
 
@@ -1032,6 +1037,8 @@ aether:
   # Posts in category "Travel & Visuals" are included when type: visual is absent.
   visuals:
     enable: true
+    # Optional curated post slugs/paths, in display order. Empty uses recent visual posts.
+    posts: []
     section_label: '07 / 影像'
     title: '旅行与影像：一些城市、路途和观看方式。'
     more_text: '查看完整影像档案'

@@ -16,11 +16,14 @@
 'use strict';
 
 const {
+  displayTitle,
+  newsletterIssue,
   inferredSeriesName,
   isNotePost,
   isRegularPost,
   isVisualPost,
-  slugifySeries
+  slugifySeries,
+  taxonomyNames
 } = require('../lib/aether-content');
 
 const stripTags = (html = '') => String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -28,6 +31,7 @@ const stripTags = (html = '') => String(html).replace(/<[^>]*>/g, ' ').replace(/
 const CAT_ZH = {
   'AI & Systems'          : 'AI 与系统',
   'AI-Systems'            : 'AI 与系统',
+  'Notes & Reflections'   : '笔记与随笔',
   'Notes & Essays'        : '笔记与随笔',
   'Notes-Essays'          : '笔记与随笔',
   'Product & Intelligence': '产品与判断',
@@ -71,7 +75,7 @@ function findBySlug(posts, slug) {
 // ---------- Latest writing ----------
 hexo.extend.helper.register('aether_latest', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.latest) || {};
-  const n = limit || cfg.limit || 6;
+  const n = limit || cfg.limit || 3;
   return (this.site.posts || { toArray: () => [] }).toArray()
     .filter(isRegularPost)
     .sort((a, b) => b.date - a.date)
@@ -83,8 +87,17 @@ hexo.extend.helper.register('aether_latest', function(limit) {
 hexo.extend.helper.register('aether_visuals', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.visuals) || {};
   const n = limit || cfg.limit || 5;
-  return (this.site.posts || { toArray: () => [] }).toArray()
+  const posts = (this.site.posts || { toArray: () => [] }).toArray();
+  const selection = ensureArr(cfg.posts);
+  if (selection.length) {
+    return [...new Set(selection)].map(slug => findBySlug(posts, slug)).filter(Boolean).slice(0, n);
+  }
+  return posts
     .filter(isVisualPost)
+    .filter(post => {
+      const tags = taxonomyNames(post.tags);
+      return post.type === 'visual' || !tags.some(tag => /^(Typography|VisualDesign)$/i.test(tag));
+    })
     .sort((a, b) => b.date - a.date)
     .slice(0, n);
 });
@@ -328,3 +341,26 @@ hexo.extend.helper.register('aether_post_category', function(post) {
   const first = post.categories.toArray ? post.categories.toArray()[0] : post.categories[0];
   return first ? catLabel(first.name) : '';
 });
+
+// Use explicit photography first, then the first image in a rendered travel post.
+hexo.extend.helper.register('aether_visual_cover', function(post) {
+  const photo = ensureArr(post.photos)[0];
+  const explicit = post.cover || (typeof photo === 'string' ? photo : photo && photo.url);
+  const match = String(post.content || '').match(/<img\b[^>]*\bsrc=["']([^"']+)["']/i);
+  const cover = explicit || (match ? match[1] : '');
+  // This image host supports HTTPS; avoid legacy HTTP redirects and mixed content.
+  return String(cover).replace(/^http:\/\/pics\.naaln\.com\//i, 'https://pics.naaln.com/');
+});
+
+// Editorial hierarchy is configured by series identity, never by its array position.
+hexo.extend.helper.register('aether_series_selection', function(items, featuredName) {
+  const series = ensureArr(items);
+  const featured = featuredName ? series.find(item => item.name === featuredName || item.slug === featuredName) : null;
+  const others = series.filter(item => item !== featured)
+    .sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0));
+  return { featured: featured || null, others: others.slice(0, featured ? 5 : 6) };
+});
+
+hexo.extend.helper.register('aether_display_title', displayTitle);
+hexo.extend.helper.register('aether_post_issue', newsletterIssue);
+hexo.extend.helper.register('aether_category_label', catLabel);

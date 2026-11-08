@@ -13,17 +13,24 @@
   font-family: var(--aether-ff-mono);
   font-size: 11px;
   gap: 8px;
-  letter-spacing: 0.06em;
+  letter-spacing: .06em;
   margin-left: 14px;
   padding: 6px 14px;
-  transition: all var(--aether-fast) var(--aether-ease);
+  transition: color var(--aether-fast) var(--aether-ease), background-color var(--aether-fast) var(--aether-ease), border-color var(--aether-fast) var(--aether-ease);
   white-space: nowrap;
 
-  &:hover { color: var(--aether-ink); border-color: var(--aether-rule-2); }
+  &:hover {
+    color: var(--aether-ink);
+    border-color: var(--aether-rule-2);
+  }
 
-  +mobile() { display: none; }
+  +mobile() {
+    display: none;
+  }
 }
-.aether-search-btn__icon  { font-size: 11px; }
+.aether-search-btn__icon {
+  font-size: 11px;
+}
 .aether-search-btn__label {
   font-family: var(--aether-ff-sans);
   font-size: 12.5px;
@@ -116,7 +123,7 @@ body[data-aether] {
   display: inline-flex;
   font-family: var(--aether-ff-sans);
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: .22em;
   padding: 0;
   text-decoration: none;
 
@@ -133,7 +140,7 @@ body[data-aether] {
   font-family: var(--aether-ff-sans);
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: .22em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -147,11 +154,7 @@ body[data-aether] {
 }
 
 // 让 use-motion 的初始隐藏失效
-.use-motion .site-title,
-.use-motion .site-subtitle,
-.use-motion .custom-logo-image,
-.use-motion .column,
-.use-motion .site-brand-container .toggle {
+.use-motion .site-title, .use-motion .site-subtitle, .use-motion .custom-logo-image, .use-motion .column, .use-motion .site-brand-container .toggle {
   opacity: 1;
   top: 0;
 }
@@ -200,4 +203,51 @@ body[data-aether] {
       font-size: 14px;
     }
   }
+}
+
+.aether-mobile-search {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: none;
+}
+
++tablet-mobile() {
+  .aether-header-row {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 12px;
+  }
+  .site-brand-container {
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+  }
+  .aether-mobile-search {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .aether-search-btn {
+    display: none;
+  }
+  .aether-header-row .site-nav {
+    order: 3;
+    flex: 0 0 100%;
+    align-items: flex-start;
+  }
+  .aether-header-row .menu {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 20px;
+    padding: 12px 0 0;
+  }
+}
+
+.site-title {
+  white-space: nowrap;
 }

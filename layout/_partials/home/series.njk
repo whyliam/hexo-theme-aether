@@ -5,12 +5,7 @@
 {%- set has_series = (explicit_series and explicit_series.length) or (auto_series and auto_series.length) -%}
 {%- set has_projects = explicit_projects and explicit_projects.length -%}
 {%- if has_series or has_projects %}
-<section class="aether-section" id="aether-series" data-aether-reveal>
-  <div class="aether-sec-label">
-    {%- set parts = (cfg.section_label or '05 / 系列与项目').split('/') -%}
-    <span class="num">{{ parts[0] | trim }}</span>
-    {%- if parts.length > 1 %}<span class="sep">/</span><span>{{ parts.slice(1).join('/') | trim }}</span>{% endif %}
-  </div>
+<section class="aether-section" id="aether-series">
   <div class="aether-sec-head">
     <h2>{{ cfg.title | safe }}</h2>
     {%- if not has_projects %}
@@ -43,7 +38,7 @@
             {%- for s in auto_series.slice(0, 4) %}
               <li><a href="{{ s.url }}">
                 <span class="pn">S-{{ aether_pad(loop.index) }}</span>
-                <span class="label">{{ s.name }}<small>{{ s.count }} 篇 · 最近更新 {{ date(s.latest_date, 'YYYY-MM') }}</small></span>
+                <span class="label">{{ s.name }}<small>{{ s.count }} 篇 · 最近更新 {{ date(s.latest_date, 'YYYY-MM-DD') }}</small></span>
                 <span class="status is-live">进行中</span>
               </a></li>
             {%- endfor %}
@@ -69,55 +64,38 @@
   </div>
 
   {%- else %}
-  {# ── No projects → full-width Bento grid of series ── #}
-  {%- if explicit_series and explicit_series.length %}
-    {%- set s_list = explicit_series -%}
-    {%- set s_is_explicit = true -%}
-  {%- else %}
-    {%- set s_list = auto_series.slice(0, 6) -%}
-    {%- set s_is_explicit = false -%}
+  {%- set selection = aether_series_selection(explicit_series if (explicit_series and explicit_series.length) else auto_series, cfg.featured) -%}
+  {%- set featured = selection.featured -%}
+  {%- if featured %}
+  <a class="aether-series-lead" href="{{ url_for(featured.url or '/series/') }}">
+    <div class="aether-series-lead__intro">
+      <p class="aether-series-lead__label">重点系列{% if featured.posts and featured.posts.length %}<span>{{ date(featured.posts[0].date, 'YYYY') }} — {{ date(featured.latest_date or featured.posts[featured.posts.length - 1].date, 'YYYY') }}</span>{% endif %}</p>
+      <h3>{{ featured.name }}</h3>
+      {%- if cfg.featured_description or featured.subtitle %}<p class="aether-series-lead__description">{{ cfg.featured_description or featured.subtitle }}</p>{% endif %}
+      <p class="aether-series-lead__count"><strong>{{ featured.count or '—' }}</strong> 篇文章<span aria-hidden="true">↗</span></p>
+    </div>
+    <div class="aether-series-lead__reading">
+      {%- if featured.posts and featured.posts.length %}
+        {%- for post in featured.posts.slice(-2).reverse() %}
+        <div class="aether-series-lead__post"><span>{{ '最新一篇' if loop.first else '上一篇' }}</span><p>{{ aether_display_title(post) }}</p></div>
+        {%- endfor %}
+      {%- endif %}
+      {%- if featured.latest_date %}<p class="aether-series-lead__updated">最近更新 <time datetime="{{ date(featured.latest_date, 'YYYY-MM-DD') }}">{{ date(featured.latest_date, 'YYYY-MM-DD') }}</time></p>{% endif %}
+    </div>
+  </a>
   {%- endif %}
-  <div class="aether-series-grid">
-    {%- for s in s_list %}
-    {%- set latest = s.posts[s.posts.length - 1] if (not s_is_explicit and s.posts and s.posts.length) else null -%}
-    {%- set prev = s.posts[s.posts.length - 2] if (not s_is_explicit and s.posts and s.posts.length > 1) else null -%}
-    <a href="{{ s.url or '#' }}" class="aether-series-tile{% if loop.index0 == 0 and s_list.length >= 3 %} is-featured{% endif %}{% if not latest %} no-posts{% endif %}">
-      <div class="aether-st-head">
-        <span class="aether-st-num">S-{{ s.index or aether_pad(loop.index) }}</span>
-        {%- if s_is_explicit and s.status %}
-          <span class="aether-st-status {{ s.status_variant or 'is-live' }}">{{ s.status }}</span>
-        {%- else %}
-          <span class="aether-st-status is-live">进行中</span>
-        {%- endif %}
-      </div>
-      <h3 class="aether-st-title">{{ s.name }}</h3>
-      {%- if s_is_explicit and s.subtitle %}
-        <p class="aether-st-desc">{{ s.subtitle }}</p>
-      {%- endif %}
-      {%- if latest %}
-      <div class="aether-st-posts">
-        <div class="aether-st-post">
-          <span class="aether-st-post-label">最新</span>
-          <span class="aether-st-post-title">{{ latest.title }}</span>
-        </div>
-        {%- if prev and loop.index0 == 0 and s_list.length >= 3 %}
-        <div class="aether-st-post">
-          <span class="aether-st-post-label">上篇</span>
-          <span class="aether-st-post-title">{{ prev.title }}</span>
-        </div>
-        {%- endif %}
-      </div>
-      {%- endif %}
-      <div class="aether-st-foot">
-        <span class="aether-st-count">{{ s.count or '—' }} 篇</span>
-        {%- if s.latest_date %}
-        <span class="aether-st-date">{{ date(s.latest_date, 'YYYY-MM') }}</span>
-        {%- endif %}
-        <span class="aether-st-arr">→</span>
-      </div>
+  {%- if selection.others.length %}
+  <div class="aether-series-secondary">
+    {%- for s in selection.others %}
+    <a class="aether-series-entry" href="{{ url_for(s.url or '/series/') }}">
+      <div class="aether-series-entry__meta"><span>{{ s.count or '—' }} 篇{% if s.posts and s.posts.length %} · {{ date(s.posts[0].date, 'YYYY') }} 起{% endif %}</span>{% if s.latest_date %}<time datetime="{{ date(s.latest_date, 'YYYY-MM-DD') }}">更新 {{ date(s.latest_date, 'YYYY-MM-DD') }}</time>{% endif %}</div>
+      <h3>{{ s.name }}</h3>
+      {%- if s.posts and s.posts.length %}<p class="aether-series-entry__latest">{{ aether_display_title(s.posts[s.posts.length - 1]) }}</p>{% elif s.subtitle %}<p class="aether-series-entry__latest">{{ s.subtitle }}</p>{% endif %}
+      <span class="aether-series-entry__link">探索系列 <span aria-hidden="true">↗</span></span>
     </a>
     {%- endfor %}
   </div>
+  {%- endif %}
   {%- endif %}
 </section>
 {%- endif %}
