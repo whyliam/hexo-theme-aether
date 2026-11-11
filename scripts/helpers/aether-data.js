@@ -71,6 +71,18 @@ function findBySlug(posts, slug) {
 }
 
 
+// Keep year wrappers structurally balanced inside each template loop.
+hexo.extend.helper.register('aether_archive_groups', function(collection) {
+  const posts = Array.isArray(collection) ? collection : collection?.toArray() || [];
+  const groups = new Map();
+  for (const post of posts) {
+    const year = this.date(post.date, 'YYYY');
+    if (!groups.has(year)) groups.set(year, { year, posts: [] });
+    groups.get(year).posts.push(post);
+  }
+  return [...groups.values()];
+});
+
 // ---------- Latest writing ----------
 hexo.extend.helper.register('aether_latest', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.latest) || {};

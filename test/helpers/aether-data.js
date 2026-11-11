@@ -103,6 +103,35 @@ describe('aether-data', () => {
     });
   });
 
+  describe('aether_archive_groups', () => {
+    const ctx = { date: value => new Date(value).getUTCFullYear().toString() };
+
+    it('groups a paginated query without changing article or year order', () => {
+      const posts = [
+        { title: 'Latest', date: '2026-10-31' },
+        { title: 'Previous', date: '2026-10-24' },
+        { title: 'Older', date: '2025-11-01' }
+      ];
+      const original = posts.slice();
+      const groups = callHelper('aether_archive_groups', [makePosts(posts)], ctx);
+      groups.map(group => group.year).should.deep.equal(['2026', '2025']);
+      groups.map(group => group.posts).should.deep.equal([posts.slice(0, 2), posts.slice(2)]);
+      posts.should.deep.equal(original);
+    });
+
+    it('accepts arrays and empty collections', () => {
+      callHelper('aether_archive_groups', [[]], ctx).should.deep.equal([]);
+      callHelper('aether_archive_groups', [null], ctx).should.deep.equal([]);
+      const post = { date: '2024-01-01' };
+      callHelper('aether_archive_groups', [[post]], ctx).should.deep.equal([{ year: '2024', posts: [post] }]);
+    });
+
+    it('uses the render context date formatter for the year boundary', () => {
+      const post = { date: '2025-12-31T23:30:00Z' };
+      callHelper('aether_archive_groups', [[post]], { date: () => '2026' })[0].year.should.equal('2026');
+    });
+  });
+
   // ---------- stripTags (tested via aether_summary) ----------
   describe('aether_summary', () => {
     it('strips HTML tags', () => {

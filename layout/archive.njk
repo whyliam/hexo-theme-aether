@@ -15,22 +15,17 @@
   </section>
   {{ archive_template.navigation('archives') }}
 
-  {%- set current_year = '' %}
-  {%- for post in page.posts.toArray() %}
-    {%- set year = date(post.date, 'YYYY') %}
-    {%- if year !== current_year %}
-      {%- if current_year %}</div>{%- endif %}
-      {%- set current_year = year %}
-      <div class="aether-archive-year-group">
+  {%- for group in aether_archive_groups(page.posts) %}
+    <div class="aether-archive-year-group">
         <h2 class="aether-archive-year">
-          {{ current_year }}
-          <span class="aether-archive-year-count">{{ post_count(year) }}</span>
+          {{ group.year }}
+          <span class="aether-archive-year-count">{{ post_count(group.year) }}</span>
         </h2>
-    {%- endif %}
-
-    {{ archive_template.item(post) }}
+      {%- for post in group.posts %}
+        {{ archive_template.item(post) }}
+      {%- endfor %}
+    </div>
   {%- endfor %}
-  {%- if current_year %}</div>{%- endif %}
 
   {%- else %}
   {# NexT fallback #}
