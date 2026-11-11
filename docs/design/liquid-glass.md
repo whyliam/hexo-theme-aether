@@ -1,3 +1,5 @@
+> 阶段性设计与验收记录。当前规则以 [设计规范](../DESIGN.md) 为准；当次本地预览地址不代表公开服务。
+
 # AETHER Liquid Glass：实施与验收
 
 2026-11-11。七页本地升级已实施，未发布线上，未提交或推送 Git。
@@ -7,7 +9,7 @@
 - 本地网站：http://localhost:4003/
 - 截图对照：http://localhost:4003/review/
 - 独立预览目录：`/tmp/aether-liquid-preview`。
-- 截图与原始检查结果：`/Users/xingquan/.codex/visualizations/2026/11/11/01a1c891-8b0f-7970-9af6-98b9860fa4a9/liquid-glass/`。
+- 截图与原始检查结果：`<local-evidence>`。
 
 预览使用真实博客内容、当前主题及仅包含本地渲染、生成、RSS和服务器插件的白名单。未加载部署、搜索引擎提交或 Algolia 上传插件。静态服务运行于127.0.0.1:4003。
 

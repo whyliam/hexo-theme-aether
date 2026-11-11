@@ -10,6 +10,12 @@ node_modules/
 .nyc_output/
 coverage/
 .env
+.venv/
+
+# Local agent planning records
+/task_plan.md
+/findings.md
+/progress.md
 
 # Open Design / temp artifacts
 .od-skills/

@@ -1,3 +1,5 @@
+> Aether 贡献请先阅读 [当前开发检查](../../README.md#开发检查) 和 [设计规范](../DESIGN.md)。以下保留上游 NexT 通用流程。
+
 <div align="right">
   语言：
   <a title="英语" href="../../.github/CONTRIBUTING.md">:us:</a>
@@ -52,7 +54,7 @@
 反馈 Bug 前，请再次确认您已经查看了 [你需要了解的](#你需要了解的) 内容，避免提交重复的 Issue。创建 Issue 时，请认真遵守如下指南，这样我们才能更好地理解问题，重现问题和解决问题。
 
 * 在标题中清晰准确地描述你的问题。
-* 按照 [模板](../../.github/ISSUE_TEMPLATE.md) 尽可能的详细填写相关信息。
+* 按照 [模板](../../.github/ISSUE_TEMPLATE/) 尽可能的详细填写相关信息。
 * 一步步详细你是如何重现 Bug 的，做了什么，使用了哪些功能等等。如果你需要展示代码段，请使用 [Markdown 代码块](https://help.github.com/articles/creating-and-highlighting-code-blocks/) 或 [Github 预览链接](https://help.github.com/articles/creating-a-permanent-link-to-a-code-snippet/) 或 [Gist 链接](https://gist.github.com/)。
 * 提供 Bug 的样例，如图像文件、在线演示网址等等。
 * 详细描述通过上述重现过程出现的问题。
@@ -66,7 +68,7 @@
 
 ### 提交功能需求
 
-提交功能需求前，请再次确认您已经查看了 [你需要了解的](#你需要了解的) 内容，避免提交重复的 Issue。确定相关仓库后，创建 Issue 并按照 [模板](../../.github/ISSUE_TEMPLATE.md) 尽可能的详细填写相关信息。
+提交功能需求前，请再次确认您已经查看了 [你需要了解的](#你需要了解的) 内容，避免提交重复的 Issue。确定相关仓库后，创建 Issue 并按照 [模板](../../.github/ISSUE_TEMPLATE/) 尽可能的详细填写相关信息。
 
 请认真遵守如下指南，这样我们才能更好地理解和开发功能需求:pencil:：
 

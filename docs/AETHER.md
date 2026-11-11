@@ -1,571 +1,128 @@
-# Aether
+# Aether 配置指南
 
-基于 [NexT](https://github.com/next-theme/hexo-theme-next) v8.27.0 的第 5 个 Scheme，为个人知识品牌站设计。
+Aether 基于 NexT 8.27.0，使用 Hexo、Nunjucks 和 Stylus。当前首页和内页设计见 [设计规范](DESIGN.md)，可用配置的完整清单以主题 [_config.yml](../_config.yml) 为准。
 
-Aether 把博客当作「低维护成本的个人内容系统」——编辑式首页、长期系列聚合、影像归档、Cmd+K 全站搜索，写完文章即自动更新，首页几乎不需要手动运营。
+## 安装与启用
 
-> 当前视觉规范和阅读优先的首页结构见 [设计规范](DESIGN.md)。本页部分旧模块配置属于兼容说明；首页实际顺序以 `layout/index.njk` 为准。
+在已有 Hexo 站点中执行：
 
----
-
-## 快速开始
-
-### 1. 安装
-
-```bash
-cd your-hexo-blog
-git clone https://github.com/whyliam/hexo-theme-aether themes/aether
+```sh
+git clone --branch master https://github.com/whyliam/hexo-theme-aether themes/aether
+npx hexo config theme aether
+cp themes/aether/_config.yml _config.aether.yml
+npx hexo server
 ```
 
-或软链开发：
+站点 `_config.yml` 中的 `theme: aether` 选择主题。与它同级的 `_config.aether.yml` 是 **主题配置文件**，直接填写 `scheme`、`menu`、`aether` 等字段，不包在 `theme_config` 下，也不作为 `--config` 的站点配置叠加文件使用。
 
-```bash
-ln -s /path/to/hexo-theme-aether themes/aether
-```
-
-### 2. 启用
-
-创建 `_config.aether.yml`（与 `_config.yml` 同级）：
+如果已有 `_config.aether.yml`，保留并修改现有文件。不要重复复制覆盖。作者、站点标题和描述继续在站点 `_config.yml` 中配置。
 
 ```yaml
-theme: aether
+# _config.aether.yml（主题配置）
+scheme: Aether
+menu:
+  首页: / || fa fa-home
+  写作: /archives/ || fa fa-pencil-alt
+  系列: /series/ || fa fa-layer-group
+  影像: /visuals/ || fa fa-camera-retro
+  关于: /about/ || fa fa-user
 
-theme_config:
-  scheme: Aether
-
-  menu:
-    首页: / || fa fa-home
-    写作: /archives/ || fa fa-pencil-alt
-    系列: /series/ || fa fa-layer-group
-    影像: /visuals/ || fa fa-camera-retro
-    关于: /about/ || fa fa-user
+aether:
+  hero:
+    name: 你的名字
+    intro: 记录技术、产品与长期思考。
+    eyebrow: 个人知识档案
+    caption: 写作，让思考慢慢成形。
+    motion: true
+  latest:
+    enable: true
+    title: 最近更新
+    limit: 3
+  series:
+    enable: true
+    title: 长期系列
+    featured: agent-runtime
+    featured_description: 持续记录 Agent 系统的设计与实践。
+  newsletter:
+    enable: true
+    text: 关注更新
+    channels:
+      - label: RSS
+        url: /atom.xml
 ```
 
-### 3. 启动
+## 首页与内容
 
-```bash
-hexo s --config _config.yml,_config.aether.yml
-```
+首页顺序固定为介绍、最近更新、精选阅读、长期系列、短札与影像、订阅渠道。各模块支持 `enable: false`。没有内容的阅读路径、文章和系列模块会跳过；订阅渠道与作者文案由配置维护。
 
-双配置叠加：`_config.aether.yml` 覆盖 `_config.yml` 的同名字段。原有主题配置不受影响，随时可以切回。
+### 作者介绍
 
----
+`aether.hero.name` 缺省时使用站点作者名；`intro` 缺省时依次读取旧字段 `identity`、站点描述。`motion: false` 禁用书页动效。移动设备及减少动态等回退路径使用静态图；桌面 WebGL 是否启用取决于设备能力。
 
-## 文章 Frontmatter
+旧版 `hero.title`、`description`、`actions`、`side_panel`、`meta_stats` 不用于当前首页。旧配置保留在 [历史配置说明](design/archive/legacy-configuration.md)，不应作为新站点设置依据。
 
-### 必填
+### 精选阅读路径
+
+当前同时支持 `aether.start_here` 与旧名称 `aether.paths`；前者存在时优先。文章引用可填写 slug 或路径对象。无效文章会被跳过，避免输出失效链接。
 
 ```yaml
----
-title: 文章标题
-date: 2026-06-09
----
+aether:
+  paths:
+    enable: true
+    title: 从这里开始
+    items:
+      - intent: 理解 Agent 系统
+        description: 从几篇代表作开始。
+        posts:
+          - slug: agent-runtime-introduction
+          - slug: agent-design-notes
 ```
 
-### 推荐
+将此片段合并到已有 `aether` 下，不要在同一个 YAML 文件中重复定义顶层 `aether`。
 
-```yaml
----
-title: Agent 时代启示录
-date: 2026-06-09
-categories:
-  - AI & Systems
-tags:
-  - Agent
-  - Runtime
-description: 从 Copilot 到 Harness，AI 编程工具的三代演进。
----
-```
-
-`description` 不写时自动截取正文前 110 字。
-
-### 系列文章
-
-加一个 `series` 字段，值相同的文章自动归入同一系列：
-
-```yaml
----
-title: "Weekly #42: Agent 的下一步"
-date: 2026-06-09
-categories:
-  - AI & Systems
-series: Newsletter 周刊
----
-```
-
-系列页 `/series/newsletter-周刊/` 和首页「系列」模块自动生成，无需额外配置。
-
-为兼容已有内容，未填写 `series` 时，Aether 也会根据稳定信号识别 Newsletter、AI Coding、Agent、Obsidian 与 2016 设计年鉴系列。显式 `series` 始终优先。
-
-### 影像帖
+### 文章、短札与影像
 
 ```yaml
 ---
-title: 坎昆的光
-date: 2026-05-20
-type: visual
-cover: /images/cancun-cover.jpg
-photos:
-  - /images/cancun-01.jpg
-  - /images/cancun-02.jpg
-location: Cancún, Mexico
-camera: Fujifilm X-T5
+title: 关于 Agent Runtime 的思考
+date: 2026-06-01
+categories: [AI & Systems]
+series: agent-runtime
+description: 可选的文章摘要。
 ---
 ```
 
-未填写 `type` 时，分类为 `Travel & Visuals` 的文章也会进入影像页；显式 `type: visual` 始终优先。
+- 普通文章无需 `type`；通过 `series` 归入长期主题。
+- 短札使用 `type: note`；显示在短札流。
+- 影像使用 `type: visual`，可配 `cover: /images/travel.jpg`；没有封面时尝试正文首图。
+- 旧文章的分类与稳定系列信号也参与推导。显式字段优先；年份、篇数与最近更新均由真实内容计算。
 
-### 短札
+`aether.visuals.posts` 可按顺序指定首页选片，空数组时按最近影像回退。影像归档保留其他历史记录。图片加载失败仍保留文章链接与占位尺寸。
 
-```yaml
----
-title: 关于 Context Window 的一个直觉
-date: 2026-06-08
-type: note
-categories:
-  - Notes & Essays
----
-```
+### 页面与订阅
 
-### 字段速查
+系列索引、系列详情、影像归档和搜索索引由主题生成。关于、分类索引、标签索引、订阅和留言板需要在站点 `source/` 中创建页面。
 
-| 字段 | 必填 | 类型 | 作用 |
-|---|---|---|---|
-| `title` | 是 | string | 文章标题 |
-| `date` | 是 | date | 发布日期 |
-| `categories` | 推荐 | string[] | 一级分类，建议不超过 4 个 |
-| `tags` | 可选 | string[] | 辅助标签 |
-| `description` | 可选 | string | 摘要，不写自动截取正文 |
-| `series` | 可选 | string | 系列名，值相同的文章自动归组 |
-| `type` | 可选 | string | `visual` = 影像帖，`note` = 短札，不填 = 普通文章 |
-| `cover` | 可选 | string | 封面图 URL，影像帖和文章卡片使用 |
-| `photos` | 可选 | string[] | 多图画廊，影像帖使用 |
-| `location` | 可选 | string | 地点，影像帖显示 |
-| `camera` | 可选 | string | 相机信息，影像归档页显示 |
+| 页面 | 建议文件 | Frontmatter |
+| --- | --- | --- |
+| 关于 | `source/about/index.md` | `layout: about` |
+| 分类索引 | `source/categories/index.md` | `type: categories` |
+| 标签索引 | `source/tags/index.md` | `type: tags` |
+| 订阅 | `source/newsletter/index.md` | `layout: newsletter` |
+| 留言板 | `source/boards/index.md` | `layout: guestbook` |
 
-不需要 `featured`、`thumbnail`、`subtitle`、`priority`、`card_description` 等字段。
+导航或订阅渠道的 URL 必须与实际文件路径一致。RSS 需要安装并配置 `hexo-generator-feed`；主题链接本身不会生成订阅源。邮件订阅需要另行接入服务，默认模板不承诺已开放邮件订阅。评论沿用 NexT/Waline 配置，参见主题 `_config.yml`。
 
----
+## 搜索、主题与玻璃效果
 
-## 首页模块配置
+- `aether.cmdk.enable` 控制本地搜索；构建时生成 `aether-search.json`。Cmd/Ctrl+K 打开，方向键选择，Escape 关闭并返回焦点。
+- 明暗主题初始跟随系统，手动切换后保存在浏览器中。
+- 导航与重点系列使用玻璃材质；鼠标高光有轻微滞后，稳定后停止帧调度。
+- 玻璃高光是 DOM/CSS 实现，参考 liquidGL 的视觉思路，并未集成其 GPU 背景折射。
+- 减少动态、减少透明度及触控模式下停止跟手高光；不支持背景模糊时使用不透明表面。
 
-首页由 6 个模块组成，每个都可以独立启用/禁用。
+## 开发与升级
 
-### 模块顺序
+运行 [README 中的开发检查](../README.md#开发检查)。模板检查器依赖固定在 `requirements-dev.txt`。修改年份分组模板时，应保持每个循环和条件分支内的 HTML 标签独立闭合。
 
-```
-01 Hero          — 个人定位 + 当前关注
-02 Start Here    — 新访客阅读路径
-03 Building      — 长期项目/系统
-04 Latest        — 最近文章（自动）
-05 Notes&Visuals — 短札 + 影像（自动）
-06 Subscribe     — 订阅入口
-```
-
-### 01 Hero
-
-```yaml
-theme_config:
-  aether:
-    hero:
-      enable: true
-      eyebrow: '个人知识档案 · 始于 2010'
-      identity: 行权 · Liam
-      title: "写给构建者的\n思考笔记"
-      description: AI · Data · Product · 影像记录
-      actions:
-        - text: 开始阅读
-          url: '#aether-latest'
-          variant: primary          # primary | default | ghost
-        - text: 阅读路径
-          url: '#aether-start-here'
-          variant: default
-        - text: 关于我
-          url: /about/
-          variant: ghost
-      side_panel:
-        enable: true
-        title: 当前关注
-        updated: '2026-06'
-        items:
-          - title: AI Coding Harness
-            subtitle: 从 Copilot 到 Agent 的编程工具演进
-            url: /series/ai-coding-evolution/
-          - title: Agent Runtime
-            subtitle: 构建可靠的 AI Agent 运行时
-            url: /series/agent-runtime/
-      meta_stats: []              # 空数组 = 自动统计文章/分类/标签数
-```
-
-`meta_stats` 留空会自动显示博客的文章、分类、标签总数（可点击跳转）。手动指定：
-
-```yaml
-      meta_stats:
-        - label: 篇文章
-          value: '702'
-        - label: 个分类
-          value: '4'
-```
-
-### 02 Start Here
-
-```yaml
-    start_here:
-      enable: true
-      section_label: '02 / 从这里开始'
-      title: "不知道从哪开始？<em>试试这三条路径</em>"
-      items:
-        - intent: 理解 AI 系统与 Agent
-          description: AI 编程工具的演进与实践
-          posts:
-            - slug: ai-coding-evolution-2026
-            - slug: agent-runtime-design
-          category: 'AI & Systems'   # posts 不够时从这个分类补
-          limit: 3
-        - intent: 理解产品、数据与判断
-          description: 数据驱动的产品方法论
-          category: 'Product & Intelligence'
-          limit: 3
-        - intent: 理解长期写作与知识系统
-          description: 知识管理、写作方法与 Obsidian 实践
-          category: 'Notes & Essays'
-          limit: 3
-```
-
-每条路径的文章解析优先级：`posts`（按 slug 精确匹配）→ `category` + `limit` → `tag` + `limit` → `series` → `url`（作为 CTA 链接）。
-
-### 03 Building
-
-```yaml
-    building:
-      enable: true
-      section_label: '03 / Building'
-      title: 正在构建
-      subtitle: 长期投入的系统与项目
-      items:
-        - name: AI Coding Harness
-          description: 从 Copilot 到 Agent 的编程工具演进
-          status: 持续更新
-          status_variant: is-live    # is-live | is-rd | is-beta
-          url: /series/ai-coding-evolution/
-        - name: Aether Blog Theme
-          description: 低维护个人内容系统
-          status: 开发中
-          status_variant: is-rd
-          url: https://github.com/whyliam/hexo-theme-aether
-          external: true
-```
-
-### 04 Latest
-
-```yaml
-    latest:
-      enable: true
-      section_label: '04 / 最近更新'
-      title: 最近写的
-      limit: 5                      # 显示篇数，默认 6
-```
-
-自动拉取最近的普通文章（排除 `type: visual` 和 `type: note`），无需手动维护。
-
-### 05 Notes & Visuals
-
-```yaml
-    notes_visuals:
-      enable: true
-      section_label: '05 / 思考与影像'
-      title: "一些思考碎片、城市观察\n<em>和影像记录</em>"
-      notes_limit: 3
-      visuals_limit: 4
-```
-
-左侧自动拉取 `type: note` 的文章，右侧自动拉取 `type: visual` 的文章。
-
-### 06 Subscribe
-
-```yaml
-    newsletter:
-      enable: true
-      text: 关注更新
-      channels:
-        - label: RSS
-          url: /atom.xml
-        - label: Newsletter
-          url: https://your-newsletter-url
-        - label: GitHub
-          url: https://github.com/yourname
-          external: true
-```
-
-极简的一行订阅栏。`channels` 为空时不渲染。
-
----
-
-## 文章页功能
-
-### 系列导航
-
-文章有 `series` 字段时，底部自动出现系列内的前后篇导航（← 上一篇 / 下一篇 →）和系列总目录链接。
-
-### 文章底部 CTA
-
-```yaml
-    cta:
-      enable: true
-      eyebrow: 关注
-      title: 我的输出渠道
-      description: 每个渠道有不同的内容节奏和视角
-      channels:
-        - label: RSS
-          url: /atom.xml
-          hint: 全量输出
-        - label: Newsletter
-          url: https://your-newsletter-url
-          hint: 精选 + 评论
-        - label: GitHub
-          url: https://github.com/yourname
-          hint: 代码 + 工具
-```
-
-每篇普通文章底部显示。`enable_all: true` 时也会在短札和影像帖底部显示。
-
-### 阅读进度条
-
-```yaml
-    reading_progress: true
-```
-
-文章页顶部显示 2px 阅读进度条。
-
----
-
-## 全站搜索（Cmd+K）
-
-```yaml
-    cmdk:
-      enable: true
-      placeholder: 搜索文章、系列、标签...
-      recent_count: 4
-```
-
-按 `Cmd+K`（macOS）或 `Ctrl+K` 打开命令面板，支持文章、系列、分类、页面的全文搜索。搜索索引在构建时自动生成（`aether-search.json`），无需外部服务。
-
----
-
-## 自动生成的页面
-
-这些页面由 Aether 的 generator 在构建时自动生成，无需手动创建：
-
-| 页面 | 路径 | 触发条件 |
-|---|---|---|
-| 系列索引 | `/series/` | 有显式 `series`，或命中稳定系列识别规则 |
-| 系列详情 | `/series/<slug>/` | 同上，每个系列一个页面 |
-| 影像页 | `/visuals/` | 有 `type: visual`，或分类为 `Travel & Visuals` |
-| 搜索索引 | `/aether-search.json` | `cmdk.enable` 不为 false |
-
-### 需要手动创建的页面
-
-`/about/` 页面需要手动创建：
-
-```bash
-hexo new page about
-```
-
-然后编辑 `source/about/index.md`。
-
----
-
-## 品牌定制
-
-### 品牌文字
-
-```yaml
-    brand:
-      text: AETHER              # 导航栏品牌名
-      dot: true                 # 品牌名后的装饰点
-```
-
-### 页脚
-
-```yaml
-  footer:
-    since: 2010
-    icon:
-      name: fa fa-feather
-      color: '#2a3a6b'
-    copyright: 行权 · Liam
-    powered: false              # 隐藏 "Powered by Hexo & NexT"
-```
-
-### 社交链接
-
-```yaml
-  social:
-    GitHub: https://github.com/yourname || fab fa-github
-    微博: https://weibo.com/yourname || fab fa-weibo
-    X: https://twitter.com/yourname || fab fa-x-twitter
-    RSS: /atom.xml || fa fa-rss
-```
-
----
-
-## 暗色模式
-
-主题内置暗色模式支持。在 `_config.yml` 或 overlay 中：
-
-```yaml
-  darkmode: true
-```
-
-自动跟随系统偏好，也可通过导航栏切换按钮手动切换。
-
----
-
-## 分类建议
-
-Aether 建议一级分类不超过 4 个：
-
-```
-AI & Systems           — AI、工具与系统
-Product & Intelligence — 产品、数据与判断
-Notes & Essays         — 札记、随笔与复盘
-Travel & Visuals       — 旅行、摄影与观看
-```
-
-分类是导航的主路径，标签是辅助检索，系列是长期主题沉淀。三者不混用。
-
----
-
-## 维护频率
-
-| 模块 | 维护方式 | 频率 |
-|---|---|---|
-| Hero 文案 | 手动 | 半年一次 |
-| 当前关注 | 手动 | 季度一次 |
-| Start Here | 手动 | 半年一次 |
-| Building | 手动 | 季度一次 |
-| Latest | 自动 | 不维护 |
-| Notes & Visuals | 自动 | 不维护 |
-| Subscribe | 手动 | 很少 |
-
-首页有 3 个模块需要手动维护，其余全部自动生成。
-
----
-
-## 与 NexT 的关系
-
-Aether 是 NexT v8.27.0 的第 5 个 Scheme（与 Muse / Mist / Pisces / Gemini 并列）。所有 Aether 功能仅在 `scheme: Aether` 时激活，其余 Scheme 不受影响。
-
-NexT 的核心功能（代码高亮、TOC、评论系统、数学公式、搜索等）在 Aether 下全部可用。
-
----
-
-## 完整配置示例
-
-```yaml
-# _config.aether.yml
-
-theme: aether
-
-theme_config:
-  scheme: Aether
-  darkmode: true
-
-  menu:
-    首页: / || fa fa-home
-    写作: /archives/ || fa fa-pencil-alt
-    系列: /series/ || fa fa-layer-group
-    影像: /visuals/ || fa fa-camera-retro
-    关于: /about/ || fa fa-user
-
-  social:
-    GitHub: https://github.com/yourname || fab fa-github
-    RSS: /atom.xml || fa fa-rss
-
-  footer:
-    since: 2010
-    copyright: Your Name
-    powered: false
-
-  aether:
-    brand:
-      text: AETHER
-      dot: true
-
-    reading_progress: true
-
-    hero:
-      enable: true
-      eyebrow: '个人知识档案'
-      identity: Your Name
-      title: "你的标题"
-      description: 你的一句话定位
-      actions:
-        - text: 开始阅读
-          url: '#aether-latest'
-          variant: primary
-        - text: 关于我
-          url: /about/
-          variant: ghost
-      side_panel:
-        enable: true
-        title: 当前关注
-        items:
-          - title: 项目名称
-            subtitle: 一句话说明
-            url: /series/slug/
-
-    start_here:
-      enable: true
-      section_label: '02 / 从这里开始'
-      title: "不知道从哪开始？"
-      items:
-        - intent: 路径一
-          description: 路径说明
-          category: 'AI & Systems'
-          limit: 3
-
-    building:
-      enable: true
-      section_label: '03 / Building'
-      title: 正在构建
-      items:
-        - name: 项目名
-          description: 项目说明
-          status: 持续更新
-          status_variant: is-live
-          url: /series/slug/
-
-    latest:
-      enable: true
-      limit: 5
-
-    notes_visuals:
-      enable: true
-      notes_limit: 3
-      visuals_limit: 4
-
-    newsletter:
-      enable: true
-      text: 关注更新
-      channels:
-        - label: RSS
-          url: /atom.xml
-
-    cmdk:
-      enable: true
-
-    cta:
-      enable: true
-      channels:
-        - label: RSS
-          url: /atom.xml
-```
-
-### 首页摄影选片
-
-可在站点 `_config.aether.yml` 的 `aether.visuals.posts` 中填写文章 slug 或路径数组。首页按指定顺序展示，跳过不存在的文章并去重；空数组保持最近影像的默认行为。选片应核实图片实际内容，不能仅依赖响应状态。封面支持 `cover`、`photos[0]` 和正文首图回退；旧 `http://pics.naaln.com/` 封面在输出时升级为已验证可用的 HTTPS。
-
-### 首页重点系列
-
-`aether.series.featured` 接受一个系列名称或 slug，`featured_description` 设置简介。匹配的系列成为唯一重点，其余系列按累计篇数排列为轻量条目；找不到匹配项时正常展示其他系列。计数、起始年份、文章和最近更新时间来自系列数据，不应写入静态展示数字。
+在 Hexo 站点执行 `npx hexo clean && npx hexo generate`，避免共享 Stylus 或模板更新后继续读取旧缓存。主题本身不包含站点文章、用户账号或部署凭据。许可证与上游致谢请保留。

@@ -1,3 +1,5 @@
+> 此页保留上游 NexT 文档。Aether 用户请使用 [当前 README](../../README.md) 与 [配置指南](../AETHER.md)。
+
 <div align="right">
   语言:
   <a title="英语" href="../../README.md">🇺🇸</a>

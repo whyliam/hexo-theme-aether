@@ -1,3 +1,5 @@
+> Архив документации NexT. Для Aether используйте [README](../../README.md) и [руководство](../AETHER.md).
+
 <div align="right">
   Язык:
   <a title="Английский" href="../../README.md">🇺🇸</a>

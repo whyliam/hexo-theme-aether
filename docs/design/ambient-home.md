@@ -1,3 +1,5 @@
+> 阶段性设计与验收记录。当前规则以 [设计规范](../DESIGN.md) 为准；当次本地预览地址不代表公开服务。
+
 # 首页渐进升级：Editorial × Organic × Ambient Motion
 
 后续精修见 [第二轮精修](editorial-refinement.md)，主体行为、系列布局和最新验收以该文档为准。
@@ -69,7 +71,7 @@ gradient-backdrops 本地 MIT runtime，mesh / speed .12 / quality .35，暖白�
 ### 截图
 
 桌面、390px 手机、深色、内容区、恢复后的桌面与手机影像截图保存在本次聊天的 visualization 目录：
-`/Users/xingquan/.codex/visualizations/2026/11/08/01a1b970-7507-7911-93ad-f0132bcbcc87/aether-upgrade/`。
+`<local-evidence>`。
 
 本地预览：`http://localhost:4002/`。预览目录 `/tmp/aether-organic-preview` 通过符号链接读取当前主题与真实文章，仅使用独立输出目录。生产发布不属于本轮自动操作。
 

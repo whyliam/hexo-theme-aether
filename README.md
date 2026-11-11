@@ -10,9 +10,10 @@
 - 📚 **系列聚合** — 通过 `series` 字段自动生成系列索引页与导航
 - 📷 **影像归档** — `type: visual` 专属画廊布局，独立于文章流
 - 📝 **短札系统** — `type: note` 用于碎片化思考与每日记录
-- 🔍 **⌘K 全站搜索** — 命令面板式搜索，支持文章、系列、标签
+- 🔍 **⌘K 全站搜索** — 命令面板式搜索，支持文章、系列、影像、短札和页面
 - 🌙 **深色模式** — 自动跟随系统 + 手动切换，平滑无闪烁
 - 🎨 **有机与编辑风格** — 柔和渐变、苔绿强调、清晰的文章层级
+- 🫧 **玻璃材质** — 半透明导航、圆润高光与轻量跟手反馈，保留减少动态和透明度的回退
 - ♿ **无障碍** — `focus-visible`、`prefers-reduced-motion`、语义 HTML
 - 🇨🇳 **中文优化** — pangu.js 自动空格、中英混排衬线正文
 - 📖 **ToC 追踪** — IntersectionObserver 实现的目录高亮
@@ -22,16 +23,16 @@
 ```sh
 # 1. 克隆主题到 Hexo 项目
 cd hexo-site
-git clone https://github.com/your-org/hexo-theme-aether themes/aether
+git clone --branch master https://github.com/whyliam/hexo-theme-aether themes/aether
 
 # 2. 启用主题（修改站点 _config.yml）
-echo "theme: aether" >> _config.yml
+npx hexo config theme aether
 
 # 3. 复制并编辑主题配置
 cp themes/aether/_config.yml _config.aether.yml
 
 # 4. 启动本地预览
-hexo s
+npx hexo server
 ```
 
 ## 内容类型
@@ -70,11 +71,11 @@ type: note
 | 模块 | 说明 |
 | --- | --- |
 | **简短介绍** | 名字、一句话写作方向、关于入口 |
-| **Latest** | 最新文章流，默认 6 篇，第一篇适度突出 |
+| **Latest** | 最新文章流，默认 3 篇，第一篇标记最新发布 |
 | **Start Here** | 通过 `start_here.items[].posts` 配置精选阅读路径 |
 | **Series** | 长期系列、文章数与最近更新 |
 | **Notes & Visuals** | 短札 + 影像双栏聚合 |
-| **Subscribe** | Newsletter 订阅入口 |
+| **Subscribe** | RSS 等配置渠道；邮件订阅需另行接入服务 |
 
 详细配置见 [docs/AETHER.md](docs/AETHER.md)。
 
@@ -82,14 +83,30 @@ type: note
 
 - 📖 [完整配置文档](docs/AETHER.md) — 所有模块、字段、自定义项
 - 📐 [设计规范](docs/DESIGN.md) — 当前视觉、组件、响应式与验收规则
-- 📋 [改造工作日志](BLOG_REDESIGN_WORKLOG.md) — 实现细节与权衡
+- 📋 [历史改造日志](docs/design/archive/redesign-worklog.md) — 历史探索，不作为当前配置依据
 
 ## 技术栈
 
 - [Hexo](https://hexo.io) 8.1.1+
 - [NexT](https://theme-next.js.org) 8.27.0（Aether Scheme）
 - [Stylus](https://stylus-lang.com) / [Nunjucks](https://mozilla.github.io/nunjucks/)
-- Node.js ≥ 18.18
+- Node.js ≥ 20.19（Hexo 8 的运行要求）
+
+## 开发检查
+
+在主题仓库中运行：
+
+```sh
+npm install
+npm run eslint
+npm test
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-dev.txt
+# Windows 使用 .venv/Scripts/curlylint.exe
+.venv/bin/curlylint --include .njk layout
+```
+
+在安装此主题的 Hexo 站点运行 `npx hexo clean && npx hexo generate` 检查完整渲染。更新共享 Stylus 后先清理缓存。PR 和 `master` 推送都会运行模板检查与跨平台构建。
 
 ## License
 

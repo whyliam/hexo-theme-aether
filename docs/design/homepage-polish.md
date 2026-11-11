@@ -47,7 +47,7 @@
 - 浏览器快照中的摘要末尾替换字符属于快照输出截断；直接 DOM 检查无 U+FFFD，原文未修改。
 
 截图与测试证据目录：
-`/Users/xingquan/.codex/visualizations/2026/11/11/01a1c974-875c-76b0-a520-4e2a7f4ee888/aether-home-polish/`。
+`<local-evidence>`。
 
 这是限定环境下的回归检查，不代表已穷举所有随机输入、浏览器或实体设备；本轮浏览器为 Ego Chromium。
 

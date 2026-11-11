@@ -1,8 +1,9 @@
+> Aether contributors: use this repository’s [README](../README.md#开发检查), [configuration guide](../docs/AETHER.md), and [design rules](../docs/DESIGN.md). The NexT guidance below is retained for shared theme features.
+
 <div align="right">
   Language:
   :us:
   <a title="Chinese" href="../docs/zh-CN/CONTRIBUTING.md">:cn:</a>
-  <a title="Russian" href="../docs/ru/CONTRIBUTING.md">:ru:</a>
 </div>
 
 <a title="NexT website" href="https://theme-next.js.org"><img align="right" alt="NexT logo" width="100" height="100" src="https://raw.githubusercontent.com/next-theme/hexo-theme-next/master/source/images/logo.svg"></a>
@@ -17,7 +18,7 @@ First of all, thanks for taking your time to contribute and help make our projec
 
   * [Before Submitting An Issue](#before-submitting-an-issue)
     * [Read the docs](#read-the-docs)
-    * [Quick debug instructions](quick-debug-instructions)
+    * [Quick debug instructions](#quick-debug-instructions)
   * [Reporting Bugs](#reporting-bugs)
     * [Reporting Security Bugs](#reporting-security-bugs)
   * [Suggesting Enhancements](#suggesting-enhancements)
@@ -52,7 +53,7 @@ If you find a bug in the source code, most importantly, please check carefully i
 Before creating bug reports, please check [this list](#before-submitting-an-issue) as you might find out that you don't need to create one. When creating an issue, following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior, and find related reports:
 
 * Use a clear and descriptive title for the issue to identify the problem.
-* Provide the information as many details as possible by filling in [the required template](ISSUE_TEMPLATE.md).
+* Provide the information as many details as possible by filling in [the required template](ISSUE_TEMPLATE/).
 * Describe the exact steps which reproduce the problem in as many details as possible. When listing steps, don't just say what you did, but explain how you did it, e.g. which command exactly you used. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/creating-and-highlighting-code-blocks/) or [a permanent link to a code snippet](https://help.github.com/articles/creating-a-permanent-link-to-a-code-snippet/), or a [Gist link](https://gist.github.com/).
 * Provide specific examples to demonstrate the steps. Include links to files (screenshots or GIFs) or live demo.
 * Describe the behavior you observed after following the steps and point out what exactly is the problem with that behavior.
@@ -66,7 +67,7 @@ We will gladly special thanks to anyone who reports a vulnerability so that we c
 
 ### Suggesting Enhancements
 
-Before creating enhancement suggestions, please check [this list](#before-submitting-an-issue) as you might find out that you don't need to create one. After you've determined the repository your enhancement suggestion is related to, create an issue on that repository and provide the information as many details as possible by filling in [the required template](ISSUE_TEMPLATE.md).
+Before creating enhancement suggestions, please check [this list](#before-submitting-an-issue) as you might find out that you don't need to create one. After you've determined the repository your enhancement suggestion is related to, create an issue on that repository and provide the information as many details as possible by filling in [the required template](ISSUE_TEMPLATE/).
 
 Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions.
 
