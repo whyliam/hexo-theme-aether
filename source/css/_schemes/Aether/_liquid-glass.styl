@@ -32,8 +32,11 @@ body[data-aether] {
   --content-bg-color: #f5f8f6;
   --text-color: #18251f;
   background: radial-gradient(ellipse 70% 540px at 85% 0, #dcece3, transparent), radial-gradient(ellipse 55% 420px at 0 240px, #e6eeeb, transparent), var(--aether-paper);
+  background-repeat: no-repeat;
   color: var(--aether-ink);
   font-size: 16px;
+  // Override NexT's viewport-height body so the background follows the document.
+  height: auto;
   padding-top: 104px;
 
   .main-inner :is(h1, h2, h3, h4, h5, h6) {
@@ -48,6 +51,10 @@ body[data-aether] {
     background: transparent;
     max-width: 720px;
     margin: 0 auto;
+  }
+  // Aether uses an inline desktop TOC, never NexT's sidebar drawer.
+  .sidebar-dimmer, .sidebar-toggle {
+    display: none;
   }
   .main-inner:is(.aether-series-index, .aether-series-page, .aether-visuals-page, .aether-about, .aether-newsletter-page) {
     max-width: 1080px;
@@ -93,6 +100,17 @@ body[data-aether] {
   }
   .aether-dark-toggle {
     flex-shrink: 0;
+  }
+  .site-nav-toggle .toggle {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+
+    .toggle-line {
+      margin-top: 0;
+    }
   }
   .menu {
     gap: 20px;
@@ -154,10 +172,6 @@ body[data-aether] {
       padding-left: 50px;
       padding-right: 50px;
     }
-    .aether-row.is-latest {
-      aether-glass();
-      border-radius: 24px;
-    }
     .aether-series-lead {
       aether-glass();
       border-radius: 24px;
@@ -193,7 +207,7 @@ body[data-aether] {
   .aether-about__hero, .aether-series-detail__hero, .aether-visuals-archive__hero {
     margin-bottom: 48px;
   }
-  .aether-about__title, .aether-series-detail__title, .aether-visuals-archive__title, .aether-newsletter h1, .aether-guestbook h1 {
+  .aether-about__title, .aether-series-detail__title, .aether-visuals-archive__title, .aether-newsletter h1, .aether-guestbook h1, .aether-archive-title {
     font-family: var(--aether-ff-serif);
     font-size: clamp(32px, 4vw, 52px);
     font-weight: 500;
@@ -210,7 +224,7 @@ body[data-aether] {
     max-width: 640px;
     margin: 0;
   }
-  .aether-page-kicker, .aether-about__eyebrow, .aether-series-detail__eyebrow, .aether-visuals-archive__eyebrow {
+  .aether-page-kicker, .aether-about__eyebrow, .aether-series-detail__eyebrow, .aether-visuals-archive__eyebrow, .aether-archive-label {
     color: var(--aether-muted);
     font-family: var(--aether-ff-sans);
     font-size: 13px;
@@ -223,20 +237,35 @@ body[data-aether] {
     border-top: 0;
     padding: 24px 0 32px;
   }
+  .main-inner.aether-archive {
+    border-top: 0;
+  }
   .aether-archive-item {
     display: grid;
-    grid-template-columns: 60px minmax(100px, 160px) minmax(0, 1fr);
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
     padding: 18px 0;
   }
+  .aether-archive-body {
+    min-width: 0;
+  }
   .aether-archive-link {
+    display: block;
     border: 0;
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
-    font-size: 16px;
+    font-size: 19px;
+    font-family: var(--aether-ff-serif);
     line-height: 1.6;
+    overflow-wrap: anywhere;
   }
   .aether-archive-cat {
+    display: block;
+    min-width: 0;
+    max-width: none;
+    margin-bottom: 6px;
     white-space: normal;
     text-transform: none;
     letter-spacing: 0;
@@ -245,6 +274,55 @@ body[data-aether] {
   }
   .aether-archive-date {
     font-size: 12px;
+    padding-top: 3px;
+  }
+  .aether-archive-year {
+    font-size: 26px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--aether-rule);
+    margin-bottom: 0;
+  }
+  .aether-taxonomy-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 24px;
+    font-size: 14px;
+
+    [aria-current='page'] {
+      color: var(--aether-accent);
+      border-bottom: 2px solid currentColor;
+    }
+  }
+  .aether-taxonomy-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    a {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--aether-rule);
+      font-size: 20px;
+    }
+    .aether-taxonomy-count {
+      color: var(--aether-muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    &.is-tags {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 24px;
+
+      a {
+        font-size: 15px;
+        overflow-wrap: anywhere;
+      }
+    }
   }
   .aether-archive-item:focus-within {
     background: var(--aether-accent-tint);
@@ -280,7 +358,9 @@ body[data-aether] {
   .aether-series-detail__post-title {
     display: block;
     overflow: visible;
+    font-size: 19px;
     line-height: 1.6;
+    overflow-wrap: anywhere;
   }
   .aether-series-detail__posts li a {
     border-bottom: 0;
@@ -546,6 +626,7 @@ body[data-aether] {
   --content-bg-color: #101815;
   --text-color: #eaf2ed;
   background: radial-gradient(ellipse 70% 540px at 85% 0, #244234, transparent), var(--aether-paper);
+  background-repeat: no-repeat;
   .aether-home .aether-organic__mesh {
     background: radial-gradient(ellipse, #345e48, transparent 68%);
   }
@@ -566,7 +647,7 @@ body[data-aether] {
     }
     .aether-header-row {
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 0 8px;
       padding: 6px 14px;
     }
     .site-brand-container {
@@ -658,19 +739,14 @@ body[data-aether] {
     }
     .aether-archive-item {
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 8px 16px;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 16px;
     }
     .aether-archive-link {
-      grid-column: 1 / -1;
-      grid-row: 1;
       font-size: 17px;
     }
     .aether-archive-date {
-      grid-row: 2;
-    }
-    .aether-archive-cat {
-      grid-row: 2;
+      padding-top: 3px;
     }
     .aether-archive-hero {
       margin-bottom: 32px;
@@ -678,6 +754,9 @@ body[data-aether] {
     }
     .aether-archive-year-group {
       margin-top: 36px;
+    }
+    .aether-taxonomy-list.is-tags {
+      grid-template-columns: minmax(0, 1fr);
     }
     .aether-si-grid, .aether-visuals-archive__grid {
       grid-template-columns: minmax(0, 1fr);

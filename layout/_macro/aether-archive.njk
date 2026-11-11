@@ -1,0 +1,21 @@
+{% macro item(post) %}
+<article class="aether-archive-item">
+  <time class="aether-archive-date" datetime="{{ moment(post.date).format() }}">{{ date(post.date, 'MM-DD') }}</time>
+  <div class="aether-archive-body">
+    {%- set issue = aether_post_issue(post) %}
+    {%- set category = aether_post_category(post) %}
+    {%- if issue or category %}
+    <span class="aether-archive-cat">{% if issue %}周刊 · 第 {{ issue }} 期{% else %}{{ category }}{% endif %}</span>
+    {%- endif %}
+    <a class="aether-archive-link" href="{{ url_for(post.path) }}">{{ aether_display_title(post) or __('post.untitled') }}</a>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro navigation(active) %}
+<nav class="aether-taxonomy-nav" aria-label="浏览方式">
+  <a href="{{ url_for('/archives/') }}"{% if active === 'archives' %} aria-current="page"{% endif %}>全部文章</a>
+  <a href="{{ url_for('/categories/') }}"{% if active === 'categories' %} aria-current="page"{% endif %}>分类</a>
+  <a href="{{ url_for('/tags/') }}"{% if active === 'tags' %} aria-current="page"{% endif %}>标签</a>
+</nav>
+{% endmacro %}

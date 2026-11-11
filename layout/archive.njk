@@ -1,5 +1,6 @@
 {% extends '_layout.njk' %}
 {% import '_macro/sidebar.njk' as sidebar_template with context %}
+{% import '_macro/aether-archive.njk' as archive_template with context %}
 
 {% block title %}{{ __('title.archive') }} | {{ title }}{% endblock %}
 
@@ -12,6 +13,7 @@
     <h1 class="aether-archive-title">{{ site.posts.length }} 篇文章</h1>
     <p class="aether-archive-desc">始于 {{ date(site.posts.sort('date').toArray()[0].date, 'YYYY') }}，记录至今。</p>
   </section>
+  {{ archive_template.navigation('archives') }}
 
   {%- set current_year = '' %}
   {%- for post in page.posts.toArray() %}
@@ -26,13 +28,7 @@
         </h2>
     {%- endif %}
 
-    <article class="aether-archive-item">
-      <time class="aether-archive-date" datetime="{{ moment(post.date).format() }}">{{ date(post.date, 'MM-DD') }}</time>
-      {%- if post.categories and post.categories.length %}
-      <span class="aether-archive-cat">{{ aether_post_category(post) }}{% if aether_post_issue(post) %} · 第 {{ aether_post_issue(post) }} 期{% endif %}</span>
-      {%- endif %}
-      <a class="aether-archive-link" href="{{ url_for(post.path) }}">{{ aether_display_title(post) or __('post.untitled') }}</a>
-    </article>
+    {{ archive_template.item(post) }}
   {%- endfor %}
   {%- if current_year %}</div>{%- endif %}
 

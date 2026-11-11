@@ -135,58 +135,63 @@
     font-family: var(--aether-ff-sans);
     letter-spacing: 0;
   }
-  .aether-row {
+  .aether-row, .aether-row.is-latest {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--aether-rule);
     border-radius: 0;
-    gap: 8px 22px;
-    grid-template-columns: 105px minmax(0, 1fr) 20px;
-    padding: 22px 12px;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) 20px;
+    margin: 0;
+    padding: 24px 0;
     box-shadow: none;
   }
-  .aether-row__date {
-    grid-column: 1;
-    grid-row: 1;
+  .aether-row__meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px 16px;
+    margin-bottom: 10px;
+  }
+  .aether-row__date, .aether-row__cat {
+    color: var(--aether-muted);
     font-size: 12px;
     letter-spacing: 0;
   }
   .aether-row__cat {
-    color: var(--aether-muted);
-    grid-column: 1;
-    grid-row: 2;
     font-family: var(--aether-ff-sans);
-    letter-spacing: 0;
+  }
+  .aether-row__latest {
+    color: var(--aether-accent);
+    font-family: var(--aether-ff-sans);
+    font-size: 12px;
   }
   .aether-row__body {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-  .aether-row__arr {
-    grid-column: 3;
+    grid-column: 1;
     grid-row: 1;
   }
-  .aether-row__title {
-    font-size: 21px;
+  .aether-row__arr {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+  .aether-row__title, .aether-row.is-latest .aether-row__title {
+    font-size: 23px;
     line-height: 1.5;
+    margin: 0;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    text-wrap: pretty;
     transition: color 160ms ease;
   }
   .aether-row__desc {
     color: var(--aether-muted);
     margin-bottom: 0;
+    max-width: 72ch;
   }
   .aether-row__tags {
     display: none;
-  }
-  .aether-row.is-latest {
-    background: var(--aether-accent-tint);
-    border: 0;
-    border-radius: 18px 32px 18px 18px;
-    margin-bottom: 4px;
-    padding: 26px 24px;
-    .aether-row__title {
-      font-size: 27px;
-    }
-    .aether-row__cat {
-      color: var(--aether-accent);
-    }
   }
   .aether-paths {
     display: grid;
@@ -279,21 +284,13 @@
       font-size: 12px;
     }
     .aether-row, .aether-row.is-latest {
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      padding: 20px 12px;
-    }
-    .aether-row__date {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .aether-row__cat {
-      grid-column: 2;
-      grid-row: 1;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+      padding: 20px 0;
     }
     .aether-row__body {
-      grid-column: 1 / -1;
-      grid-row: 2;
+      grid-column: 1;
+      grid-row: 1;
     }
     .aether-row__arr {
       display: none;
@@ -720,5 +717,35 @@ body[data-aether] {
 @media (prefers-reduced-motion: reduce) {
   body[data-aether] button:active {
     transform: none;
+  }
+}
+
+
+// The lightweight animation survives narrow viewports and WebGL fallback.
+@keyframes aether-folio-breathe {
+  0%, 100% { transform: translateY(5px) rotate(-1.5deg) scale(.98); }50% { transform: translateY(-12px) rotate(1.5deg) scale(1.05); }
+}
+
+.aether-home .aether-organic__art {
+  position: absolute;
+  inset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aether-home .aether-organic.has-motion {
+    .aether-organic__art {
+      transform: perspective(800px) translateY(var(--folio-scroll, 0px)) rotateX(var(--folio-y, 0deg)) rotateY(var(--folio-x, 0deg));
+      transition: transform 350ms ease-out;
+    }
+    .aether-organic__still, .aether-organic__scene {
+      animation: aether-folio-breathe 5s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    &.is-moving .aether-organic__still, &.is-moving .aether-organic__scene {
+      animation-play-state: running;
+    }
+    &.is-live .aether-organic__still {
+      animation: none;
+    }
   }
 }

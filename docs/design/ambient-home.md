@@ -72,3 +72,12 @@ gradient-backdrops 本地 MIT runtime，mesh / speed .12 / quality .35，暖白�
 `/Users/xingquan/.codex/visualizations/2026/11/08/01a1b970-7507-7911-93ad-f0132bcbcc87/aether-upgrade/`。
 
 本地预览：`http://localhost:4002/`。预览目录 `/tmp/aether-organic-preview` 通过符号链接读取当前主题与真实文章，仅使用独立输出目录。生产发布不属于本轮自动操作。
+
+
+### 2026-11-11：窄窗口动效修复
+
+复现：800px 视口中，旧版 `is-live: false`、动画数量为 0，等待两秒仍无变化。旧版宽度、硬件和慢帧门槛把所有动效一起关闭。此前仅在宽桌面验证 WebGL 绘制，未覆盖静态回退路径。
+
+现在呼吸与交互独立于 WebGL：5 秒一轮的 CSS 位移、缩放与小角度摆动；鼠标响应为左右最多 12°、上下最多 9°；滚动产生最多 32px 位移。3D 可用时保留层间舒展，否则使用相同琉璃形态的 PNG。离屏、后台暂停；减少动态效果和 `hero.motion: false` 禁用运动。
+
+浏览器回归覆盖：800px 的实际 transform 随时间变化、真实鼠标左右移动的倾斜响应、宽桌面动效、滚动位移、离屏暂停与重新进入恢复、WebGL 上下文丢失后继续轻量呼吸、运行中切换减少动态效果。静态截图或仅统计 draw calls 不能替代这些检查。

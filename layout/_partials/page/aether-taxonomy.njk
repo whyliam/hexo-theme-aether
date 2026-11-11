@@ -1,0 +1,14 @@
+{%- set categories = page.type === 'categories' %}
+{% import '_macro/aether-archive.njk' as archive_template with context %}
+<header class="aether-archive-hero">
+  <span class="aether-archive-label">浏览写作</span>
+  <h1 class="aether-archive-title">{% if categories %}分类{% else %}标签{% endif %}</h1>
+  <p class="aether-archive-desc">{% if categories %}按主题浏览 {{ site.categories.length }} 个分类。{% else %}从 {{ site.tags.length }} 个标签中，找到感兴趣的话题。{% endif %}</p>
+</header>
+{{ archive_template.navigation(page.type) }}
+<ul class="aether-taxonomy-list{% if not categories %} is-tags{% endif %}">
+  {%- set entries = site.categories if categories else site.tags %}
+  {%- for entry in entries.sort('name', 1).toArray() %}
+  <li><a href="{{ url_for(entry.path) }}"><span>{% if categories %}{{ aether_category_label(entry.name) }}{% else %}{{ entry.name }}{% endif %}</span><span class="aether-taxonomy-count">{{ entry.posts.length }} 篇</span></a></li>
+  {%- endfor %}
+</ul>

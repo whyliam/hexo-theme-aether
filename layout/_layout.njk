@@ -83,6 +83,11 @@
         </div>
         <div class="aether-foot-meta">
           <span>© {{ since_year }}–{{ date(null, 'YYYY') }} {{ author }}</span>
+          {%- for entry in site.pages.toArray() %}
+            {%- if entry.layout === 'guestbook' %}
+          <a href="{{ url_for(entry.path) }}">{{ entry.title or '留言板' }}</a>
+            {%- endif %}
+          {%- endfor %}
           {%- if theme.social %}
           <span class="aether-foot-social">
             {%- for name, entry in theme.social -%}

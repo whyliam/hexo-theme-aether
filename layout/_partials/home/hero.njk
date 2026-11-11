@@ -11,8 +11,10 @@
   </div>
   <div class="aether-organic" aria-hidden="true" data-organic{% if hero.motion === false %} data-static{% endif %}>
     <div class="aether-organic__mesh"></div>
-    <img class="aether-organic__still" src="{{ url_for('/images/aether-folio.png') }}" alt="" width="560" height="480" decoding="async">
-    <div class="aether-organic__scene"></div>
+    <div class="aether-organic__art">
+      <img class="aether-organic__still" src="{{ url_for('/images/aether-folio.png') }}" alt="" width="560" height="480" decoding="async">
+      <div class="aether-organic__scene"></div>
+    </div>
   </div>
   <div class="aether-intro__foot">
     <span>{{ hero.caption or '写作，让思考慢慢成形。' }}</span>

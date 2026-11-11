@@ -11,13 +11,15 @@
     {%- for post in posts %}
       {%- set cat = aether_post_category(post) -%}
       <a class="aether-row{% if loop.first %} is-latest{% endif %}" href="{{ aether_post_url(post) }}">
-        <span class="aether-row__date">{{ date(post.date, 'YYYY-MM-DD') }}</span>
-        <span class="aether-row__cat">{% if loop.first %}最新发布{% elif cat %}{{ cat }}{% endif %}</span>
         <div class="aether-row__body">
           {%- set issue = aether_post_issue(post) -%}
-          {%- if issue %}<div class="aether-row__issue">周刊 · 第 {{ issue }} 期</div>{% endif %}
+          <div class="aether-row__meta">
+            <time class="aether-row__date" datetime="{{ aether_iso_date(post.date) }}">{{ date(post.date, 'YYYY-MM-DD') }}</time>
+            <span class="aether-row__cat">{% if issue %}周刊 · 第 {{ issue }} 期{% else %}{{ cat }}{% endif %}</span>
+            {% if loop.first %}<span class="aether-row__latest">最新发布</span>{% endif %}
+          </div>
           <h3 class="aether-row__title">{{ aether_display_title(post) }}</h3>
-          {%- set sum = aether_summary(post, 130) -%}
+          {%- set sum = aether_summary(post, 90) -%}
           {%- if sum %}<p class="aether-row__desc">{{ sum }}</p>{% endif %}
           {%- if post.tags and post.tags.length %}
             <div class="aether-row__tags">

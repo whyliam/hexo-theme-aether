@@ -1,0 +1,194 @@
+// Incremental home refinement; retain the existing folio and glass system.
+// Lens depth with a visible moving glint and a rounded inner edge.
+body[data-aether] {
+  --aether-liquid-reflection: rgba(255, 255, 255, .82);
+  --aether-liquid-rim: rgba(255, 255, 255, .95);
+  --aether-liquid-surface: rgba(245, 255, 249, .56);
+
+  .header {
+    background: var(--aether-liquid-surface);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+
+  .header, .aether-home .aether-series-lead {
+    isolation: isolate;
+    border-color: var(--aether-liquid-rim);
+    box-shadow: inset 0 2px 3px var(--aether-glass-shine), inset 0 -2px 3px var(--aether-rule), 0 10px 32px var(--aether-glass-shadow);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: radial-gradient(ellipse 180px 90px at var(--aether-liquid-x, 18%) var(--aether-liquid-y, 0%), var(--aether-liquid-reflection), transparent 78%), linear-gradient(115deg, var(--aether-glass-shine), transparent 30%, transparent 72%, var(--aether-glass-shine));
+      box-shadow: inset 2px 2px 1px var(--aether-liquid-rim), inset -1px -2px 2px var(--aether-glass-shine);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+  .aether-home .aether-series-lead {
+    position: relative;
+  }
+  .aether-home .aether-intro__links a:first-child {
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, .25), inset 0 -1px 1px rgba(0, 0, 0, .1);
+  }
+}
+
+[data-color-scheme='dark'] body[data-aether] {
+  --aether-liquid-reflection: rgba(206, 244, 222, .24);
+  --aether-liquid-rim: rgba(219, 255, 231, .36);
+  --aether-liquid-surface: rgba(26, 44, 34, .66);
+}
+
+// The solid-surface preference also removes the decorative lens reflection.
+@media (prefers-reduced-transparency: reduce) {
+  body[data-aether] .header {
+    background: var(--aether-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  body[data-aether] .header::before, body[data-aether] .aether-home .aether-series-lead::before {
+    display: none;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body[data-aether] .header {
+    background: var(--aether-surface);
+  }
+}
+
+body[data-aether] .aether-home {
+  .aether-intro h1 {
+    font-size: clamp(40px, 4.2vw, 58px);
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+  .aether-intro__links {
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 12px 24px;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      box-sizing: border-box;
+      border: 0;
+      border-radius: 999px;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+    a:first-child {
+      background: var(--aether-accent);
+      color: var(--aether-paper);
+      padding: 10px 20px;
+    }
+    a:first-child:active {
+      background: var(--aether-accent-hover);
+    }
+    a:last-child {
+      padding: 10px 4px;
+    }
+  }
+  .aether-sec-head {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 20px;
+  }
+  .aether-more, .aether-nv-label a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-bottom: 0;
+  }
+  .aether-row__meta {
+    justify-content: flex-start;
+    font-variant-numeric: tabular-nums;
+  }
+  .aether-row__latest {
+    background: var(--aether-accent-tint);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .aether-row:focus-visible, .aether-series-entry:focus-visible, .aether-note:focus-visible {
+    background: var(--aether-accent-tint);
+  }
+  .aether-row__title, .aether-path__title, .aether-series-entry h3 {
+    overflow-wrap: anywhere;
+  }
+  .aether-path__intent {
+    font-size: 22px;
+    text-wrap: balance;
+  }
+  .aether-path__list a {
+    min-height: 44px;
+    align-items: center;
+  }
+  a:focus-visible {
+    transition: none;
+  }
+  .aether-series-lead {
+    // A static mesh adds depth without another canvas or continuous paint.
+    background: var(--aether-glass);
+    background: unquote('radial-gradient(ellipse at 0% 100% in oklab, var(--aether-accent-tint), transparent 70%), var(--aether-glass)');
+    border-color: var(--aether-rule);
+  }
+  .aether-subscribe-bar {
+    border-bottom: 1px solid var(--aether-rule);
+    padding: 20px 0;
+    gap: 8px 24px;
+  }
+  .aether-subscribe-text {
+    font-family: var(--aether-ff-serif);
+    color: var(--aether-ink);
+    font-size: 20px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .aether-subscribe-links {
+    gap: 4px 14px;
+    font-family: var(--aether-ff-sans);
+    font-size: 14px;
+    letter-spacing: 0;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      border-bottom: 0;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .aether-intro__links a:first-child:hover {
+      background: var(--aether-accent-hover);
+    }
+    .aether-row:hover, .aether-series-entry:hover, .aether-note:hover {
+      background: var(--aether-accent-tint);
+      box-shadow: none;
+      transform: none;
+    }
+    .aether-path__list a:hover .aether-path__title {
+      color: var(--aether-accent);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .aether-intro h1 {
+      font-size: 36px;
+    }
+    .aether-sec-head {
+      margin-bottom: 12px;
+    }
+    .aether-path__intent {
+      font-size: 22px;
+    }
+    .aether-subscribe-bar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+}

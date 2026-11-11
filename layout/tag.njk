@@ -1,5 +1,6 @@
 {% extends '_layout.njk' %}
 {% import '_macro/sidebar.njk' as sidebar_template with context %}
+{% import '_macro/aether-archive.njk' as archive_template with context %}
 
 {% block title %}{{ __('title.tag') }}: {{ page.tag }} | {{ title }}{% endblock %}
 
@@ -10,8 +11,9 @@
   <section class="aether-archive-hero">
     <span class="aether-archive-label">{{ __('title.tag') }}</span>
     <h1 class="aether-archive-title"># {{ page.tag }}</h1>
-    <p class="aether-archive-desc">{{ page.posts.length }} 篇文章</p>
+    <p class="aether-archive-desc">{{ site.tags.findOne({name: page.tag}).posts.length }} 篇文章</p>
   </section>
+  {{ archive_template.navigation('tags') }}
 
   {%- set current_year = '' %}
   {%- for post in page.posts.toArray() %}
@@ -22,13 +24,7 @@
       <div class="aether-archive-year-group">
         <h2 class="aether-archive-year">{{ current_year }}</h2>
     {%- endif %}
-    <article class="aether-archive-item">
-      <time class="aether-archive-date" datetime="{{ moment(post.date).format() }}">{{ date(post.date, 'MM-DD') }}</time>
-      {%- if post.categories and post.categories.length %}
-      <span class="aether-archive-cat">{{ post.categories.toArray()[0].name }}</span>
-      {%- endif %}
-      <a class="aether-archive-link" href="{{ url_for(post.path) }}">{{ post.title or __('post.untitled') }}</a>
-    </article>
+    {{ archive_template.item(post) }}
   {%- endfor %}
   {%- if current_year %}</div>{%- endif %}
 
@@ -46,5 +42,5 @@
 {% endblock %}
 
 {% block sidebar %}
-  {{ sidebar_template.render(false) }}
+  {% if theme.scheme !== 'Aether' %}{{ sidebar_template.render(false) }}{% endif %}
 {% endblock %}

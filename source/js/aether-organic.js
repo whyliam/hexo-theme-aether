@@ -1,10 +1,10 @@
 /* eslint no-use-before-define: ["error", { "functions": false }] */
-/* Aether folio: static-first, desktop-only enhancement, no render loop offscreen. */
+/* Compositor motion remains available when the optional WebGL scene cannot run. */
 (() => {
   'use strict';
-  const script = document.currentScript;
-  const base = new URL('.', script.src);
-  const media = matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+  const base = new URL('.', document.currentScript.src);
+  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+  const desktop = matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)');
   const connection = navigator.connection;
   let cleanup = () => {};
   let generation = 0;
@@ -13,71 +13,91 @@
     cleanup();
     const id = ++generation;
     const el = document.querySelector('[data-organic]');
-    if (!el || el.hasAttribute('data-static') || !media.matches || connection?.saveData
-        || (navigator.deviceMemory && navigator.deviceMemory <= 4)
-        || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)) return;
-    let scene, observer, resize;
-    const unfold = !hasUnfolded;
+    if (!el || el.hasAttribute('data-static') || !motion.matches) return;
+    let scene, resize;
     let frame = 0; let visible = false; let stopped = false; let time = 0; let last = 0; let drawn = 0;
     let samples = 0; let slow = 0;
-    let settled = false;
-    const renderedPointer = { x: NaN, y: NaN };
+    const unfold = !hasUnfolded;
     const target = { x: 0, y: 0 }; const pointer = { x: 0, y: 0 };
-    function stop() {
-      stopped = true;
+    const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; scroll(); sync(); });
+    el.classList.add('has-motion');
+    function releaseScene() {
       cancelAnimationFrame(frame);
-      observer?.disconnect();
+      frame = 0;
       resize?.disconnect();
-      document.removeEventListener('visibilitychange', sync);
-      window.removeEventListener('pagehide', stop);
-      el.removeEventListener('pointermove', move);
-      el.removeEventListener('pointerleave', reset);
       scene?.canvas.removeEventListener('webglcontextlost', lost);
       scene?.destroy();
+      scene = undefined;
       el.classList.remove('is-live');
+    }
+    function stop() {
+      stopped = true;
+      releaseScene();
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', sync);
+      window.removeEventListener('pagehide', stop);
+      window.removeEventListener('scroll', scroll);
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerleave', reset);
+      el.classList.remove('has-motion', 'is-moving');
+      ['--folio-x', '--folio-y', '--folio-scroll'].forEach(name => el.style.removeProperty(name));
     }
     cleanup = stop;
     function tick(now) {
       frame = 0;
-      if (stopped || !visible || document.hidden) return;
+      if (stopped || !scene || !visible || document.hidden) return;
       const delta = last ? now - last : 16;
       last = now;
-      // A sustained slow device returns to the static artwork for this visit.
       if (samples < 120) { samples++; if (delta > 48) slow++; }
-      if (samples === 120 && slow > 35) { stop(); return; }
-      time += delta / 1000;
-      const interval = 1000 / 30;
+      // Keep the lightweight breath and interaction when GPU rendering is too slow.
+      if (samples === 120 && slow > 35) { releaseScene(); return; }
+      time += Math.min(delta, 100) / 1000;
+      const interval = 1000 / 24;
       if (now - drawn >= interval) {
-        pointer.x += (target.x - pointer.x) * 0.07;
-        pointer.y += (target.y - pointer.y) * 0.07;
-        if (!settled || Math.abs(pointer.x - renderedPointer.x) > 0.0001 || Math.abs(pointer.y - renderedPointer.y) > 0.0001) {
-          scene.render(unfold ? time : Infinity, pointer);
-          renderedPointer.x = pointer.x;
-          renderedPointer.y = pointer.y;
-          settled = !unfold || time >= 2.32;
-        }
+        pointer.x += (target.x - pointer.x) * 0.12;
+        pointer.y += (target.y - pointer.y) * 0.12;
+        scene.render(unfold ? time : Infinity, pointer, time);
         drawn = now - ((now - drawn) % interval);
       }
-      const moving = Math.abs(target.x - pointer.x) > 0.0001 || Math.abs(target.y - pointer.y) > 0.0001;
-      if (!settled || moving) frame = requestAnimationFrame(tick);
+      frame = requestAnimationFrame(tick);
     }
     function sync() {
       cancelAnimationFrame(frame);
       frame = 0;
       last = 0;
-      if (stopped) return;
-      if (visible && !document.hidden) {
-        frame = requestAnimationFrame(tick);
-      }
+      const running = !stopped && visible && !document.hidden;
+      el.classList.toggle('is-moving', running);
+      if (running && scene) frame = requestAnimationFrame(tick);
     }
     function move(event) {
+      if (event.pointerType === 'touch') return;
       const rect = el.getBoundingClientRect();
-      target.x = ((event.clientX - rect.left) / rect.width * 2) - 1;
-      target.y = ((event.clientY - rect.top) / rect.height * 2) - 1;
-      if (!frame) sync();
+      target.x = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width * 2) - 1));
+      target.y = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height * 2) - 1));
+      el.style.setProperty('--folio-x', `${target.x * 12}deg`);
+      el.style.setProperty('--folio-y', `${-target.y * 9}deg`);
     }
-    function reset() { target.x = 0; target.y = 0; if (!frame) sync(); }
-    function lost(event) { event.preventDefault(); stop(); }
+    function reset() {
+      target.x = 0; target.y = 0;
+      el.style.setProperty('--folio-x', '0deg');
+      el.style.setProperty('--folio-y', '0deg');
+    }
+    function scroll() {
+      if (!visible || document.hidden) return;
+      const section = el.closest('.aether-intro');
+      const progress = Math.max(0, Math.min(1, window.scrollY / section.offsetHeight));
+      el.style.setProperty('--folio-scroll', `${progress * -32}px`);
+    }
+    function lost(event) { event.preventDefault(); releaseScene(); }
+    observer.observe(el);
+    document.addEventListener('visibilitychange', sync);
+    window.addEventListener('pagehide', stop, { once: true });
+    window.addEventListener('scroll', scroll, { passive: true });
+    el.addEventListener('pointermove', move, { passive: true });
+    el.addEventListener('pointerleave', reset);
+    if (!desktop.matches || connection?.saveData
+        || (navigator.deviceMemory && navigator.deviceMemory <= 4)
+        || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)) return;
     try {
       const module = await import(new URL('aether-organic-scene.mjs', base).href);
       if (id !== generation || stopped) return;
@@ -85,19 +105,16 @@
       hasUnfolded = true;
       scene.canvas.addEventListener('webglcontextlost', lost);
       el.classList.add('is-live');
-      resize = new ResizeObserver(() => { scene.resize(); scene.render(unfold ? time : Infinity, pointer); });
+      resize = new ResizeObserver(() => { scene.resize(); scene.render(unfold ? time : Infinity, pointer, time); });
       resize.observe(el);
-      observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); });
-      observer.observe(el);
-      document.addEventListener('visibilitychange', sync);
-      window.addEventListener('pagehide', stop, { once: true });
-      el.addEventListener('pointermove', move, { passive: true });
-      el.addEventListener('pointerleave', reset);
+      sync();
     } catch {
-      stop();
+      if (id !== generation || stopped) return;
+      releaseScene();
     }
   }
-  media.addEventListener('change', init);
+  motion.addEventListener('change', init);
+  desktop.addEventListener('change', init);
   connection?.addEventListener('change', init);
   document.addEventListener('pjax:success', init);
   window.addEventListener('pageshow', event => { if (event.persisted) init(); });
