@@ -2,7 +2,7 @@
 
 > 基于 NexT v8.27.0 的个人知识档案馆主题，为长期写作者设计。Aether 独立版本：0.1.0。
 
-[在线预览](https://blog.naaln.com/) · [配置指南](docs/AETHER.md) · [迁移说明](docs/MIGRATION-0.1.md)
+[npm](https://www.npmjs.com/package/hexo-theme-aether) · [在线预览](https://blog.naaln.com/) · [配置指南](docs/AETHER.md) · [迁移说明](docs/MIGRATION-0.1.md)
 
 ![Aether 预览](https://raw.githubusercontent.com/whyliam/hexo-theme-aether/master/docs/assets/aether.png)
 
@@ -24,6 +24,19 @@
 - 📖 **ToC 追踪** — 阅读位置同步目录高亮
 
 ## 快速开始
+
+在已有 Hexo 站点中通过 npm 安装：
+
+```sh
+npm install hexo-theme-aether
+npx hexo config theme aether
+cp node_modules/hexo-theme-aether/_config.yml _config.aether.yml
+npx hexo server
+```
+
+已有 `_config.aether.yml` 时编辑现有配置，保留个人内容。主题运行依赖由 npm 自动安装。
+
+也支持通过 Git 安装：
 
 ```sh
 # 1. 克隆主题到 Hexo 项目

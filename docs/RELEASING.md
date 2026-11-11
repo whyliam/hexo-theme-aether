@@ -2,6 +2,10 @@
 
 The display name is **Aether**. The npm package is `hexo-theme-aether` (npm requires lowercase names). The initial independent package version is `0.1.0`; NexT 8.27.0 remains the upstream base, not the Aether release version.
 
+## Current release
+
+Version [0.1.0](https://www.npmjs.com/package/hexo-theme-aether/v/0.1.0) was published on 2026-11-11. Its public registry tarball SHA-1 is `64691753e1563c4593da324d84eb8f0e86afb3a9`. A clean consumer installed the public package and generated its empty home and archive.
+
 ## Verify a release
 
 From a clean repository checkout:

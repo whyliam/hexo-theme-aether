@@ -4,7 +4,9 @@ Aether 基于 NexT 8.27.0，使用 Hexo、Nunjucks 和 Stylus。当前首页和�
 
 ## 安装与启用
 
-在已有 Hexo 站点中执行：
+在已有 Hexo 站点中，可运行 `npm install hexo-theme-aether`，设置 `theme: aether`，再从 `node_modules/hexo-theme-aether/_config.yml` 复制默认配置到站点根目录。已有配置时保留并编辑现有文件。
+
+也可通过 Git 安装：
 
 ```sh
 git clone --branch master https://github.com/whyliam/hexo-theme-aether themes/aether
