@@ -2,12 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-let css;
-try {
-  css = require('@adobe/css-tools');
-} catch {
-  css = require('css');
-}
+const css = require('@adobe/css-tools');
 
 function resolve(name, file = '') {
   let dir;

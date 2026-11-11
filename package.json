@@ -38,9 +38,9 @@
     "liquid-glass"
   ],
   "dependencies": {
-    "css": "^3.0.0",
+    "@adobe/css-tools": "^5.0.0",
     "hexo-util": "^4.0.0",
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^4.3.2"
   },
   "author": "Liam (https://github.com/whyliam)",
   "license": "AGPL-3.0-only",
