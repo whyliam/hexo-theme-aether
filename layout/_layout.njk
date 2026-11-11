@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang }}">
 <head>
+  {%- if theme.scheme === 'Aether' %}
+  <script>
+    (() => {
+      let stored;
+      try { stored = localStorage.getItem('aether-color-scheme'); } catch {}
+      const scheme = ['light', 'dark'].includes(stored) ? stored : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-color-scheme', scheme);
+    })();
+  </script>
+  {%- endif %}
   {{ partial('_partials/head/head.njk', {}, {cache: theme.cache.enable}) }}
   {%- include '_partials/head/head-unique.njk' -%}
   <title>{% block title %}{% endblock %}</title>

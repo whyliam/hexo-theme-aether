@@ -33,7 +33,7 @@
     {%- if page.now %}
       <section class="aether-about__now">
         <div class="aether-about__sec-label">
-          <span class="num">01</span><span class="sep">/</span><span>当下</span>
+          <span>正在做什么</span>
         </div>
         <div class="aether-about__now-grid">
           {%- if page.now.currently %}
@@ -58,35 +58,16 @@
       </section>
     {%- endif %}
 
-    {#- ============== FACTS table ============== -#}
-    {%- if page.facts %}
-      <section class="aether-about__facts">
-        <div class="aether-about__sec-label">
-          <span class="num">02</span><span class="sep">/</span><span>基本事实</span>
-        </div>
-        <dl class="aether-about__facts-list">
-          {%- for f in page.facts %}
-            <div>
-              <dt>{{ f.k }}</dt>
-              <dd>{{ f.v | safe }}</dd>
-            </div>
-          {%- endfor %}
-        </dl>
-      </section>
-    {%- endif %}
-
-    {#- ============== Long-form body (markdown) ============== -#}
-    {%- if page.content and page.content.trim() %}
-      <section class="aether-about__body post-body">
-        {{ page.content }}
-      </section>
-    {%- endif %}
+    <section class="aether-about__selected">
+      <h2>代表内容</h2>
+      {% for path in aether_paths() %}<div><h3>{{ path.intent }}</h3><ul>{% for p in path.posts %}<li><a href="{{ url_for(p.url) }}">{{ p.title }}</a></li>{% endfor %}</ul></div>{% endfor %}
+    </section>
 
     {#- ============== CONTACT ============== -#}
     {%- if page.contact %}
       <section class="aether-about__contact">
         <div class="aether-about__sec-label">
-          <span class="num">03</span><span class="sep">/</span><span>联系方式</span>
+          <span>如何联系</span>
         </div>
         <ul class="aether-about__contact-list">
           {%- for c in page.contact %}

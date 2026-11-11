@@ -138,8 +138,8 @@
   }
 
   onReady(() => {
-    document.querySelectorAll('.aether-visual img').forEach(img => {
-      const card = img.closest('.aether-visual');
+    document.querySelectorAll('.aether-visual img, .aether-photo img').forEach(img => {
+      const card = img.closest('.aether-visual, .aether-photo');
       let timer;
       const failed = () => card.classList.add('is-unavailable');
       img.addEventListener('error', () => { clearTimeout(timer); failed(); }, { once: true });
@@ -155,6 +155,14 @@
     });
     const menuToggle = $('.site-nav-toggle .toggle');
     if (menuToggle) {
+      const nav = $('.site-nav');
+      if (nav) { nav.id = 'aether-navigation'; menuToggle.setAttribute('aria-controls', nav.id); }
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && document.body.classList.contains('site-nav-on')) {
+          menuToggle.click();
+          menuToggle.focus();
+        }
+      });
       menuToggle.addEventListener('keydown', event => {
         if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); menuToggle.click(); }
       });

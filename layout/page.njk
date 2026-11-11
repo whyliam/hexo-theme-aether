@@ -52,5 +52,5 @@
 {% endblock %}
 
 {% block sidebar %}
-  {{ sidebar_template.render(page.toc.enable) }}
+  {% if theme.scheme !== 'Aether' %}{{ sidebar_template.render(page.toc.enable) }}{% endif %}
 {% endblock %}

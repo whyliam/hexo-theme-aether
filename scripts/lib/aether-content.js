@@ -90,7 +90,29 @@ function displayTitle(post) {
   return newsletterIssue(post) ? title.replace(/^L\d+[_:：]\s*/i, '') : title;
 }
 
+// One aggregation contract for home, series pages and newsletter.
+function aggregateSeries(input) {
+  const groups = new Map();
+  toArray(input).filter(isRegularPost).forEach(post => {
+    const name = inferredSeriesName(post);
+    if (!name) return;
+    if (!groups.has(name)) groups.set(name, []);
+    groups.get(name).push(post);
+  });
+  return [...groups].map(([name, items]) => {
+    const posts = items.slice().sort((a, b) => a.date - b.date || String(a.path).localeCompare(String(b.path)))
+      .map((post, index) => ({ index      : String(index + 1).padStart(2, '0'), title      : post.title, path       : post.path,
+        url        : '/' + post.path, permalink  : post.permalink, date       : post.date, updated    : post.updated,
+        series     : name, description: post.description, excerpt    : post.excerpt, content    : post.content }));
+    const slug = slugifySeries(name);
+    return { name, slug, url         : '/series/' + encodeURI(slug) + '/', count       : posts.length,
+      first_date  : posts[0].date, latest_date : posts[posts.length - 1].date,
+      posts, recent_posts: posts.slice(-3).reverse() };
+  }).sort((a, b) => b.latest_date - a.latest_date || a.name.localeCompare(b.name));
+}
+
 module.exports = {
+  aggregateSeries,
   displayTitle,
   newsletterIssue,
   inferredSeriesName,

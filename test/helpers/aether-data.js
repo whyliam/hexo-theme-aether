@@ -50,6 +50,43 @@ describe('aether-data', () => {
     };
   }
 
+  describe('shared archives', () => {
+    it('keeps home and generated series in sync without mutating input', () => {
+      const { aggregateSeries } = require('../../scripts/lib/aether-content');
+      const posts = [
+        { title: 'L145_New', path: 'newsletter-145/', date: new Date('2026-11-07') },
+        { title: 'L144_Old', path: 'newsletter-144/', date: new Date('2026-10-31') },
+        { title: 'Photo', type: 'visual', series: 'Newsletter 周刊', date: new Date() }
+      ];
+      const home = callHelper('aether_series', [], baseCtx(posts));
+      home.should.deep.equal(aggregateSeries(makePosts(posts)));
+      home[0].count.should.equal(2);
+      home[0].posts[0].title.should.equal('L144_Old');
+      home[0].recent_posts[0].path.should.equal('newsletter-145/');
+      posts[0].title.should.equal('L145_New');
+    });
+    it('preserves unselected visual records and selected order', () => {
+      const posts = [
+        { title: 'Font', path: 'font/', type: 'visual', date: new Date('2026-01-01') },
+        { title: 'Paris', path: 'paris/', type: 'visual', date: new Date('2024-01-01') },
+        { title: 'Train', path: 'train/', type: 'visual', date: new Date('2025-01-01') }
+      ];
+      const ctx = baseCtx(posts, { theme: { aether: { visuals: { posts: ['train/', 'missing/', 'paris/', 'train/'] } } } });
+      ctx.aether_visuals = limit => callHelper('aether_visuals', [limit], ctx);
+      const result = callHelper('aether_visual_archive', [], ctx);
+      result.selected.map(p => p.path).should.deep.equal(['train/', 'paris/']);
+      result.others.map(p => p.path).should.deep.equal(['font/']);
+    });
+    it('does not truncate series and orders ties by recency then name', () => {
+      const items = Array.from({ length: 8 }, (_, i) => ({ name: String(i), count: 2, latest_date: new Date('2026-01-01') }));
+      items[7].latest_date = new Date('2026-11-01');
+      const result = callHelper('aether_series_selection', [items, 'missing'], baseCtx([]));
+      result.others.should.have.length(8);
+      result.others[0].name.should.equal('7');
+      result.others[1].name.should.equal('0');
+    });
+  });
+
   describe('newsletter presentation', () => {
     it('separates the issue from a newsletter heading without changing the post', () => {
       const post = { title: 'L144_门禁：智能正在变便宜', series: 'Newsletter 周刊' };

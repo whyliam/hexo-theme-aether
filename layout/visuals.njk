@@ -1,38 +1,31 @@
 {% extends '_layout.njk' %}
-
 {% block title %}影像 | {{ title }}{% endblock %}
-
 {% block class %}page aether-visuals-page{% endblock %}
-
 {% block content %}
-  <article class="aether-visuals-archive">
-    <header class="aether-visuals-archive__hero">
-      <div class="aether-visuals-archive__eyebrow">影像 · {{ page.visual_posts.length }} 组</div>
-      <h1 class="aether-visuals-archive__title">影像档案</h1>
-      <p class="aether-visuals-archive__lede">城市行走、旅行片段、视觉碎片 — 这里是不写成长文的另一种语言。</p>
-    </header>
-
-    <section class="aether-visuals-archive__grid">
-      {%- for v in page.visual_posts %}
-        <a class="aether-visuals-archive__card" href="{{ url_for(v.path) }}">
-          <span class="aether-visuals-archive__cover{% if v.cover %} has-bg{% endif %}"
-                {% if v.cover %}style="background-image: url('{{ v.cover }}');"{% endif %}></span>
-          <span class="aether-visuals-archive__meta">
-            <span class="aether-visuals-archive__num">V-{{ v.index }}</span>
-            <span class="aether-visuals-archive__date">{{ aether_iso_date(v.date) }}</span>
-          </span>
-          <span class="aether-visuals-archive__name">{{ v.title }}</span>
-          {%- if v.location or v.camera %}
-            <span class="aether-visuals-archive__sub">
-              {%- if v.location %}<span>{{ v.location }}</span>{% endif %}
-              {%- if v.location and v.camera %}<span> · </span>{% endif %}
-              {%- if v.camera %}<span>{{ v.camera }}</span>{% endif %}
-            </span>
-          {%- endif %}
-        </a>
-      {%- endfor %}
-    </section>
-  </article>
+{% set archive = aether_visual_archive() %}
+<article class="aether-visuals-archive">
+  <header class="aether-visuals-archive__hero">
+    <p class="aether-visuals-archive__eyebrow">城市、旅途与日常</p>
+    <h1 class="aether-visuals-archive__title">影像档案</h1>
+    <p class="aether-visuals-archive__lede">在文字之外，留下一些值得回看的风景。</p>
+  </header>
+  <section class="aether-visuals-archive__grid" aria-label="精选摄影">
+    {% for p in archive.selected %}
+    <a class="aether-photo" href="{{ url_for(p.path) }}">
+      <div class="aether-photo__frame">
+        {% set cover = aether_visual_cover(p) %}
+        {% if cover %}<img src="{{ cover }}" alt="{{ p.title }}" width="640" height="480" loading="lazy" decoding="async">{% endif %}
+        <span class="aether-photo__fallback"{% if not cover %} style="display: grid"{% endif %}>图片暂不可用 · 仍可阅读文章</span>
+      </div>
+      <div class="aether-photo__caption"><h2>{{ p.title }}</h2><p>{{ p.location }}{% if p.location %} · {% endif %}{{ date(p.date, 'YYYY-MM') }}</p></div>
+    </a>
+    {% endfor %}
+  </section>
+  {% if archive.others.length %}
+  <section class="aether-visual-records"><h2>其他视觉记录</h2><p>字体、旅行随笔与早年的视觉收藏。</p>
+    <ul>{% for p in archive.others %}<li><a href="{{ url_for(p.path) }}"><span>{{ p.title }}</span><time>{{ date(p.date, 'YYYY-MM-DD') }}</time></a></li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+</article>
 {% endblock %}
-
 {% block sidebar %}{% endblock %}

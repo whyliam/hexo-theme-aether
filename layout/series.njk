@@ -34,7 +34,7 @@
             <a href="{{ url_for(p.path) }}">
               <span class="aether-series-detail__num">{{ p.index }}</span>
               <span class="aether-series-detail__body">
-                <span class="aether-series-detail__post-title">{{ p.title }}</span>
+                <span class="aether-series-detail__post-title">{{ aether_display_title(p) }}</span>
                 {%- if p.description %}
                   <span class="aether-series-detail__post-desc">{{ p.description }}</span>
                 {%- endif %}

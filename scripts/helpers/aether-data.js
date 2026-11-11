@@ -16,13 +16,12 @@
 'use strict';
 
 const {
+  aggregateSeries,
   displayTitle,
   newsletterIssue,
-  inferredSeriesName,
   isNotePost,
   isRegularPost,
   isVisualPost,
-  slugifySeries,
   taxonomyNames
 } = require('../lib/aether-content');
 
@@ -116,39 +115,7 @@ hexo.extend.helper.register('aether_notes', function(limit) {
 
 // ---------- Series (auto-aggregate from frontmatter `series`) ----------
 hexo.extend.helper.register('aether_series', function() {
-  const all = (this.site.posts || { toArray: () => [] }).toArray()
-    .filter(isRegularPost)
-    .map(post => ({ post, name: inferredSeriesName(post) }))
-    .filter(item => item.name);
-
-  const map = new Map();
-  all.forEach(({ post, name }) => {
-    if (!map.has(name)) map.set(name, []);
-    map.get(name).push(post);
-  });
-
-  const out = [];
-  map.forEach((posts, name) => {
-    posts.sort((a, b) => a.date - b.date);
-    const slug = slugifySeries(name);
-    out.push({
-      name,
-      slug,
-      url        : '/series/' + encodeURI(slug) + '/',
-      count      : posts.length,
-      latest_date: posts[posts.length - 1].date,
-      posts      : posts.map((p, idx) => ({
-        index: String(idx + 1).padStart(2, '0'),
-        title: p.title,
-        url  : '/' + p.path,
-        date : p.date
-      }))
-    });
-  });
-
-  // sort series by latest update desc
-  out.sort((a, b) => b.latest_date - a.latest_date);
-  return out;
+  return aggregateSeries(this.site.posts);
 });
 
 
@@ -357,10 +324,19 @@ hexo.extend.helper.register('aether_series_selection', function(items, featuredN
   const series = ensureArr(items);
   const featured = featuredName ? series.find(item => item.name === featuredName || item.slug === featuredName) : null;
   const others = series.filter(item => item !== featured)
-    .sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0));
-  return { featured: featured || null, others: others.slice(0, featured ? 5 : 6) };
+    .sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0)
+      || b.latest_date - a.latest_date || a.name.localeCompare(b.name));
+  return { featured: featured || null, others };
 });
 
 hexo.extend.helper.register('aether_display_title', displayTitle);
 hexo.extend.helper.register('aether_post_issue', newsletterIssue);
 hexo.extend.helper.register('aether_category_label', catLabel);
+
+hexo.extend.helper.register('aether_visual_archive', function() {
+  const selected = this.aether_visuals(Number.MAX_SAFE_INTEGER);
+  const paths = new Set(selected.map(post => post.path));
+  const others = this.site.posts.toArray().filter(isVisualPost)
+    .filter(post => !paths.has(post.path)).sort((a, b) => b.date - a.date);
+  return { selected, others };
+});

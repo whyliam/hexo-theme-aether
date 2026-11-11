@@ -1,19 +1,19 @@
 import * as THREE from './vendor/three.module.min.js';
 
-// A family of folded leaves: closed geometry, shaded as satin jade, not a globe.
+// A family of folded leaves: closed geometry, shaded as moss-tinted glass, not a globe.
 export function createFolio(host, { unfold = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 0.85;
   host.append(renderer.domElement);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 30);
   camera.position.set(0, 0.1, 6.15);
-  scene.add(new THREE.HemisphereLight(0xfffcf0, 0x577565, 2.0));
-  const key = new THREE.DirectionalLight(0xfff8e4, 3.2);
+  scene.add(new THREE.HemisphereLight(0xfffcf0, 0x577565, 0.8));
+  const key = new THREE.DirectionalLight(0xfff8e4, 1.5);
   key.position.set(-3, 5, 5);
   scene.add(key);
   const rim = new THREE.DirectionalLight(0xe0efe8, 3);
@@ -22,8 +22,30 @@ export function createFolio(host, { unfold = false } = {}) {
   const group = new THREE.Group();
   group.position.set(0.12, 0.12, 0);
   scene.add(group);
+  // A small local studio map gives glass a legible rim without remote assets.
+  const studio = document.createElement('canvas');
+  studio.width = 512;
+  studio.height = 256;
+  const context = studio.getContext('2d');
+  const gradient = context.createLinearGradient(0, 0, 0, 256);
+  gradient.addColorStop(0, '#f4fff8');
+  gradient.addColorStop(0.5, '#a3c2b1');
+  gradient.addColorStop(1, '#355e49');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 512, 256);
+  context.fillStyle = '#ffffff';
+  context.fillRect(50, 12, 30, 190);
+  context.fillRect(350, 25, 100, 90);
+  const environment = new THREE.CanvasTexture(studio);
+  environment.mapping = THREE.EquirectangularReflectionMapping;
+  environment.colorSpace = THREE.SRGBColorSpace;
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const environmentTarget = pmrem.fromEquirectangular(environment);
+  scene.environment = environmentTarget.texture;
+  environment.dispose();
+  pmrem.dispose();
   const leaves = [];
-  const colors = [0x829e8d, 0x95af99, 0xa9bda4, 0xb9c9af, 0xb8c9ae];
+  const colors = [0x80ad98, 0x9fc8b5, 0xb3d7c5, 0xcce6d7, 0xe2f2e7];
   for (let i = 0; i < 5; i++) {
     const geometry = new THREE.SphereGeometry(1, 64, 40);
     const positions = geometry.attributes.position;
@@ -38,9 +60,12 @@ export function createFolio(host, { unfold = false } = {}) {
     }
     geometry.computeVertexNormals();
     const material = new THREE.MeshPhysicalMaterial({
-      color             : colors[i], metalness         : 0.06, roughness         : 0.3,
-      clearcoat         : 0.65, clearcoatRoughness: 0.35,
-      sheen             : 0.4, sheenColor        : new THREE.Color(0xe5edd7)
+      color              : colors[i], metalness          : 0, roughness          : 0.12,
+      transparent        : true, opacity            : 0.68, depthWrite         : false,
+      transmission       : 0.78, thickness          : 0.55, ior                : 1.45,
+      attenuationColor   : new THREE.Color(0x9bbfaa), attenuationDistance: 2.5,
+      clearcoat          : 1, clearcoatRoughness : 0.08,
+      sheen              : 0.05, sheenColor         : new THREE.Color(0xe5edd7)
     });
     const leaf = new THREE.Mesh(geometry, material);
     leaf.position.set((i - 2) * 0.16, -i * 0.06, i * 0.23);
@@ -78,6 +103,7 @@ export function createFolio(host, { unfold = false } = {}) {
     canvas: renderer.domElement, resize, render,
     destroy() {
       leaves.forEach(leaf => { leaf.geometry.dispose(); leaf.material.dispose(); });
+      environmentTarget.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     }

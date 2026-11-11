@@ -75,11 +75,8 @@
       <p class="aether-series-lead__count"><strong>{{ featured.count or '—' }}</strong> 篇文章<span aria-hidden="true">↗</span></p>
     </div>
     <div class="aether-series-lead__reading">
-      {%- if featured.posts and featured.posts.length %}
-        {%- for post in featured.posts.slice(-2).reverse() %}
-        <div class="aether-series-lead__post"><span>{{ '最新一篇' if loop.first else '上一篇' }}</span><p>{{ aether_display_title(post) }}</p></div>
-        {%- endfor %}
-      {%- endif %}
+      <p class="aether-series-lead__invitation">沿着一个主题，读得更深一点。</p>
+      <span class="aether-series-entry__link">浏览整个系列 ↗</span>
       {%- if featured.latest_date %}<p class="aether-series-lead__updated">最近更新 <time datetime="{{ date(featured.latest_date, 'YYYY-MM-DD') }}">{{ date(featured.latest_date, 'YYYY-MM-DD') }}</time></p>{% endif %}
     </div>
   </a>

@@ -45,7 +45,7 @@
       // A sustained slow device returns to the static artwork for this visit.
       if (samples < 120) { samples++; if (delta > 48) slow++; }
       if (samples === 120 && slow > 35) { stop(); return; }
-      time += Math.min(delta, 50) / 1000;
+      time += delta / 1000;
       const interval = 1000 / 30;
       if (now - drawn >= interval) {
         pointer.x += (target.x - pointer.x) * 0.07;
@@ -58,7 +58,8 @@
         }
         drawn = now - ((now - drawn) % interval);
       }
-      frame = requestAnimationFrame(tick);
+      const moving = Math.abs(target.x - pointer.x) > 0.0001 || Math.abs(target.y - pointer.y) > 0.0001;
+      if (!settled || moving) frame = requestAnimationFrame(tick);
     }
     function sync() {
       cancelAnimationFrame(frame);
@@ -73,8 +74,9 @@
       const rect = el.getBoundingClientRect();
       target.x = ((event.clientX - rect.left) / rect.width * 2) - 1;
       target.y = ((event.clientY - rect.top) / rect.height * 2) - 1;
+      if (!frame) sync();
     }
-    function reset() { target.x = 0; target.y = 0; }
+    function reset() { target.x = 0; target.y = 0; if (!frame) sync(); }
     function lost(event) { event.preventDefault(); stop(); }
     try {
       const module = await import(new URL('aether-organic-scene.mjs', base).href);
