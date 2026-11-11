@@ -10,9 +10,9 @@
     <h1>{{ cfg.title or page.title or aether_text('subscribe') }}</h1>
     {% if cfg.description or page.description %}<p class="aether-page-lede">{{ cfg.description or page.description }}</p>{% endif %}
     {% if cfg.rss_url or cfg.email_url %}
-    <div class="aether-subscribe-panel">
+    <div class="aether-subscribe-panel" data-aether-glass="surface">
       <div>{% if cfg.rss_label %}<h2>{{ cfg.rss_label }}</h2>{% endif %}{% if cfg.status %}<p>{{ cfg.status }}</p>{% endif %}</div>
-      <div class="aether-actions">{% if cfg.rss_url %}<a class="aether-button" href="{{ url_for(cfg.rss_url) }}">{{ cfg.rss_label or 'RSS' }} ↗</a>{% endif %}{% if cfg.email_url %}<a href="{{ url_for(cfg.email_url) }}">{{ cfg.email_label or 'Email' }}</a>{% endif %}{% if series %}<a href="{{ url_for(series.url) }}">{{ aether_text('all_series') }} →</a>{% endif %}</div>
+      <div class="aether-actions">{% if cfg.rss_url %}<a class="aether-button" href="{{ url_for(cfg.rss_url) }}" data-aether-glass="button">{{ cfg.rss_label or 'RSS' }} ↗</a>{% endif %}{% if cfg.email_url %}<a href="{{ url_for(cfg.email_url) }}">{{ cfg.email_label or 'Email' }}</a>{% endif %}{% if series %}<a href="{{ url_for(series.url) }}">{{ aether_text('all_series') }} →</a>{% endif %}</div>
     </div>
     {% endif %}
   </header>

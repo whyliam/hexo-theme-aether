@@ -1,6 +1,6 @@
 <div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="{{ __('accessibility.nav_toggle') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %}>
+    <div class="toggle" aria-label="{{ __('accessibility.nav_toggle') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %} data-aether-glass="button">
       {%- if theme.menu or (theme.main_menu and theme.main_menu.length) %}
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
@@ -29,11 +29,11 @@
 
   <div class="site-nav-right">
     {%- if theme.scheme === 'Aether' and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
-      <button class="toggle aether-mobile-search" type="button" aria-label="{{ aether_text('search') }}" data-aether-cmdk-trigger>
+      <button class="toggle aether-mobile-search" type="button" aria-label="{{ aether_text('search') }}" data-aether-cmdk-trigger data-aether-glass="button">
         <i class="fa fa-search" aria-hidden="true"></i>
       </button>
     {%- else %}
-    <div class="toggle popup-trigger" aria-label="{{ __('menu.search') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %}>
+    <div class="toggle popup-trigger" aria-label="{{ __('menu.search') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %} data-aether-glass="button">
       {%- if theme.algolia_search.enable or theme.local_search.enable %}
         <i class="fa fa-search fa-fw fa-lg"></i>
       {%- endif %}

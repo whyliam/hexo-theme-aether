@@ -5,4 +5,5 @@ describe('Helpers', () => {
   require('./next-url');
   require('./aether-data');
   require('./aether-config');
+  require('./liquid-lifecycle');
 });

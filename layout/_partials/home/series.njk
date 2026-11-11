@@ -9,7 +9,7 @@
   {%- set selection = aether_series_selection(auto_series, cfg.featured) -%}
   {%- set featured = selection.featured -%}
   {%- if featured %}
-  <a class="aether-series-lead" href="{{ url_for(featured.url or '/series/') }}">
+  <a class="aether-series-lead" href="{{ url_for(featured.url or '/series/') }}" data-aether-glass="surface">
     <div class="aether-series-lead__intro">
       <p class="aether-series-lead__label">{{ aether_text('featured_series') }}{% if featured.posts and featured.posts.length %}<span>{{ date(featured.posts[0].date, 'YYYY') }} — {{ date(featured.latest_date or featured.posts[featured.posts.length - 1].date, 'YYYY') }}</span>{% endif %}</p>
       <h3>{{ featured.name }}</h3>

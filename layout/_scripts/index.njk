@@ -16,6 +16,9 @@
 {{- next_js('next-boot.js') }}
 {%- if theme.scheme === 'Aether' %}
   {{- next_js('aether.js') }}
+  {%- if aether_glass().enable %}
+    {{- next_js('vendor/liquidGL.js') }}
+  {%- endif %}
   {{- next_js('aether-liquid.js') }}
   {{- next_js('aether-organic.js') }}
   {%- if theme.aether and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}

@@ -120,9 +120,8 @@ description: 可选的文章摘要。
 
 - `aether.cmdk.enable` 控制本地搜索；构建时生成 `aether-search.json`，检索标题、摘要、系列、分类与标签。`recent_count` 和 `result_limit` 控制展示数量；索引和结果链接支持子目录部署。Cmd/Ctrl+K 打开，方向键选择，Escape 关闭并返回焦点。
 - 明暗主题初始跟随系统，手动切换后保存在浏览器中。
-- 导航与重点系列使用玻璃材质；鼠标高光有轻微滞后，稳定后停止帧调度。
-- 玻璃高光是 DOM/CSS 实现，参考 liquidGL 的视觉思路，并未集成其 GPU 背景折射。
-- 减少动态、减少透明度及触控模式下停止跟手高光；不支持背景模糊时使用不透明表面。
+- 导航、搜索弹窗、系列卡片、订阅面板及主题按钮使用本地 liquidGL。折射作用于材质，文字与点击目标保持原生 DOM。导航、卡片和弹窗分别使用轻、中、厚三种阅读底。
+- 关闭玻璃时不加载 GPU 库；GPU、脚本不可用或初始化超时回退到 CSS 材质。减少动态时关闭流体响应，减少透明度时使用实体表面。后台与页面离开时释放实例，明暗切换和 PJAX 后重新初始化。
 
 ## 外观与布局参数
 
@@ -136,13 +135,13 @@ description: 可选的文章摘要。
 | `layout.article_width` | 720 / 480–960px | 文章宽度 |
 | `layout.gutter` / `mobile_gutter` | 50 / 20px | 桌面与手机水平留白 |
 | `font.serif` / `sans` / `mono` | 空值保留原有字体栈 | CSS 字体族列表 |
-| `glass.enable` / `pointer` | true / true | 玻璃材质、鼠标跟手高光开关 |
-| `glass.blur` / `saturation` | 16px / 160% | 背景模糊与饱和度 |
+| `glass.enable` / `pointer` | true / true | 玻璃材质、流体响应及回退高光开关 |
+| `glass.blur` / `saturation` | 16px / 160% | CSS 回退的背景模糊与饱和度 |
 | `glass.surface.light` / `dark` | 六位颜色 | 玻璃底色 |
 | `glass.opacity.light` / `dark` | .56 / .66 | 玻璃底色透明度，0–1 |
-| `glass.reflection.light` / `dark` | .82 / .24 | 跟手高光强度，0–1 |
-| `glass.rim.light` / `dark` | .95 / .36 | 内侧亮边强度，0–1 |
-| `glass.follow_duration` | 100 / 0–500ms | 高光跟随时间常数；0 为即时响应 |
+| `glass.reflection.light` / `dark` | .82 / .24 | CSS 回退的跟手高光强度，0–1 |
+| `glass.rim.light` / `dark` | .95 / .36 | CSS 回退的内侧亮边强度，0–1 |
+| `glass.follow_duration` | 100 / 0–500ms | CSS 回退高光跟随时间；0 为即时响应 |
 
 `home.sections` 可选 `hero`、`latest`、`paths`、`series`、`personal`、`subscribe`。默认使用全部模块；`[]` 隐藏全部首页模块。空值使用默认顺序，配置数组会替换默认顺序。`hero.links` 可配置多个 `{label, url}`；空数组显示默认档案入口。`hero.artwork: false` 隐藏书页，`hero.image` 可替换装饰图并自动停止 3D 动效。
 
@@ -153,3 +152,7 @@ description: 可选的文章摘要。
 运行 [README 中的开发检查](../README.md#开发检查)。模板检查器依赖固定在 `requirements-dev.txt`。修改年份分组模板时，应保持每个循环和条件分支内的 HTML 标签独立闭合。
 
 在 Hexo 站点执行 `npx hexo clean && npx hexo generate`，避免共享 Stylus 或模板更新后继续读取旧缓存。主题本身不包含站点文章、用户账号或部署凭据。许可证与上游致谢请保留。
+
+## liquidGL rendering
+
+Aether bundles liquidGL v3.0.0 locally at commit `88f681ab7035fd55b04f63edff1841e32c4199e9`; see `source/js/vendor/liquidGL.README.md` and `liquidGL.LICENSE` for attribution. There is no runtime CDN dependency. Autonomous specular animation, tilt, dragging and chromatic aberration are disabled. Native text stays above the lens. Opening or filtering search preserves existing navigation instances; appearance changes rebuild snapshots.

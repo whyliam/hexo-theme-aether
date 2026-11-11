@@ -7,7 +7,7 @@
     <p class="aether-intro__description">{{ hero.intro or config.description }}</p>
     <div class="aether-intro__links">
       {%- for link in links %}
-      <a href="{{ url_for(link.url) }}">{{ link.label or aether_text('read') }}{% if loop.first %} <span aria-hidden="true">↗</span>{% endif %}</a>
+      <a data-aether-glass="button" href="{{ url_for(link.url) }}">{{ link.label or aether_text('read') }}{% if loop.first %} <span aria-hidden="true">↗</span>{% endif %}</a>
       {%- endfor %}
     </div>
   </div>

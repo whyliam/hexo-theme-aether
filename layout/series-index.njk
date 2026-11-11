@@ -12,7 +12,7 @@
   {% set items = ([selection.featured] if selection.featured else []).concat(selection.others) %}
   <section class="aether-si-grid">
   {% for s in items %}
-    <article class="aether-si-card{% if selection.featured and s.slug === selection.featured.slug %} is-featured{% endif %}">
+    <article data-aether-glass="surface" class="aether-si-card{% if selection.featured and s.slug === selection.featured.slug %} is-featured{% endif %}">
       <div class="aether-si-card__head"><span>{{ aether_text('featured_series') if selection.featured and s.slug === selection.featured.slug else aether_text('series') }}</span><span class="aether-si-card__stat">{{ aether_text('article_count', s.count) }}</span></div>
       <h2 class="aether-si-card__title"><a href="{{ url_for(s.url) }}">{{ s.name }}</a></h2>
       <p class="aether-si-card__meta">{{ aether_iso_date(s.first_date) }} — {{ aether_iso_date(s.latest_date) }}</p>

@@ -85,3 +85,6 @@ And best contributors from initially repository:
 It lives on as an open source project with many contributors, a self updating list is [here](https://github.com/next-theme/hexo-theme-next/graphs/contributors).
 
 P.S. If you did some useful pulls/commits in original repository and you are not in the list, let us know and you will be added here.
+# liquidGL
+
+The local renderer is by [NaughtyDuk](https://github.com/naughtyduk/liquidGL), distributed under the MIT license. See `source/js/vendor/liquidGL.LICENSE`. Demo assets are not included.

@@ -1,0 +1,155 @@
+// A clear edge around a quiet reading surface. The GPU lens stays behind live DOM.
+body[data-aether] {
+  --aether-material: rgba(250, 253, 251, .86);
+  --aether-material-nav: rgba(250, 253, 251, .88);
+  --aether-material-dialog: rgba(250, 253, 251, .97);
+  --aether-material-control: rgba(255, 255, 255, .48);
+  --aether-material-edge: rgba(255, 255, 255, .86);
+  --aether-material-shadow: rgba(25, 48, 36, .08);
+  --aether-control-ink: #fff;
+
+  [data-aether-glass='surface'] {
+    isolation: isolate;
+    border: 1px solid var(--aether-material-edge);
+    box-shadow: 0 1px 2px var(--aether-material-shadow), 0 12px 32px var(--aether-material-shadow) !important;
+
+    &::before {
+      display: none;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--aether-material-fill, var(--aether-material));
+      pointer-events: none;
+      z-index: 0;
+    }
+    > :not(canvas) {
+      position: relative;
+      z-index: 1;
+    }
+  }
+  [data-aether-glass='surface']:not(.header), .aether-intro__links a, .aether-button, .btn, .aether-cmdk__filters button, .aether-cmdk__esc {
+    position: relative;
+    z-index: 1;
+  }
+  [data-aether-glass='surface']:not([data-aether-glass-state='ready']) {
+    backdrop-filter: unquote('blur(var(--aether-liquid-blur, 16px)) saturate(var(--aether-liquid-saturation, 160%))');
+    -webkit-backdrop-filter: unquote('blur(var(--aether-liquid-blur, 16px)) saturate(var(--aether-liquid-saturation, 160%))');
+
+    &::after {
+      background: radial-gradient(ellipse 180px 90px at var(--aether-liquid-x, 18%) var(--aether-liquid-y, 0%), unquote('color-mix(in srgb, var(--aether-liquid-reflection) 18%, transparent)'), transparent 78%), var(--aether-material-fill, var(--aether-material));
+      box-shadow: inset 0 1px 0 var(--aether-liquid-rim);
+    }
+  }
+  .header {
+    --aether-material-fill: var(--aether-material-nav);
+  }
+  .aether-cmdk__panel, .search-popup {
+    --aether-material-fill: var(--aether-material-dialog);
+  }
+  .aether-cmdk__backdrop {
+    background: rgba(16, 24, 20, .28);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  [data-aether-lens] {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+  }
+  [data-aether-glass='button'] {
+    background: var(--aether-material-control) !important;
+    color: var(--aether-ink);
+    border: 1px solid var(--aether-rule);
+    box-shadow: inset 0 1px 0 var(--aether-material-edge);
+    transition: background-color 140ms ease, box-shadow 140ms ease;
+  }
+  .aether-intro__links a:first-child, .aether-button, .aether-cmdk__filters button.is-on {
+    background: var(--aether-accent) !important;
+    color: var(--aether-control-ink) !important;
+    border-color: transparent;
+  }
+  .aether-intro__links a:first-child {
+    padding: 10px 20px;
+  }
+  .site-nav-toggle .toggle, .aether-mobile-search, .aether-dark-toggle {
+    border-radius: 50%;
+  }
+  .aether-cmdk__esc {
+    border-radius: 10px;
+    min-width: 44px;
+    font-family: var(--aether-ff-sans);
+    font-size: 11px;
+  }
+  .aether-cmdk__filters button {
+    font-family: var(--aether-ff-sans);
+    letter-spacing: 0;
+    font-size: 12px;
+  }
+  .aether-cmdk__input:focus-visible {
+    outline: none;
+  }
+  .aether-cmdk__inputbar:focus-within {
+    box-shadow: inset 0 -2px 0 var(--aether-accent);
+  }
+  .aether-cmdk__item.is-on {
+    background: var(--aether-accent-tint);
+  }
+}
+
+[data-color-scheme='dark'] body[data-aether] {
+  --aether-material: rgba(25, 38, 31, .9);
+  --aether-material-nav: rgba(25, 38, 31, .8);
+  --aether-material-dialog: rgba(25, 38, 31, .98);
+  --aether-material-control: rgba(219, 240, 227, .07);
+  --aether-material-edge: rgba(225, 246, 233, .18);
+  --aether-material-shadow: rgba(0, 0, 0, .16);
+  --aether-control-ink: #14251c;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body[data-aether] [data-aether-glass='button']:hover {
+    box-shadow: inset 0 1px 0 var(--aether-material-edge), 0 2px 8px var(--aether-material-shadow);
+  }
+}
+
+body[data-aether][data-aether-glass='false'] {
+  --aether-material-control: var(--aether-surface);
+
+  [data-aether-glass='surface'] {
+    background: var(--aether-surface) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  body[data-aether] {
+    --aether-material-control: var(--aether-surface);
+
+    [data-aether-glass='surface'] {
+      background: var(--aether-surface) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+
+      &::after {
+        display: none;
+      }
+    }
+    .aether-cmdk__backdrop {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-aether] [data-aether-glass='button'] {
+    transition: none;
+  }
+}

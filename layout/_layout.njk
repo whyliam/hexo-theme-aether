@@ -28,7 +28,7 @@
   </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}{% if theme.scheme === 'Aether' %} data-aether data-aether-copy-label="{{ aether_text('copy_code') }}" data-aether-copied-label="{{ aether_text('copied') }}" data-aether-root="{{ config.root }}" data-aether-dark-label="{{ aether_text('switch_dark') }}" data-aether-light-label="{{ aether_text('switch_light') }}" data-aether-pointer="{{ aether_glass().pointer }}" data-aether-follow="{{ aether_glass().follow }}"{% endif %}>
+<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}{% if theme.scheme === 'Aether' %} data-aether data-aether-copy-label="{{ aether_text('copy_code') }}" data-aether-copied-label="{{ aether_text('copied') }}" data-aether-root="{{ config.root }}" data-aether-dark-label="{{ aether_text('switch_dark') }}" data-aether-light-label="{{ aether_text('switch_light') }}" data-aether-glass="{{ aether_glass().enable }}" data-aether-pointer="{{ aether_glass().pointer }}" data-aether-follow="{{ aether_glass().follow }}"{% endif %}>
   <div class="headband"></div>
 
   {%- if theme.scheme === 'Aether' and theme.aether and theme.aether.reading_progress %}
@@ -37,20 +37,20 @@
 
   <main class="main">
     <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader" data-aether-glass="surface">
         {%- if theme.scheme === 'Aether' -%}
           <div class="aether-header-row">
             {{ partial('_partials/header/brand.njk') }}
             {{ partial('_partials/header/menu.njk', {}, {cache: theme.cache.enable}) }}
             {%- if theme.aether and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
               <button class="aether-search-btn" type="button" data-aether-cmdk-trigger
-                      aria-label="{{ aether_text('search') }} (⌘K)">
+                      aria-label="{{ aether_text('search') }} (⌘K)" data-aether-glass="button">
                 <span class="aether-search-btn__icon" aria-hidden="true"><i class="fa fa-search"></i></span>
                 <span class="aether-search-btn__label">{{ aether_text('search') }}</span>
                 <kbd class="aether-search-btn__kbd">⌘K</kbd>
               </button>
             {%- endif %}
-            {% if aether_mode() === 'auto' %}<button class="aether-dark-toggle" type="button" aria-label="{{ aether_text('switch_dark') }}">☾</button>{% endif %}
+            {% if aether_mode() === 'auto' %}<button class="aether-dark-toggle" type="button" aria-label="{{ aether_text('switch_dark') }}" data-aether-glass="button">☾</button>{% endif %}
           </div>
           {{ partial('_partials/search/index.njk', {}, {cache: theme.cache.enable}) }}
           {{- next_inject('header') }}

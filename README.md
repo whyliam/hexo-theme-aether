@@ -1,6 +1,6 @@
 # Aether
 
-> 基于 NexT v8.27.0 的个人知识档案馆主题，为长期写作者设计。Aether 独立版本：0.1.0。
+> 基于 NexT v8.27.0 的个人知识档案馆主题，为长期写作者设计。Aether 当前代码版本：0.1.1；npm 稳定版：0.1.0。
 
 [npm](https://www.npmjs.com/package/hexo-theme-aether) · [在线预览](https://blog.naaln.com/) · [配置指南](docs/AETHER.md) · [迁移说明](docs/MIGRATION-0.1.md)
 

@@ -1,6 +1,6 @@
 {
   "name": "hexo-theme-aether",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Aether — a reading-first Hexo theme with configurable liquid glass surfaces.",
   "main": "package.json",
   "files": [

@@ -19,5 +19,6 @@ module.exports = ctx => function(args) {
     icon = `<i class="${icon}"></i>`;
   }
 
-  return `<a class="btn" href="${url}"${title.length > 0 ? ` title="${title}"` : ''}>${icon}${text}</a>`;
+  const glass = ctx.theme.config.scheme === 'Aether' ? ' data-aether-glass="button"' : '';
+  return `<a class="btn" href="${url}"${title.length > 0 ? ` title="${title}"` : ''}${glass}>${icon}${text}</a>`;
 };

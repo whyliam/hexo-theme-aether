@@ -53,7 +53,7 @@
 
 {%- if theme.chat.enable and (theme.chatra.enable or theme.tidio.enable) %}
   <div class="sidebar-button animated">
-    <button>
+    <button data-aether-glass="button">
       {%- if theme.chat.icon %}<i class="{{ theme.chat.icon }}"></i>{% endif %}
       {{ __('widget.chat') }}
     </button>

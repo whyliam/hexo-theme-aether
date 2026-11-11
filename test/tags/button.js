@@ -6,6 +6,12 @@ const hexo = new Hexo();
 describe('button', () => {
   const postButton = require('../../scripts/tags/button')(hexo);
 
+  it('marks only Aether button tags for the glass renderer', () => {
+    const render = require('../../scripts/tags/button')({ theme: { config: { scheme: 'Aether' } } });
+    render(['#', ',Read']).should.include('data-aether-glass="button"');
+    postButton(['#']).should.not.include('data-aether-glass');
+  });
+
   it('only url', () => {
     postButton(['#']).should.eql('<a class="btn" href="#"></a>');
   });

@@ -50,11 +50,10 @@
 
 - 紧凑主要操作目标至少 44px；键盘焦点使用实线，立即反馈。
 - 颜色反馈使用 120–180ms；键盘动作不等待动画。
-- 跟手高光只在鼠标操作期间调度，使用约 100ms 跟随时间常数；停稳、后台和页面离开时停止。
+- liquidGL 使用窄边缘折射和低强度流体响应；关闭自主游动高光、倾斜和色散。后台释放 GPU 实例。CSS 回退高光在鼠标操作时调度，稳定后停止。
 - 高光装饰层不接收指针事件，不移动正文与导航文字。
-- 减少动态、减少透明度、触控及不支持背景模糊的场景有静态或不透明回退。
-- Hero 书页有独立的设备能力与动态偏好判断；不要把导航高光误认为 3D 折射。
-- 当前玻璃效果为 CSS 材质和指针高光，未集成 liquidGL 的 WebGPU/WebGL 页面折射。
+- 减少动态时关闭流体响应，减少透明度时使用实体表面。GPU 和脚本不可用时保留 CSS 材质与交互。
+- Hero 书页保持独立的设备能力判断。玻璃使用本地 liquidGL，原生内容不参与 GPU 重绘。
 
 ## 实现入口
 
@@ -64,7 +63,8 @@
 | 年份分组 / 共享文章行 | `scripts/helpers/aether-data.js` / `layout/_macro/aether-archive.njk` |
 | 全站玻璃与内页 | `source/css/_schemes/Aether/_liquid-glass.styl` |
 | 首页阅读结构 | `source/css/_schemes/Aether/_reading-home.styl` |
-| 首页精修与跟手高光 | `_home-polish.styl` / `source/js/aether-liquid.js` |
+| 首页精修 | `_home-polish.styl` |
+| 材质与实例生命周期 | `_glass-material.styl` / `source/js/aether-liquid.js` |
 | 书页与回退 | `source/js/aether-organic.js` / `aether-organic-scene.mjs` |
 | 搜索与焦点 | `source/js/aether-cmdk.js` |
 
@@ -77,3 +77,17 @@
 5. ESLint、测试、`curlylint --include .njk layout` 与 Hexo 构建通过。
 
 设计参考：[frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)、[emil-design-eng](https://github.com/emilkowalski/skills)、[gradient-backdrops](https://github.com/nonlineartom/gradient-backdrops)、[liquidGL](https://github.com/naughtyduk/liquidGL)。具体历史验收见 [首页精修记录](https://github.com/whyliam/hexo-theme-aether/tree/master/docs/design/homepage-polish.md) 和 [玻璃材质记录](https://github.com/whyliam/hexo-theme-aether/tree/master/docs/design/liquid-glass.md)。
+
+## liquidGL rendering
+
+Aether bundles liquidGL v3.0.0 locally at commit `88f681ab7035fd55b04f63edff1841e32c4199e9`; see `source/js/vendor/liquidGL.README.md` for attribution. Explicit targets cover navigation, search, series cards, subscription panels and theme buttons. Native DOM content stays above the optical layer. Specular animation, tilt, dragging and chromatic aberration are disabled; reduced motion also disables fluid interaction.
+
+`appearance.glass.enable` controls the integration; `pointer` controls fluid interaction. Surface and opacity configure tint. Legacy blur/saturation/reflection/rim/follow_duration settings apply to the CSS fallback. Reduced transparency uses solid surfaces. Opening search adds its own lenses without recapturing the navigation under the backdrop; closing search destroys those lenses. Theme changes and PJAX invalidate snapshots.
+
+| Before | After | Why |
+| --- | --- | --- |
+| Broad grey navigation bevel | Narrow optical edge and restrained shadow | Keep the navigation light and text dominant |
+| Background text visible through search | Nearly opaque reading surface over a blurred backdrop | Separate search results from the page behind them |
+| Uniform material density | Separate navigation, card and dialog density | Match transparency to reading demands |
+| Weak active controls in dark mode | Pale green primary control with dark text | Keep action hierarchy clear in both themes |
+| Square mobile icon surfaces | Circular controls with preserved hit targets | Match the rounded navigation without changing its layout |

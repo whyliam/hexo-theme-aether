@@ -42,6 +42,7 @@ NexT.utils = {
     button.className = 'copy-btn';
     if (accessible) {
       button.type = 'button';
+      button.dataset.aetherGlass = 'button';
       button.setAttribute('aria-label', document.body.dataset.aetherCopyLabel || 'Copy code');
     }
     button.innerHTML = '<i class="fa fa-copy fa-fw" aria-hidden="true"></i>';
