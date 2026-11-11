@@ -76,4 +76,4 @@
 4. 检查减少动态、减少透明度及静态书页回退；实际核验图片解码与目标链接。
 5. ESLint、测试、`curlylint --include .njk layout` 与 Hexo 构建通过。
 
-设计参考：[frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)、[emil-design-eng](https://github.com/emilkowalski/skills)、[gradient-backdrops](https://github.com/nonlineartom/gradient-backdrops)、[liquidGL](https://github.com/naughtyduk/liquidGL)。具体历史验收见 [首页精修记录](design/homepage-polish.md) 和 [玻璃材质记录](design/liquid-glass.md)。
+设计参考：[frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)、[emil-design-eng](https://github.com/emilkowalski/skills)、[gradient-backdrops](https://github.com/nonlineartom/gradient-backdrops)、[liquidGL](https://github.com/naughtyduk/liquidGL)。具体历史验收见 [首页精修记录](https://github.com/whyliam/hexo-theme-aether/tree/master/docs/design/homepage-polish.md) 和 [玻璃材质记录](https://github.com/whyliam/hexo-theme-aether/tree/master/docs/design/liquid-glass.md)。

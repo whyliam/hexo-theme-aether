@@ -9,9 +9,9 @@
 {% block content %}
   {%- if theme.scheme === 'Aether' %}
   <section class="aether-archive-hero">
-    <span class="aether-archive-label">写作</span>
-    <h1 class="aether-archive-title">{{ site.posts.length }} 篇文章</h1>
-    <p class="aether-archive-desc">始于 {{ date(site.posts.sort('date').toArray()[0].date, 'YYYY') }}，记录至今。</p>
+    <span class="aether-archive-label">{{ aether_text('writing') }}</span>
+    <h1 class="aether-archive-title">{{ aether_text('article_count', site.posts.length) }}</h1>
+    <p class="aether-archive-desc">{% if site.posts.length %}{{ aether_text('since', date(site.posts.sort('date').toArray()[0].date, 'YYYY')) }}{% else %}{{ aether_text('empty_archive') }}{% endif %}</p>
   </section>
   {{ archive_template.navigation('archives') }}
 

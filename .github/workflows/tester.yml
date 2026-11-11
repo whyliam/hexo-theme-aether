@@ -15,21 +15,25 @@ jobs:
           repository: hexojs/hexo-starter
       - name: Use Node.js
         uses: actions/setup-node@v6
+        with:
+          node-version: '24'
       - name: Install Dependencies
         run: npm install
       - name: Install hexo-tag-embed
         run: npm install hexo-tag-embed
       - uses: actions/checkout@v6
         with:
-          path: themes/next
+          path: themes/aether
       - uses: actions/checkout@v6
         with:
           repository: hexojs/hexo-many-posts
           path: source/_posts/hexo-many-posts
-      - run: npx hexo config theme next
+      - name: Install theme runtime dependencies
+        run: npm install --prefix themes/aether --omit=dev
+      - run: npx hexo config theme aether
       - uses: DamianReeves/write-file-action@master
         with:
-          path: themes/next/scripts/error.js
+          path: themes/aether/scripts/error.js
           contents: |
             hexo.log.error = function(...params) {
               console.error("ERROR", ...params);

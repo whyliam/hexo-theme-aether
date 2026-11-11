@@ -10,10 +10,16 @@
 {%- endif %}
 
 {%- if theme.back2top.enable and not theme.back2top.sidebar %}
+  {% if theme.scheme === 'Aether' %}
+  <button class="back-to-top" type="button" aria-label="{{ __('accessibility.back_to_top') }}">
+    <i class="fa fa-arrow-up fa-lg" aria-hidden="true"></i><span>0%</span>
+  </button>
+  {% else %}
   <div class="back-to-top" role="button" aria-label="{{ __('accessibility.back_to_top') }}">
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  {% endif %}
 {%- endif %}
 
 {%- if theme.reading_progress.enable %}
@@ -34,5 +40,5 @@
 {%- endif %}
 
 <noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+  <div class="noscript-warning">{{ 'Aether' if theme.scheme === 'Aether' else 'NexT' }} works best with JavaScript enabled</div>
 </noscript>

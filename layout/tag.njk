@@ -11,7 +11,7 @@
   <section class="aether-archive-hero">
     <span class="aether-archive-label">{{ __('title.tag') }}</span>
     <h1 class="aether-archive-title"># {{ page.tag }}</h1>
-    <p class="aether-archive-desc">{{ site.tags.findOne({name: page.tag}).posts.length }} 篇文章</p>
+    <p class="aether-archive-desc">{{ aether_text('article_count', site.tags.findOne({name: page.tag}).posts.length) }}</p>
   </section>
   {{ archive_template.navigation('tags') }}
 

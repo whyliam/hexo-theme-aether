@@ -101,3 +101,56 @@ symbols_count_time:
   time: 阅读时长
   time_total: 站点阅读时长
   time_minutes: 分钟
+
+aether:
+  about: 关于作者
+  read: 探索我的思考
+  caption: 写作，让思考慢慢成形。
+  latest: 最近更新
+  all_posts: 所有文章
+  newest: 最新发布
+  paths: 从这里开始
+  series: 长期系列
+  all_series: 全部系列
+  personal: 短札与影像
+  notes: 短札
+  visuals: 影像
+  all: 全部
+  subscribe: 关注更新
+  search: 搜索档案
+  search_placeholder: 搜索档案 — 文章、系列、笔记、影像…
+  issue: 第 {value} 期
+  close: 关闭
+  open: 打开
+  navigate: 导航
+  content_types: 内容类型
+  search_results: 搜索结果
+  loading: 正在加载档案索引…
+  indexed: '{value} 条目已索引'
+  search_failed: 索引加载失败。按 Enter 浏览归档。
+  no_results: 没有匹配项，试试别的关键词或切换过滤器。
+  results: '{value} 个结果'
+  post: 文章
+  visual: 影像
+  note: 短札
+  page: 页面
+  category: 分类
+  switch_dark: 切换到深色模式
+  switch_light: 切换到浅色模式
+  article_count: '{value} 篇文章'
+  since: 始于 {value}，记录至今。
+  empty_archive: 写下第一篇文章，开始你的档案。
+  featured_series: 重点系列
+  series_invitation: 沿着一个主题，读得更深一点。
+  browse_series: 浏览整个系列
+  updated: 最近更新
+  articles: 篇文章
+  since_short: '{value} 起'
+  series_count: '{value} 个长期主题'
+  series_description: 沿着一个问题持续写作，留下可以接着读的思考。
+  started: 起始
+  reading_order: 阅读顺序
+  browse: 浏览方式
+  writing: 写作
+  copy_code: 复制代码
+  copied: 已复制

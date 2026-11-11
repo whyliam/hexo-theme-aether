@@ -3,7 +3,7 @@
 {%- if items and items.length %}
 <section class="aether-section aether-paths-wrap" id="aether-start-here">
   <div class="aether-sec-head">
-    <h2>{{ cfg.title | safe }}</h2>
+    <h2>{{ (cfg.title or aether_text('paths')) | safe }}</h2>
   </div>
 
   <div class="aether-paths">

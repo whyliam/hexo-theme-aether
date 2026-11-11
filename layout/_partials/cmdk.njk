@@ -6,30 +6,30 @@
 -#}
 {%- if theme.scheme === 'Aether' and theme.aether.cmdk and theme.aether.cmdk.enable !== false -%}
 {%- set cfg = theme.aether.cmdk -%}
-<div class="aether-cmdk" id="aether-cmdk" hidden role="dialog" aria-modal="true" aria-label="搜索档案">
+<div class="aether-cmdk" id="aether-cmdk" hidden role="dialog" aria-modal="true" aria-label="{{ aether_text('search') }}" data-settings="{{ aether_search_settings() | escape }}">
   <div class="aether-cmdk__backdrop" data-cmdk-close></div>
   <div class="aether-cmdk__panel">
     <div class="aether-cmdk__inputbar">
       <span class="aether-cmdk__prompt">⌘K</span>
       <input class="aether-cmdk__input" type="text" autocomplete="off" spellcheck="false"
-             placeholder="{{ cfg.placeholder or '搜索档案 — 文章、系列、笔记、影像…' }}"
-             aria-label="搜索" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-controls="aether-cmdk-results" />
-      <button class="aether-cmdk__esc" type="button" aria-label="关闭搜索" data-cmdk-close>ESC</button>
+             placeholder="{{ cfg.placeholder or aether_text('search_placeholder') }}"
+             aria-label="{{ aether_text('search') }}" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-controls="aether-cmdk-results" />
+      <button class="aether-cmdk__esc" type="button" aria-label="{{ aether_text('close') }}" data-cmdk-close>ESC</button>
     </div>
-    <div class="aether-cmdk__filters" role="group" aria-label="内容类型">
-      <button class="is-on" aria-pressed="true" data-cmdk-filter="all" type="button">全部</button>
-      <button aria-pressed="false" data-cmdk-filter="post" type="button">文章</button>
-      <button aria-pressed="false" data-cmdk-filter="series" type="button">系列</button>
-      <button aria-pressed="false" data-cmdk-filter="visual" type="button">影像</button>
-      <button aria-pressed="false" data-cmdk-filter="note" type="button">短札</button>
-      <button aria-pressed="false" data-cmdk-filter="page" type="button">页面</button>
+    <div class="aether-cmdk__filters" role="group" aria-label="{{ aether_text('content_types') }}">
+      <button class="is-on" aria-pressed="true" data-cmdk-filter="all" type="button">{{ aether_text('all') }}</button>
+      <button aria-pressed="false" data-cmdk-filter="post" type="button">{{ aether_text('post') }}</button>
+      <button aria-pressed="false" data-cmdk-filter="series" type="button">{{ aether_text('series') }}</button>
+      <button aria-pressed="false" data-cmdk-filter="visual" type="button">{{ aether_text('visual') }}</button>
+      <button aria-pressed="false" data-cmdk-filter="note" type="button">{{ aether_text('note') }}</button>
+      <button aria-pressed="false" data-cmdk-filter="page" type="button">{{ aether_text('page') }}</button>
     </div>
     <div class="aether-cmdk__status" aria-live="polite"></div>
-    <ul class="aether-cmdk__results" id="aether-cmdk-results" role="listbox" aria-label="搜索结果"></ul>
+    <ul class="aether-cmdk__results" id="aether-cmdk-results" role="listbox" aria-label="{{ aether_text('search_results') }}"></ul>
     <div class="aether-cmdk__hint">
-      <span><kbd>↑</kbd><kbd>↓</kbd> 导航</span>
-      <span><kbd>↵</kbd> 打开</span>
-      <span><kbd>esc</kbd> 关闭</span>
+      <span><kbd>↑</kbd><kbd>↓</kbd> {{ aether_text('navigate') }}</span>
+      <span><kbd>↵</kbd> {{ aether_text('open') }}</span>
+      <span><kbd>esc</kbd> {{ aether_text('close') }}</span>
     </div>
   </div>
 </div>

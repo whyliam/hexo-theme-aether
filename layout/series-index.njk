@@ -1,23 +1,23 @@
 {% extends '_layout.njk' %}
-{% block title %}系列 | {{ title }}{% endblock %}
+{% block title %}{{ aether_text('series') }} | {{ title }}{% endblock %}
 {% block class %}page aether-series-index{% endblock %}
 {% block content %}
 <article class="aether-series-detail">
   <header class="aether-series-detail__hero">
-    <p class="aether-series-detail__eyebrow">{{ page.series_list.length }} 个长期主题</p>
-    <h1 class="aether-series-detail__title">系列文章</h1>
-    <p class="aether-series-detail__lede">沿着一个问题持续写作，留下可以接着读的思考。</p>
+    <p class="aether-series-detail__eyebrow">{{ aether_text('series_count', page.series_list.length) }}</p>
+    <h1 class="aether-series-detail__title">{{ aether_text('series') }}</h1>
+    <p class="aether-series-detail__lede">{{ aether_text('series_description') }}</p>
   </header>
   {% set selection = aether_series_selection(page.series_list, theme.aether.series.featured) %}
   {% set items = ([selection.featured] if selection.featured else []).concat(selection.others) %}
   <section class="aether-si-grid">
   {% for s in items %}
     <article class="aether-si-card{% if selection.featured and s.slug === selection.featured.slug %} is-featured{% endif %}">
-      <div class="aether-si-card__head"><span>{{ '重点系列' if selection.featured and s.slug === selection.featured.slug else '长期写作' }}</span><span class="aether-si-card__stat">{{ s.count }} 篇</span></div>
+      <div class="aether-si-card__head"><span>{{ aether_text('featured_series') if selection.featured and s.slug === selection.featured.slug else aether_text('series') }}</span><span class="aether-si-card__stat">{{ aether_text('article_count', s.count) }}</span></div>
       <h2 class="aether-si-card__title"><a href="{{ url_for(s.url) }}">{{ s.name }}</a></h2>
       <p class="aether-si-card__meta">{{ aether_iso_date(s.first_date) }} — {{ aether_iso_date(s.latest_date) }}</p>
       <ul class="aether-si-card__recent">{% for p in s.recent_posts %}<li><a href="{{ url_for(p.path) }}">{{ aether_display_title(p) }}</a></li>{% endfor %}</ul>
-      <a class="aether-si-card__cta" href="{{ url_for(s.url) }}">阅读系列 →</a>
+      <a class="aether-si-card__cta" href="{{ url_for(s.url) }}">{{ aether_text('browse_series') }} →</a>
     </article>
   {% endfor %}
   </section>

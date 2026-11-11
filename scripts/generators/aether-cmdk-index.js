@@ -20,6 +20,8 @@ const {
   slugifySeries
 } = require('../lib/aether-content');
 
+const { sitePath } = require('../lib/aether-config');
+
 const stripTags = (html = '') =>
   String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -50,34 +52,36 @@ hexo.extend.generator.register('aether-cmdk-index', function(locals) {
     entries.push({
       kind,
       title : String(p.title || ''),
-      path  : '/' + p.path,
+      path  : sitePath(p.path, hexo.config.root),
       date  : p.date ? new Date(p.date.toDate ? p.date.toDate() : p.date).toISOString().slice(0, 10) : '',
       summary,
       category,
       tags,
-      series: inferredSeriesName(p)
+      series: inferredSeriesName(p, aether?.series?.rules || [])
     });
   });
 
   // Series pages
   const seriesNames = new Set();
   locals.posts.toArray().forEach(p => {
-    const name = inferredSeriesName(p);
+    const name = inferredSeriesName(p, aether?.series?.rules || []);
     if (name) seriesNames.add(name);
   });
-  seriesNames.forEach(name => {
-    const slug = slugifySeries(name);
-    entries.push({
-      kind    : 'series',
-      title   : name,
-      path    : '/series/' + slug + '/',
-      date    : '',
-      summary : '系列 — 按主题组织的长期写作',
-      category: 'Series',
-      tags    : [],
-      series  : name
+  if (aether?.series_pages?.enable !== false) {
+    seriesNames.forEach(name => {
+      const slug = slugifySeries(name);
+      entries.push({
+        kind    : 'series',
+        title   : name,
+        path    : sitePath('/series/' + slug + '/', hexo.config.root),
+        date    : '',
+        summary : '系列 — 按主题组织的长期写作',
+        category: 'Series',
+        tags    : [],
+        series  : name
+      });
     });
-  });
+  }
 
   // Top-level pages (about, now, newsletter, visuals)
   locals.pages.toArray().forEach(pg => {
@@ -85,7 +89,7 @@ hexo.extend.generator.register('aether-cmdk-index', function(locals) {
     entries.push({
       kind    : 'page',
       title   : String(pg.title),
-      path    : '/' + pg.path,
+      path    : sitePath(pg.path, hexo.config.root),
       date    : pg.date ? new Date(pg.date.toDate ? pg.date.toDate() : pg.date).toISOString().slice(0, 10) : '',
       summary : stripTags(pg.description || pg.excerpt || pg.content || '').slice(0, 140),
       category: 'Page',
@@ -99,7 +103,7 @@ hexo.extend.generator.register('aether-cmdk-index', function(locals) {
     entries.push({
       kind    : 'category',
       title   : c.name,
-      path    : '/' + c.path,
+      path    : sitePath(c.path, hexo.config.root),
       date    : '',
       summary : c.length + ' 篇文章',
       category: 'Category',

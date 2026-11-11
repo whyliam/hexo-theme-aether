@@ -118,3 +118,57 @@ symbols_count_time:
   time: Reading time
   time_total: Reading time total
   time_minutes: mins.
+
+aether:
+  about: About the author
+  read: Explore the archive
+  caption: Writing gives thoughts a lasting shape.
+  latest: Recent writing
+  all_posts: All posts
+  newest: New
+  paths: Start here
+  series: Series
+  all_series: All series
+  personal: Notes and photographs
+  notes: Notes
+  visuals: Photographs
+  all: All
+  subscribe: Follow updates
+  search: Search archive
+  search_placeholder: Search posts, series, notes and photographs…
+  issue: Issue {value}
+  close: Close
+  open: Open
+  navigate: Navigate
+  content_types: Content types
+  search_results: Search results
+  loading: Loading the archive…
+  indexed: '{value} entries indexed'
+  search_failed: Search unavailable. Press Enter to browse the archive.
+  no_results: No matches. Try another keyword or filter.
+  results: '{value} results'
+  post: Post
+  visual: Photograph
+  note: Note
+  page: Page
+  category: Category
+
+  switch_dark: Switch to dark mode
+  switch_light: Switch to light mode
+  article_count: '{value} posts'
+  since: Writing since {value}.
+  empty_archive: Your archive starts with the first post.
+  featured_series: Featured series
+  series_invitation: Follow a topic a little further.
+  browse_series: Browse series
+  updated: Updated
+  articles: posts
+  since_short: since {value}
+  series_count: '{value} long-running topics'
+  series_description: Follow a question over time, and leave a trail worth returning to.
+  started: Started
+  reading_order: Reading order
+  browse: Browse archive
+  writing: Writing
+  copy_code: Copy code
+  copied: Copied

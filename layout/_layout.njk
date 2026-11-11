@@ -6,13 +6,15 @@
     (() => {
       let stored;
       try { stored = localStorage.getItem('aether-color-scheme'); } catch {}
-      const scheme = ['light', 'dark'].includes(stored) ? stored : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const mode = '{{ aether_mode() }}';
+      const scheme = mode !== 'auto' ? mode : ['light', 'dark'].includes(stored) ? stored : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-color-scheme', scheme);
     })();
   </script>
   {%- endif %}
   {{ partial('_partials/head/head.njk', {}, {cache: theme.cache.enable}) }}
   {%- include '_partials/head/head-unique.njk' -%}
+  {% if theme.scheme === 'Aether' %}<style>{{ aether_styles() | safe }}</style>{% endif %}
   <title>{% block title %}{% endblock %}</title>
   {{ partial('_third-party/analytics/index.njk', {}, {cache: theme.cache.enable}) }}
   {{ partial('_scripts/index.njk', {}, {cache: theme.cache.enable}) }}
@@ -26,7 +28,7 @@
   </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}{% if theme.scheme === 'Aether' %} data-aether{% endif %}>
+<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}{% if theme.scheme === 'Aether' %} data-aether data-aether-copy-label="{{ aether_text('copy_code') }}" data-aether-copied-label="{{ aether_text('copied') }}" data-aether-root="{{ config.root }}" data-aether-dark-label="{{ aether_text('switch_dark') }}" data-aether-light-label="{{ aether_text('switch_light') }}" data-aether-pointer="{{ aether_glass().pointer }}" data-aether-follow="{{ aether_glass().follow }}"{% endif %}>
   <div class="headband"></div>
 
   {%- if theme.scheme === 'Aether' and theme.aether and theme.aether.reading_progress %}
@@ -42,13 +44,13 @@
             {{ partial('_partials/header/menu.njk', {}, {cache: theme.cache.enable}) }}
             {%- if theme.aether and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
               <button class="aether-search-btn" type="button" data-aether-cmdk-trigger
-                      aria-label="搜索档案 (⌘K)">
+                      aria-label="{{ aether_text('search') }} (⌘K)">
                 <span class="aether-search-btn__icon" aria-hidden="true"><i class="fa fa-search"></i></span>
-                <span class="aether-search-btn__label">搜索档案</span>
+                <span class="aether-search-btn__label">{{ aether_text('search') }}</span>
                 <kbd class="aether-search-btn__kbd">⌘K</kbd>
               </button>
             {%- endif %}
-            <button class="aether-dark-toggle" type="button" aria-label="切换深色模式">☾</button>
+            {% if aether_mode() === 'auto' %}<button class="aether-dark-toggle" type="button" aria-label="{{ aether_text('switch_dark') }}">☾</button>{% endif %}
           </div>
           {{ partial('_partials/search/index.njk', {}, {cache: theme.cache.enable}) }}
           {{- next_inject('header') }}
@@ -74,7 +76,7 @@
       {%- set aether_brand = theme.aether and theme.aether.brand or {} -%}
       {%- set brand_text = aether_brand.text or config.title or 'AETHER' -%}
       {%- set brand_dot  = aether_brand.dot if aether_brand.dot is defined else true -%}
-      {%- set since_year = (theme.footer and theme.footer.since) or '2010' -%}
+      {%- set since_year = (theme.footer and theme.footer.since) or date(null, 'YYYY') -%}
       {%- set tagline    = (theme.aether and theme.aether.footer and theme.aether.footer.tagline) or '' -%}
       <div class="aether-footer">
         <div class="aether-foot-brand">

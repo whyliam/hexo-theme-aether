@@ -1,0 +1,58 @@
+{
+  "series": {
+    "rules": [
+      {
+        "name": "Newsletter 周刊",
+        "title_pattern": "^L\\d+[_:：]",
+        "path_pattern": "newsletter[-_]?\\d+",
+        "issue_pattern": "^L(\\d+)[_:：]\\s*"
+      },
+      {
+        "name": "AI Coding Harness",
+        "tags": [
+          "AI Coding"
+        ],
+        "title_pattern": "AI Coding|Vibe Coding|Claude Code|Cursor|Copilot|Codex|Aider|Cline"
+      },
+      {
+        "name": "Agent Runtime",
+        "tags": [
+          "Agent",
+          "AgenticAI"
+        ],
+        "title_pattern": "\\bAgent\\b|智能体|OpenClaw|MCP|Manus"
+      },
+      {
+        "name": "Obsidian Knowledge System",
+        "tags": [
+          "Obsidian"
+        ],
+        "title_pattern": "Obsidian|知识管理|笔记系统|\\bPKM\\b|Second Brain"
+      },
+      {
+        "name": "2016 设计年鉴",
+        "title_pattern": "2016.*设计年鉴",
+        "path_pattern": "design-yearbook-of-2016"
+      }
+    ]
+  },
+  "images": {
+    "https_hosts": [
+      "pics.naaln.com"
+    ]
+  },
+  "taxonomy": {
+    "labels": {
+      "AI & Systems": "AI 与系统",
+      "AI-Systems": "AI 与系统",
+      "Notes & Reflections": "笔记与随笔",
+      "Notes & Essays": "笔记与随笔",
+      "Notes-Essays": "笔记与随笔",
+      "Notes-Reflections": "笔记与随笔",
+      "Product & Intelligence": "产品与判断",
+      "Product-Intelligence": "产品与判断",
+      "Travel & Visuals": "旅行与影像",
+      "Travel-Visuals": "旅行与影像"
+    }
+  }
+}

@@ -2,7 +2,8 @@
 /* Compositor motion remains available when the optional WebGL scene cannot run. */
 (() => {
   'use strict';
-  const base = new URL('.', document.currentScript.src);
+  const assetUrl = new URL(document.currentScript.src);
+  const base = new URL('.', assetUrl);
   const motion = matchMedia('(prefers-reduced-motion: no-preference)');
   const desktop = matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)');
   const connection = navigator.connection;
@@ -99,7 +100,9 @@
         || (navigator.deviceMemory && navigator.deviceMemory <= 4)
         || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)) return;
     try {
-      const module = await import(new URL('aether-organic-scene.mjs', base).href);
+      const sceneUrl = new URL('aether-organic-scene.mjs', base);
+      sceneUrl.search = assetUrl.search;
+      const module = await import(sceneUrl.href);
       if (id !== generation || stopped) return;
       scene = module.createFolio(el.querySelector('.aether-organic__scene'), { unfold });
       hasUnfolded = true;

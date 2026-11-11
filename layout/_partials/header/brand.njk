@@ -1,7 +1,7 @@
 <div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="{{ __('accessibility.nav_toggle') }}" role="button"{% if theme.scheme === 'Aether' %} tabindex="0" aria-expanded="false"{% endif %}>
-      {%- if theme.menu %}
+      {%- if theme.menu or (theme.main_menu and theme.main_menu.length) %}
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
@@ -16,7 +16,7 @@
 
     <a href="{{ config.root }}" class="brand" rel="start">
       <i class="logo-line"></i>
-      <{% if is_home() or is_archive() %}h1{% else %}p{% endif %} class="site-title">{{ title }}</{% if is_home() or is_archive() %}h1{% else %}p{% endif %}>
+      <{% if is_home() or is_archive() %}h1{% else %}p{% endif %} class="site-title">{{ theme.aether.brand.text or title if theme.scheme === 'Aether' else title }}</{% if is_home() or is_archive() %}h1{% else %}p{% endif %}>
       <i class="logo-line"></i>
     </a>
     {%- if subtitle %}
@@ -29,7 +29,7 @@
 
   <div class="site-nav-right">
     {%- if theme.scheme === 'Aether' and theme.aether.cmdk and theme.aether.cmdk.enable !== false %}
-      <button class="toggle aether-mobile-search" type="button" aria-label="搜索" data-aether-cmdk-trigger>
+      <button class="toggle aether-mobile-search" type="button" aria-label="{{ aether_text('search') }}" data-aether-cmdk-trigger>
         <i class="fa fa-search" aria-hidden="true"></i>
       </button>
     {%- else %}

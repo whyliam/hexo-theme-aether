@@ -18,15 +18,6 @@ hexo.extend.filter.register('before_generate', () => {
 hexo.on('ready', () => {
   if (!/^(g|s)/.test(hexo.env.cmd) || process.argv.includes('--next-disable-banner')) return;
   const { version } = require('../../package.json');
-  hexo.log.info(`==================================
-  ███╗   ██╗███████╗██╗  ██╗████████╗
-  ████╗  ██║██╔════╝╚██╗██╔╝╚══██╔══╝
-  ██╔██╗ ██║█████╗   ╚███╔╝    ██║
-  ██║╚██╗██║██╔══╝   ██╔██╗    ██║
-  ██║ ╚████║███████╗██╔╝ ██╗   ██║
-  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝   ╚═╝
-========================================
-NexT version ${version}
-Documentation: https://theme-next.js.org
-========================================`);
+  hexo.log.info(`Aether ${version} (based on NexT 8.27.0)
+Documentation: https://github.com/whyliam/hexo-theme-aether`);
 });

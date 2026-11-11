@@ -61,8 +61,8 @@ module.exports = hexo => {
   const isAether = themeCfg.scheme === 'Aether';
   if (isAether && main_menu.length === 0) {
     const aetherDefault = (themeCfg.aether && themeCfg.aether.menu) || {
-      '首页': '/ || fa fa-home',
-      '归档': '/archives/ || fa fa-archive'
+      'home'    : '/ || fa fa-home',
+      'archives': '/archives/ || fa fa-archive'
     };
     parse(aetherDefault);
   }

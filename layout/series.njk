@@ -1,14 +1,14 @@
 {% extends '_layout.njk' %}
 {% import '_macro/sidebar.njk' as sidebar_template with context %}
 
-{% block title %}{{ page.series_name }} · 系列 | {{ title }}{% endblock %}
+{% block title %}{{ page.series_name }} · {{ aether_text('series') }} | {{ title }}{% endblock %}
 
 {% block class %}page aether-series-page{% endblock %}
 
 {% block content %}
   <article class="aether-series-detail">
     <header class="aether-series-detail__hero">
-      <div class="aether-series-detail__eyebrow">系列 · {{ page.series_posts.length }} 篇</div>
+      <div class="aether-series-detail__eyebrow">{{ aether_text('article_count', page.series_posts.length) }}</div>
       <h1 class="aether-series-detail__title">{{ page.series_name }}</h1>
       {%- if page.description %}
         <p class="aether-series-detail__lede">{{ page.description }}</p>
@@ -17,15 +17,15 @@
       {%- set first = page.series_posts[0] -%}
       {%- set last = page.series_posts[page.series_posts.length - 1] -%}
       <dl class="aether-series-detail__meta">
-        <div><dt>起始</dt><dd>{{ aether_iso_date(first.date) }}</dd></div>
-        <div><dt>最近更新</dt><dd>{{ aether_iso_date(last.date) }}</dd></div>
-        <div><dt>篇数</dt><dd>{{ page.series_posts.length }}</dd></div>
+        <div><dt>{{ aether_text('started') }}</dt><dd>{{ aether_iso_date(first.date) }}</dd></div>
+        <div><dt>{{ aether_text('updated') }}</dt><dd>{{ aether_iso_date(last.date) }}</dd></div>
+        <div><dt>{{ aether_text('articles') }}</dt><dd>{{ page.series_posts.length }}</dd></div>
       </dl>
     </header>
 
     <section class="aether-series-detail__list">
       <div class="aether-series-detail__sec-label">
-        <span class="num">01</span><span class="sep">/</span><span>阅读顺序</span>
+        <span class="num">01</span><span class="sep">/</span><span>{{ aether_text('reading_order') }}</span>
       </div>
 
       <ol class="aether-series-detail__posts">

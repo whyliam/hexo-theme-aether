@@ -1,23 +1,27 @@
 {%- set hero = theme.aether.hero -%}
-<section class="aether-intro" aria-label="关于作者">
+{%- set links = hero.links if (hero.links and hero.links.length) else [{url: '/archives/', label: aether_text('read')}] -%}
+<section class="aether-intro{% if hero.artwork === false %} is-text-only{% endif %}" aria-label="{{ aether_text('about') }}">
   <div class="aether-intro__copy">
     {%- if hero.eyebrow %}<p class="aether-intro__eyebrow">{{ hero.eyebrow }}</p>{% endif %}
     <h1>{{ hero.name or config.author or title }}</h1>
-    <p class="aether-intro__description">{{ hero.intro or hero.identity or config.description }}</p>
+    <p class="aether-intro__description">{{ hero.intro or config.description }}</p>
     <div class="aether-intro__links">
-      <a href="{{ url_for('/archives/') }}">探索我的思考 <span aria-hidden="true">↗</span></a>
-      <a href="{{ url_for('/about/') }}">关于我</a>
+      {%- for link in links %}
+      <a href="{{ url_for(link.url) }}">{{ link.label or aether_text('read') }}{% if loop.first %} <span aria-hidden="true">↗</span>{% endif %}</a>
+      {%- endfor %}
     </div>
   </div>
-  <div class="aether-organic" aria-hidden="true" data-organic{% if hero.motion === false %} data-static{% endif %}>
+  {% if hero.artwork !== false %}
+  <div class="aether-organic" aria-hidden="true" data-organic{% if hero.motion === false or hero.image %} data-static{% endif %}>
     <div class="aether-organic__mesh"></div>
     <div class="aether-organic__art">
-      <img class="aether-organic__still" src="{{ url_for('/images/aether-folio.png') }}" alt="" width="560" height="480" decoding="async">
+      <img class="aether-organic__still" src="{{ url_for(hero.image or '/images/aether-folio.png') }}" alt="" width="560" height="480" decoding="async">
       <div class="aether-organic__scene"></div>
     </div>
   </div>
+  {% endif %}
   <div class="aether-intro__foot">
-    <span>{{ hero.caption or '写作，让思考慢慢成形。' }}</span>
+    <span>{{ hero.caption or aether_text('caption') }}</span>
     {%- if theme.footer.since %}<span>{{ theme.footer.since }} — {{ date(null, 'YYYY') }}</span>{% endif %}
   </div>
 </section>

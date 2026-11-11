@@ -14,7 +14,7 @@
     <a class="aether-photo" href="{{ url_for(p.path) }}">
       <div class="aether-photo__frame">
         {% set cover = aether_visual_cover(p) %}
-        {% if cover %}<img src="{{ cover }}" alt="{{ p.title }}" width="640" height="480" loading="lazy" decoding="async">{% endif %}
+        {% if cover %}<img src="{{ url_for(cover) }}" alt="{{ p.title }}" width="640" height="480" loading="lazy" decoding="async">{% endif %}
         <span class="aether-photo__fallback"{% if not cover %} style="display: grid"{% endif %}>图片暂不可用 · 仍可阅读文章</span>
       </div>
       <div class="aether-photo__caption"><h2>{{ p.title }}</h2><p>{{ p.location }}{% if p.location %} · {% endif %}{{ date(p.date, 'YYYY-MM') }}</p></div>

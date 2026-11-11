@@ -37,8 +37,15 @@ NexT.utils = {
 
   registerCopyButton(target, element, code = '') {
     // One-click copy code support.
-    target.insertAdjacentHTML('beforeend', '<div class="copy-btn"><i class="fa fa-copy fa-fw"></i></div>');
-    const button = target.querySelector('.copy-btn');
+    const accessible = document.body.hasAttribute('data-aether');
+    const button = document.createElement(accessible ? 'button' : 'div');
+    button.className = 'copy-btn';
+    if (accessible) {
+      button.type = 'button';
+      button.setAttribute('aria-label', document.body.dataset.aetherCopyLabel || 'Copy code');
+    }
+    button.innerHTML = '<i class="fa fa-copy fa-fw" aria-hidden="true"></i>';
+    target.appendChild(button);
     button.addEventListener('click', async () => {
       if (!code) {
         const lines = element.querySelector('.code') || element.querySelector('code');
@@ -49,6 +56,7 @@ NexT.utils = {
         try {
           await navigator.clipboard.writeText(code);
           button.querySelector('i').className = 'fa fa-check-circle fa-fw';
+          if (accessible) button.setAttribute('aria-label', document.body.dataset.aetherCopiedLabel || 'Copied');
         } catch {
           button.querySelector('i').className = 'fa fa-times-circle fa-fw';
         }
@@ -61,6 +69,7 @@ NexT.utils = {
     element.addEventListener('mouseleave', () => {
       setTimeout(() => {
         button.querySelector('i').className = 'fa fa-copy fa-fw';
+        if (accessible) button.setAttribute('aria-label', document.body.dataset.aetherCopyLabel || 'Copy code');
       }, 300);
     });
   },

@@ -8,6 +8,7 @@ Aether 基于 NexT 8.27.0，使用 Hexo、Nunjucks 和 Stylus。当前首页和�
 
 ```sh
 git clone --branch master https://github.com/whyliam/hexo-theme-aether themes/aether
+npm install --prefix themes/aether --omit=dev
 npx hexo config theme aether
 cp themes/aether/_config.yml _config.aether.yml
 npx hexo server
@@ -53,17 +54,17 @@ aether:
 
 ## 首页与内容
 
-首页顺序固定为介绍、最近更新、精选阅读、长期系列、短札与影像、订阅渠道。各模块支持 `enable: false`。没有内容的阅读路径、文章和系列模块会跳过；订阅渠道与作者文案由配置维护。
+首页默认顺序为介绍、最近更新、精选阅读、长期系列、短札与影像、订阅渠道，可通过 `aether.home.sections` 重排和省略。各模块支持 `enable: false`。没有内容的阅读路径、文章和系列模块会跳过；订阅渠道与作者文案由配置维护。
 
 ### 作者介绍
 
-`aether.hero.name` 缺省时使用站点作者名；`intro` 缺省时依次读取旧字段 `identity`、站点描述。`motion: false` 禁用书页动效。移动设备及减少动态等回退路径使用静态图；桌面 WebGL 是否启用取决于设备能力。
+`aether.hero.name` 缺省时使用站点作者名；`intro` 缺省时读取站点描述。`motion: false` 禁用书页动效。移动设备及减少动态等回退路径使用静态图；桌面 WebGL 是否启用取决于设备能力。
 
-旧版 `hero.title`、`description`、`actions`、`side_panel`、`meta_stats` 不用于当前首页。旧配置保留在 [历史配置说明](design/archive/legacy-configuration.md)，不应作为新站点设置依据。
+旧版 `hero.title`、`description`、`actions`、`side_panel`、`meta_stats` 不用于当前首页。未使用的字段已从默认配置中删除。迁移规则见 [0.1 迁移指南](MIGRATION-0.1.md)，旧配置保留在 [历史配置说明](https://github.com/whyliam/hexo-theme-aether/tree/master/docs/design/archive/legacy-configuration.md)，不应作为新站点设置依据。
 
 ### 精选阅读路径
 
-当前同时支持 `aether.start_here` 与旧名称 `aether.paths`；前者存在时优先。文章引用可填写 slug 或路径对象。无效文章会被跳过，避免输出失效链接。
+当前同时支持 `aether.start_here` 与旧名称 `aether.paths`；前者存在时优先。文章引用可填写 slug 或路径对象。`notes.limit`、`visuals.limit` 与 `latest.limit` 支持 0；各自 `enable` 独立生效。无效文章会被跳过，避免输出失效链接。
 
 ```yaml
 aether:
@@ -95,7 +96,7 @@ description: 可选的文章摘要。
 - 普通文章无需 `type`；通过 `series` 归入长期主题。
 - 短札使用 `type: note`；显示在短札流。
 - 影像使用 `type: visual`，可配 `cover: /images/travel.jpg`；没有封面时尝试正文首图。
-- 旧文章的分类与稳定系列信号也参与推导。显式字段优先；年份、篇数与最近更新均由真实内容计算。
+- 系列默认只读取显式 `series`；需要兼容旧文章时配置 `aether.series.rules`。显式字段优先；年份、篇数与最近更新均由真实内容计算。
 
 `aether.visuals.posts` 可按顺序指定首页选片，空数组时按最近影像回退。影像归档保留其他历史记录。图片加载失败仍保留文章链接与占位尺寸。
 
@@ -111,15 +112,39 @@ description: 可选的文章摘要。
 | 订阅 | `source/newsletter/index.md` | `layout: newsletter` |
 | 留言板 | `source/boards/index.md` | `layout: guestbook` |
 
-导航或订阅渠道的 URL 必须与实际文件路径一致。RSS 需要安装并配置 `hexo-generator-feed`；主题链接本身不会生成订阅源。邮件订阅需要另行接入服务，默认模板不承诺已开放邮件订阅。评论沿用 NexT/Waline 配置，参见主题 `_config.yml`。
+导航或订阅渠道的 URL 必须与实际文件路径一致。订阅页文案与目标由 `aether.newsletter` 的 `title`、`description`、`series`、`rss_url`、`rss_label`、`status`、`email_url`、`email_label`、`recent_title` 配置。RSS 需要安装并配置 `hexo-generator-feed`；主题链接本身不会生成订阅源。邮件订阅需要另行接入服务，默认模板不承诺已开放邮件订阅。评论沿用 NexT/Waline 配置，参见主题 `_config.yml`。
 
 ## 搜索、主题与玻璃效果
 
-- `aether.cmdk.enable` 控制本地搜索；构建时生成 `aether-search.json`。Cmd/Ctrl+K 打开，方向键选择，Escape 关闭并返回焦点。
+- `aether.cmdk.enable` 控制本地搜索；构建时生成 `aether-search.json`，检索标题、摘要、系列、分类与标签。`recent_count` 和 `result_limit` 控制展示数量；索引和结果链接支持子目录部署。Cmd/Ctrl+K 打开，方向键选择，Escape 关闭并返回焦点。
 - 明暗主题初始跟随系统，手动切换后保存在浏览器中。
 - 导航与重点系列使用玻璃材质；鼠标高光有轻微滞后，稳定后停止帧调度。
 - 玻璃高光是 DOM/CSS 实现，参考 liquidGL 的视觉思路，并未集成其 GPU 背景折射。
 - 减少动态、减少透明度及触控模式下停止跟手高光；不支持背景模糊时使用不透明表面。
+
+## 外观与布局参数
+
+所有外观参数放在 `aether.appearance`，无需直接修改 Stylus。
+
+| 字段 | 默认 / 范围 | 用途 |
+| --- | --- | --- |
+| `mode` | `auto` / `light` / `dark` | 跟随系统和手动切换，或固定明暗主题 |
+| `palette.light` / `palette.dark` | 对象，六位十六进制色值 | `paper`、`paper_tint`、`surface`、`surface_alt`、`ink`、`ink_secondary`、`muted`、`accent`、`accent_hover`、`accent_tint`、`rule`、`rule_strong`、`environment` |
+| `layout.width` | 1180 / 800–1600px | 主版心与导航宽度 |
+| `layout.article_width` | 720 / 480–960px | 文章宽度 |
+| `layout.gutter` / `mobile_gutter` | 50 / 20px | 桌面与手机水平留白 |
+| `font.serif` / `sans` / `mono` | 空值保留原有字体栈 | CSS 字体族列表 |
+| `glass.enable` / `pointer` | true / true | 玻璃材质、鼠标跟手高光开关 |
+| `glass.blur` / `saturation` | 16px / 160% | 背景模糊与饱和度 |
+| `glass.surface.light` / `dark` | 六位颜色 | 玻璃底色 |
+| `glass.opacity.light` / `dark` | .56 / .66 | 玻璃底色透明度，0–1 |
+| `glass.reflection.light` / `dark` | .82 / .24 | 跟手高光强度，0–1 |
+| `glass.rim.light` / `dark` | .95 / .36 | 内侧亮边强度，0–1 |
+| `glass.follow_duration` | 100 / 0–500ms | 高光跟随时间常数；0 为即时响应 |
+
+`home.sections` 可选 `hero`、`latest`、`paths`、`series`、`personal`、`subscribe`。默认使用全部模块；`[]` 隐藏全部首页模块。空值使用默认顺序，配置数组会替换默认顺序。`hero.links` 可配置多个 `{label, url}`；空数组显示默认档案入口。`hero.artwork: false` 隐藏书页，`hero.image` 可替换装饰图并自动停止 3D 动效。
+
+默认 UI 根据站点语言提供英文/简体中文核心界面；可用 `aether.labels` 覆盖文案。类别显示名通过 `taxonomy.labels` 设置，原始分类和文章路径保持不变。
 
 ## 开发与升级
 

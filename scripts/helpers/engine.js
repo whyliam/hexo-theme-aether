@@ -24,14 +24,15 @@ hexo.extend.helper.register('next_js', function(file, {
   const { next_version } = this;
   const { internal, custom_cdn_url } = this.theme.vendors;
   const links = getVendors({
-    name    : 'hexo-theme-next',
+    name    : require('../../package.json').name,
     version : next_version,
     file    : 'source/js/' + file,
     minified: 'source/js/' + file.replace(/\.js$/, '.min.js'),
     local   : this.url_for(`${this.theme.js}/${file}`),
     custom  : custom_cdn_url
   });
-  const src = links[internal] || links.local;
+  let src = links[internal] || links.local;
+  if (src === links.local) src += (src.includes('?') ? '&' : '?') + 'v=' + next_version;
   return `<script ${pjax ? 'data-pjax ' : ''}${module ? 'type="module" ' : ''}src="${src}" defer></script>`;
 });
 

@@ -21,6 +21,8 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
     - name: Update npm to latest version for OIDC support
       run: npm install -g npm@latest
-    - run: |
-        npm install
-        npm publish
+    - run: npm install
+    - run: npm run eslint
+    - run: npm test
+    - run: npm run test:smoke
+    - run: npm publish --provenance --access public

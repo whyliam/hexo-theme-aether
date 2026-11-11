@@ -1,6 +1,7 @@
 'use strict';
 
 const Hexo = require('hexo');
+const profile = require('../fixtures/aether-profile.json');
 
 describe('aether-data', () => {
   let hexo;
@@ -45,7 +46,7 @@ describe('aether-data', () => {
   function baseCtx(posts, extra) {
     return {
       site : { posts: makePosts(posts), categories: makeCategories([]) },
-      theme: { aether: {} },
+      theme: { aether: profile },
       ...extra
     };
   }
@@ -59,7 +60,7 @@ describe('aether-data', () => {
         { title: 'Photo', type: 'visual', series: 'Newsletter 周刊', date: new Date() }
       ];
       const home = callHelper('aether_series', [], baseCtx(posts));
-      home.should.deep.equal(aggregateSeries(makePosts(posts)));
+      home.should.deep.equal(aggregateSeries(makePosts(posts), profile.series.rules));
       home[0].count.should.equal(2);
       home[0].posts[0].title.should.equal('L144_Old');
       home[0].recent_posts[0].path.should.equal('newsletter-145/');
@@ -215,12 +216,12 @@ describe('aether-data', () => {
       result[0].title.should.equal('Photo');
     });
 
-    it('defaults to 5 items', () => {
+    it('defaults to 4 items', () => {
       const posts = Array.from({ length: 8 }, (_, i) => ({
         title: `V${i}`, date: new Date(`2026-01-${String(i + 1).padStart(2, '0')}`), path: `v${i}/`, type: 'visual'
       }));
       const ctx = baseCtx(posts);
-      callHelper('aether_visuals', [], ctx).should.have.length(5);
+      callHelper('aether_visuals', [], ctx).should.have.length(4);
     });
 
     it('uses Travel & Visuals category when type is absent', () => {
@@ -300,12 +301,12 @@ describe('aether-data', () => {
       result[0].title.should.equal('Memo');
     });
 
-    it('defaults to 4 items', () => {
+    it('defaults to 3 items', () => {
       const posts = Array.from({ length: 7 }, (_, i) => ({
         title: `N${i}`, date: new Date(`2026-01-${String(i + 1).padStart(2, '0')}`), path: `n${i}/`, type: 'note'
       }));
       const ctx = baseCtx(posts);
-      callHelper('aether_notes', [], ctx).should.have.length(4);
+      callHelper('aether_notes', [], ctx).should.have.length(3);
     });
   });
 
@@ -362,42 +363,6 @@ describe('aether-data', () => {
       names.should.include('Newsletter 周刊');
       names.should.include('AI Coding Harness');
       names.should.include('Agent Runtime');
-    });
-  });
-
-  // ---------- aether_kindex ----------
-  describe('aether_kindex', () => {
-    it('uses configured items when present', () => {
-      const ctx = baseCtx([], {
-        theme: {
-          aether: {
-            kindex: {
-              items: [{ index: '01', category: 'AI', title: 'AI', count: 10, url: '/cat/ai/' }]
-            }
-          }
-        }
-      });
-      const result = callHelper('aether_kindex', [], ctx);
-      result.should.have.length(1);
-      result[0].category.should.equal('AI');
-    });
-
-    it('auto-derives from categories when no items', () => {
-      const cats = [
-        { name : 'AI & Systems', count: 50, posts: [
-          { title: 'P1', date: new Date('2026-06-01'), description: 'Desc' }
-        ] },
-        { name : 'Notes & Essays', count: 30, posts: [
-          { title: 'P2', date: new Date('2026-05-01') }
-        ] }
-      ];
-      const ctx = {
-        site : { posts: makePosts([]), categories: makeCategories(cats) },
-        theme: { aether: {} }
-      };
-      const result = callHelper('aether_kindex', [], ctx);
-      result.should.have.length(2);
-      result[0].count.should.equal(50);
     });
   });
 

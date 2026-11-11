@@ -31,7 +31,7 @@ body[data-aether] {
   --body-bg-color: #f5f8f6;
   --content-bg-color: #f5f8f6;
   --text-color: #18251f;
-  background: radial-gradient(ellipse 70% 540px at 85% 0, #dcece3, transparent), radial-gradient(ellipse 55% 420px at 0 240px, #e6eeeb, transparent), var(--aether-paper);
+  background: radial-gradient(ellipse 70% 540px at 85% 0, var(--aether-environment, #dcece3), transparent), radial-gradient(ellipse 55% 420px at 0 240px, #e6eeeb, transparent), var(--aether-paper);
   background-repeat: no-repeat;
   color: var(--aether-ink);
   font-size: 16px;
@@ -43,13 +43,13 @@ body[data-aether] {
     color: var(--aether-ink);
   }
   .main {
-    max-width: 1180px;
-    padding: 36px 50px 0;
+    max-width: var(--aether-site-width, 1180px);
+    padding: 36px var(--aether-gutter, 50px) 0;
     gap: 40px;
   }
   .main-inner {
     background: transparent;
-    max-width: 720px;
+    max-width: var(--aether-article-width, 720px);
     margin: 0 auto;
   }
   // Aether uses an inline desktop TOC, never NexT's sidebar drawer.
@@ -67,7 +67,7 @@ body[data-aether] {
     max-width: none;
   }
   .main:has(.sidebar) .main-inner {
-    max-width: 720px;
+    max-width: var(--aether-article-width, 720px);
   }
   .header {
     aether-glass(20px);
@@ -77,7 +77,7 @@ body[data-aether] {
     right: auto;
     transform: translateX(-50%);
     width: calc(100% - 40px);
-    max-width: 1180px;
+    max-width: var(--aether-site-width, 1180px);
     overflow: visible;
   }
   .aether-header-row {
@@ -139,8 +139,8 @@ body[data-aether] {
     padding: 36px 0;
   }
   .footer-inner {
-    max-width: 1180px;
-    padding: 0 50px;
+    max-width: var(--aether-site-width, 1180px);
+    padding: 0 var(--aether-gutter, 50px);
   }
   .aether-foot-social a {
     min-width: 44px;
@@ -164,13 +164,15 @@ body[data-aether] {
     --aether-accent-hover: inherit;
     --aether-accent-tint: inherit;
     --aether-rule: inherit;
+    --aether-muted: inherit;
+    --aether-muted-2: inherit;
     .aether-intro {
-      padding: 0 50px;
+      padding: 0 var(--aether-gutter, 50px);
     }
     .aether-section {
-      max-width: 1180px;
-      padding-left: 50px;
-      padding-right: 50px;
+      max-width: var(--aether-site-width, 1180px);
+      padding-left: var(--aether-gutter, 50px);
+      padding-right: var(--aether-gutter, 50px);
     }
     .aether-series-lead {
       aether-glass();
@@ -439,7 +441,7 @@ body[data-aether] {
     color: var(--aether-muted);
   }
   .aether-about__now, .aether-about__selected, .aether-about__contact {
-    max-width: 720px;
+    max-width: var(--aether-article-width, 720px);
     margin: 40px auto 0;
     padding-top: 32px;
   }
@@ -482,7 +484,7 @@ body[data-aether] {
     margin-top: 28px;
   }
   .aether-about__selected ul {
-    padding-left: 20px;
+    padding-left: var(--aether-mobile-gutter, 20px);
   }
   .aether-about__selected li {
     margin: 12px 0;
@@ -534,7 +536,7 @@ body[data-aether] {
     color: var(--aether-paper);
   }
   .aether-newsletter__recent, .aether-newsletter__body {
-    max-width: 720px;
+    max-width: var(--aether-article-width, 720px);
     margin: 48px auto 0;
   }
   .aether-newsletter__recent article {
@@ -625,7 +627,7 @@ body[data-aether] {
   --body-bg-color: #101815;
   --content-bg-color: #101815;
   --text-color: #eaf2ed;
-  background: radial-gradient(ellipse 70% 540px at 85% 0, #244234, transparent), var(--aether-paper);
+  background: radial-gradient(ellipse 70% 540px at 85% 0, var(--aether-environment, #244234), transparent), var(--aether-paper);
   background-repeat: no-repeat;
   .aether-home .aether-organic__mesh {
     background: radial-gradient(ellipse, #345e48, transparent 68%);
@@ -668,14 +670,14 @@ body[data-aether] {
       display: none;
     }
     .aether-home .aether-intro, .aether-home .aether-section {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-left: var(--aether-mobile-gutter, 20px);
+      padding-right: var(--aether-mobile-gutter, 20px);
     }
     .aether-about__article, .aether-series-detail, .aether-visuals-archive, .aether-newsletter {
       padding-top: 20px;
     }
     .footer-inner {
-      padding: 0 20px;
+      padding: 0 var(--aether-mobile-gutter, 20px);
     }
   }
 }

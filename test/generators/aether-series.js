@@ -1,6 +1,7 @@
 'use strict';
 
 const Hexo = require('hexo');
+const profile = require('../fixtures/aether-profile.json');
 
 describe('aether-series', () => {
   let hexo,
@@ -27,7 +28,7 @@ describe('aether-series', () => {
 
   before(() => {
     hexo = new Hexo(__dirname, { silent: true });
-    hexo.theme.config = { scheme: 'Aether', aether: {} };
+    hexo.theme.config = { scheme: 'Aether', aether: profile };
     global.hexo = hexo;
     require('../../scripts/generators/aether-series');
     generatorFn = hexo.extend.generator.list()['aether-series'];

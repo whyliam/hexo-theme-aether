@@ -9,13 +9,13 @@
   'use strict';
 
   const PALETTE_SEL = '#aether-cmdk';
-  const INDEX_URL = '/aether-search.json';
-  const RECENT_KEY = 'aether-cmdk-recent';
-  const RECENT_MAX = 6;
-  const RESULT_LIMIT = 30;
+
 
   const palette = document.querySelector(PALETTE_SEL);
   if (!palette) return;
+  const settings = JSON.parse(palette.dataset.settings);
+  const { index: INDEX_URL, recent: RECENT_MAX, limit: RESULT_LIMIT, messages } = settings;
+  const RECENT_KEY = 'aether-cmdk-recent:' + INDEX_URL;
 
   const input    = palette.querySelector('.aether-cmdk__input');
   const list     = palette.querySelector('.aether-cmdk__results');
@@ -26,6 +26,7 @@
   let returnFocus = null;
   let entries = null;
   let loadingPromise = null;
+  let failed = false;
   let activeFilter = 'all';
   let cursor = 0;
   let lastResults = [];
@@ -34,16 +35,17 @@
   function load() {
     if (entries) return Promise.resolve(entries);
     if (loadingPromise) return loadingPromise;
-    setStatus('正在加载档案索引…');
+    setStatus(messages.loading);
     loadingPromise = fetch(INDEX_URL, { cache: 'force-cache' })
       .then(r => (r.ok ? r.json() : Promise.reject(new Error('Index ' + r.status))))
       .then(data => {
         entries = data.entries || [];
-        setStatus(entries.length + ' 条目已索引');
+        setStatus(messages.indexed.replace('{value}', entries.length));
         return entries;
       })
       .catch(err => {
-        setStatus('索引加载失败：' + err.message + '。Enter 跳转到归档搜索。');
+        failed = true;
+        setStatus(messages.search_failed + ' ' + err.message);
         entries = [];
         return entries;
       });
@@ -126,7 +128,7 @@
   }
 
   // ---------- Render ----------
-  const KIND_LABEL = { post: '文章', series: '系列', visual: '影像', note: '短札', page: '页面', category: '分类' };
+  const KIND_LABEL = messages;
 
   function render(q) {
     const results = search(q.trim());
@@ -134,14 +136,14 @@
     cursor = Math.min(cursor, Math.max(0, results.length - 1));
     if (!results.length) {
       input.removeAttribute('aria-activedescendant');
-      list.innerHTML = '<li class="aether-cmdk__empty">没有匹配项 — 试试别的关键词或切换过滤器。</li>';
-      setStatus('0 个结果');
+      list.innerHTML = '<li class="aether-cmdk__empty">' + escapeHtml(messages.no_results) + '</li>';
+      if (!failed) setStatus(messages.results.replace('{value}', 0));
       return;
     }
-    setStatus(results.length + ' 个结果');
+    setStatus(messages.results.replace('{value}', results.length));
     list.innerHTML = results.map((r, idx) => `
       <li class="aether-cmdk__item${idx === cursor ? ' is-on' : ''}" id="aether-result-${idx}" role="option" aria-selected="${idx === cursor}" data-idx="${idx}" data-path="${escapeHtml(r.path)}">
-        <span class="aether-cmdk__kind">${KIND_LABEL[r.kind] || r.kind}</span>
+        <span class="aether-cmdk__kind">${escapeHtml(KIND_LABEL[r.kind] || r.kind)}</span>
         <span class="aether-cmdk__body">
           <span class="aether-cmdk__title">${escapeHtml(r.title)}</span>
           ${r.summary ? '<span class="aether-cmdk__sum">' + escapeHtml(r.summary.slice(0, 80)) + '</span>' : ''}
@@ -214,7 +216,7 @@
 
   function pickResult(idx) {
     const r = lastResults[idx];
-    if (!r) return;
+    if (!r) { if (failed) window.location.href = settings.fallback; return; }
     pushRecent(r.path);
     window.location.href = r.path;
   }

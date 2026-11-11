@@ -5,8 +5,10 @@
 
   const preference = matchMedia('(prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (hover: none)');
   const surfaces = [];
+  const follow = Number(document.body.dataset.aetherFollow || 100);
 
   function setup() {
+    if (document.body.dataset.aetherPointer === 'false') return;
     document.querySelectorAll('.header, .aether-home .aether-series-lead').forEach(element => {
       let frame = 0;
       let last = 0;
@@ -29,7 +31,7 @@
       function paint(time) {
         frame = 0;
         if (preference.matches || document.hidden) { reset(); return; }
-        const progress = 1 - Math.exp(-Math.min(time - last, 64) / 100);
+        const progress = 1 - Math.exp(-Math.min(time - last, 64) / follow);
         last = time;
         x += (targetX - x) * progress;
         y += (targetY - y) * progress;
@@ -42,6 +44,13 @@
         if (preference.matches || document.hidden) return;
         targetX = nextX;
         targetY = nextY;
+        if (follow === 0) {
+          x = nextX;
+          y = nextY;
+          element.style.setProperty('--aether-liquid-x', x.toFixed(2) + '%');
+          element.style.setProperty('--aether-liquid-y', y.toFixed(2) + '%');
+          return;
+        }
         if (!frame) { last = performance.now(); frame = requestAnimationFrame(paint); }
       }
 

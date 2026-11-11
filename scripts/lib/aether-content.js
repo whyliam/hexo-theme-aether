@@ -35,38 +35,17 @@ function isRegularPost(post) {
   return !isVisualPost(post) && !isNotePost(post);
 }
 
-function inferredSeriesName(post) {
+function inferredSeriesName(post, rules = []) {
   if (!post) return null;
   if (post.series) return String(post.series);
-
-  const title = String(post.title || '');
-  const identity = `${post.slug || ''} ${post.path || ''} ${title}`;
-
-  if (/newsletter[-_]?\d+/i.test(identity) || /^L\d+[_:：]/i.test(title)) {
-    return 'Newsletter 周刊';
-  }
-  if (
-    hasTaxonomy(post.tags, ['AI Coding'])
-    || /AI Coding|Vibe Coding|Claude Code|Cursor|Copilot|Codex|Aider|Cline/i.test(title)
-  ) {
-    return 'AI Coding Harness';
-  }
-  if (
-    hasTaxonomy(post.tags, ['Agent', 'AgenticAI'])
-    || /\bAgent\b|智能体|OpenClaw|MCP|Manus/i.test(title)
-  ) {
-    return 'Agent Runtime';
-  }
-  if (
-    hasTaxonomy(post.tags, ['Obsidian'])
-    || /Obsidian|知识管理|笔记系统|\bPKM\b|Second Brain/i.test(title)
-  ) {
-    return 'Obsidian Knowledge System';
-  }
-  if (/2016.*设计年鉴|design-yearbook-of-2016/i.test(identity)) {
-    return '2016 设计年鉴';
-  }
-  return null;
+  const rule = rules.find(item => {
+    if (!item.name) return false;
+    return (item.title_pattern && new RegExp(item.title_pattern, 'i').test(post.title || ''))
+      || (item.path_pattern && new RegExp(item.path_pattern, 'i').test(`${post.slug || ''} ${post.path || ''}`))
+      || hasTaxonomy(post.tags, item.tags || [])
+      || hasTaxonomy(post.categories, item.categories || []);
+  });
+  return rule ? rule.name : null;
 }
 
 function slugifySeries(name) {
@@ -80,21 +59,23 @@ function slugifySeries(name) {
 }
 
 // Presentation only: keep canonical titles, URLs and search identities intact.
-function newsletterIssue(post) {
-  const match = String((post && post.title) || '').match(/^L(\d+)[_:：]\s*/i);
-  return match && inferredSeriesName(post) === 'Newsletter 周刊' ? match[1] : '';
+function postIssue(post, rules = []) {
+  const rule = rules.find(item => item.name === inferredSeriesName(post, rules));
+  const match = rule?.issue_pattern && new RegExp(rule.issue_pattern, 'i').exec(String(post?.title || ''));
+  return match ? match[1] || '' : '';
 }
 
-function displayTitle(post) {
-  const title = String((post && post.title) || '');
-  return newsletterIssue(post) ? title.replace(/^L\d+[_:：]\s*/i, '') : title;
+function displayTitle(post, rules = []) {
+  const title = String(post?.title || '');
+  const rule = rules.find(item => item.name === inferredSeriesName(post, rules));
+  return rule?.issue_pattern ? title.replace(new RegExp(rule.issue_pattern, 'i'), '') : title;
 }
 
 // One aggregation contract for home, series pages and newsletter.
-function aggregateSeries(input) {
+function aggregateSeries(input, rules = []) {
   const groups = new Map();
   toArray(input).filter(isRegularPost).forEach(post => {
-    const name = inferredSeriesName(post);
+    const name = inferredSeriesName(post, rules);
     if (!name) return;
     if (!groups.has(name)) groups.set(name, []);
     groups.get(name).push(post);
@@ -114,7 +95,7 @@ function aggregateSeries(input) {
 module.exports = {
   aggregateSeries,
   displayTitle,
-  newsletterIssue,
+  postIssue,
   inferredSeriesName,
   isNotePost,
   isRegularPost,

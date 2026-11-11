@@ -1,0 +1,45 @@
+# Copy this file beside your Hexo site's _config.yml. Set theme: aether there.
+scheme: Aether
+menu:
+  home: / || fa fa-home
+  archives: /archives/ || fa fa-archive
+  Series: /series/ || fa fa-layer-group
+  About: /about/ || fa fa-user
+
+aether:
+  hero:
+    name: Aether Notes
+    intro: A small archive of systems, observations, and things worth returning to.
+    eyebrow: Notes from an independent notebook
+    links:
+      - label: Explore the writing
+        url: /archives/
+      - label: About this notebook
+        url: /about/
+  home:
+    sections: [hero, latest, paths, series, personal, subscribe]
+  appearance:
+    palette:
+      light:
+        accent: '#345b4b'
+      dark:
+        accent: '#a8d2bb'
+    glass:
+      enable: true
+      pointer: true
+      blur: 16
+      opacity: {light: 0.56, dark: 0.66}
+      reflection: {light: 0.82, dark: 0.24}
+      follow_duration: 100
+  paths:
+    items:
+      - intent: Begin with a good question
+        description: Two essays on making room for deeper work.
+        posts:
+          - slug: writing-as-thinking
+          - slug: building-small-systems
+  series:
+    featured: Field Notes
+    featured_description: Observations from a slower, more intentional way of working.
+  newsletter:
+    enable: false

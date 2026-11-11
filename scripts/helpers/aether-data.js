@@ -18,30 +18,19 @@
 const {
   aggregateSeries,
   displayTitle,
-  newsletterIssue,
+  postIssue,
   isNotePost,
   isRegularPost,
   isVisualPost,
   taxonomyNames
 } = require('../lib/aether-content');
 
+const { appearanceStyle, colorMode, glassOptions, homeSections, number, sitePath } = require('../lib/aether-config');
+
 const stripTags = (html = '') => String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
-const CAT_ZH = {
-  'AI & Systems'          : 'AI 与系统',
-  'AI-Systems'            : 'AI 与系统',
-  'Notes & Reflections'   : '笔记与随笔',
-  'Notes & Essays'        : '笔记与随笔',
-  'Notes-Essays'          : '笔记与随笔',
-  'Product & Intelligence': '产品与判断',
-  'Product-Intelligence'  : '产品与判断',
-  'Travel & Visuals'      : '旅行与影像',
-  'Travel-Visuals'        : '旅行与影像',
-  '技术'                    : '技术'
-};
-
-function catLabel(name) {
-  return CAT_ZH[name] || name;
+function catLabel(name, labels = {}) {
+  return labels[name] || name;
 }
 
 function ensureArr(x) {
@@ -86,7 +75,7 @@ hexo.extend.helper.register('aether_archive_groups', function(collection) {
 // ---------- Latest writing ----------
 hexo.extend.helper.register('aether_latest', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.latest) || {};
-  const n = limit || cfg.limit || 3;
+  const n = number(limit ?? cfg.limit, 3, 0, 50);
   return (this.site.posts || { toArray: () => [] }).toArray()
     .filter(isRegularPost)
     .sort((a, b) => b.date - a.date)
@@ -97,7 +86,7 @@ hexo.extend.helper.register('aether_latest', function(limit) {
 // ---------- Visuals ----------
 hexo.extend.helper.register('aether_visuals', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.visuals) || {};
-  const n = limit || cfg.limit || 5;
+  const n = number(limit ?? cfg.limit, 4, 0, Number.MAX_SAFE_INTEGER);
   const posts = (this.site.posts || { toArray: () => [] }).toArray();
   const selection = ensureArr(cfg.posts);
   if (selection.length) {
@@ -117,7 +106,7 @@ hexo.extend.helper.register('aether_visuals', function(limit) {
 // ---------- Notes ----------
 hexo.extend.helper.register('aether_notes', function(limit) {
   const cfg = (this.theme.aether && this.theme.aether.notes) || {};
-  const n = limit || cfg.limit || 4;
+  const n = number(limit ?? cfg.limit, 3, 0, 50);
   return (this.site.posts || { toArray: () => [] }).toArray()
     .filter(isNotePost)
     .sort((a, b) => b.date - a.date)
@@ -127,39 +116,7 @@ hexo.extend.helper.register('aether_notes', function(limit) {
 
 // ---------- Series (auto-aggregate from frontmatter `series`) ----------
 hexo.extend.helper.register('aether_series', function() {
-  return aggregateSeries(this.site.posts);
-});
-
-
-// ---------- Knowledge index ----------
-// Returns four-card data for the home "Knowledge Index" section.
-// If `theme.aether.kindex.items` is configured, use that; otherwise auto-derive from categories.
-hexo.extend.helper.register('aether_kindex', function() {
-  const cfg = (this.theme.aether && this.theme.aether.kindex) || {};
-  if (Array.isArray(cfg.items) && cfg.items.length) {
-    return cfg.items;
-  }
-
-  const cats = (this.site.categories || { toArray: () => [] }).toArray()
-    .filter(c => c.length > 0)
-    .sort((a, b) => b.length - a.length)
-    .slice(0, 4);
-
-  return cats.map((cat, idx) => {
-    const latest = cat.posts
-      .toArray()
-      .sort((a, b) => b.date - a.date)[0];
-    return {
-      index      : String(idx + 1).padStart(2, '0'),
-      category   : catLabel(cat.name).toUpperCase(),
-      title      : catLabel(cat.name),
-      description: latest ? latest.description || '' : '',
-      count      : cat.length,
-      latest_date: latest ? latest.date : null,
-      tags       : [],
-      url        : '/' + cat.path
-    };
-  });
+  return aggregateSeries(this.site.posts, this.theme.aether?.series?.rules || []);
 });
 
 
@@ -173,13 +130,13 @@ hexo.extend.helper.register('aether_kindex', function() {
 //   2. `tag` + optional `limit` → pick latest N from that tag
 //   3. `series` → pick first N from that series
 //   4. `url` → render as a single-link CTA card
-function postShape(post, override) {
+function postShape(post, override, labels) {
   return {
     title   : (override && override.title) || post.title,
     url     : '/' + post.path,
     date    : post.date,
     category: post.categories && post.categories.length
-      ? catLabel(post.categories.toArray ? post.categories.toArray()[0].name : post.categories[0].name)
+      ? catLabel(post.categories.toArray ? post.categories.toArray()[0].name : post.categories[0].name, labels)
       : ''
   };
 }
@@ -197,7 +154,7 @@ hexo.extend.helper.register('aether_paths', function() {
     let resolved = ensureArr(item.posts).map(p => {
       const slug = typeof p === 'string' ? p : p.slug;
       const post = findBySlug(all, slug);
-      return post ? postShape(post, typeof p === 'object' ? p : null) : null;
+      return post ? postShape(post, typeof p === 'object' ? p : null, a.taxonomy?.labels) : null;
     }).filter(Boolean);
 
     // Fallback: pick by category
@@ -210,7 +167,7 @@ hexo.extend.helper.register('aether_paths', function() {
             .some(c => c.name && c.name.toLowerCase() === wantedLc))
         .sort((a, b) => b.date - a.date)
         .slice(0, n)
-        .map(p => postShape(p));
+        .map(p => postShape(p, null, a.taxonomy?.labels));
     }
 
     // Fallback: pick by tag
@@ -223,7 +180,7 @@ hexo.extend.helper.register('aether_paths', function() {
             .some(t => t.name && t.name.toLowerCase() === wantedLc))
         .sort((a, b) => b.date - a.date)
         .slice(0, n)
-        .map(p => postShape(p));
+        .map(p => postShape(p, null, a.taxonomy?.labels));
     }
 
     // Fallback: pick from a named series
@@ -233,7 +190,7 @@ hexo.extend.helper.register('aether_paths', function() {
         .filter(p => p.series === item.series)
         .sort((a, b) => a.date - b.date)
         .slice(0, n)
-        .map(p => postShape(p));
+        .map(p => postShape(p, null, a.taxonomy?.labels));
     }
 
     // CTA-style path (no posts, just a destination)
@@ -312,13 +269,13 @@ hexo.extend.helper.register('aether_iso_date', function(date) {
 
 hexo.extend.helper.register('aether_post_url', function(post) {
   if (!post) return '#';
-  return '/' + post.path;
+  return sitePath(post.path, this.config?.root);
 });
 
 hexo.extend.helper.register('aether_post_category', function(post) {
   if (!post || !post.categories || !post.categories.length) return '';
   const first = post.categories.toArray ? post.categories.toArray()[0] : post.categories[0];
-  return first ? catLabel(first.name) : '';
+  return first ? catLabel(first.name, this.theme.aether?.taxonomy?.labels) : '';
 });
 
 // Use explicit photography first, then the first image in a rendered travel post.
@@ -328,7 +285,15 @@ hexo.extend.helper.register('aether_visual_cover', function(post) {
   const match = String(post.content || '').match(/<img\b[^>]*\bsrc=["']([^"']+)["']/i);
   const cover = explicit || (match ? match[1] : '');
   // This image host supports HTTPS; avoid legacy HTTP redirects and mixed content.
-  return String(cover).replace(/^http:\/\/pics\.naaln\.com\//i, 'https://pics.naaln.com/');
+  const value = String(cover);
+  const hosts = this.theme.aether?.images?.https_hosts || [];
+  try {
+    const url = new URL(value);
+    if (url.protocol === 'http:' && hosts.includes(url.hostname)) url.protocol = 'https:';
+    return url.href;
+  } catch {
+    return value;
+  }
 });
 
 // Editorial hierarchy is configured by series identity, never by its array position.
@@ -341,9 +306,15 @@ hexo.extend.helper.register('aether_series_selection', function(items, featuredN
   return { featured: featured || null, others };
 });
 
-hexo.extend.helper.register('aether_display_title', displayTitle);
-hexo.extend.helper.register('aether_post_issue', newsletterIssue);
-hexo.extend.helper.register('aether_category_label', catLabel);
+hexo.extend.helper.register('aether_display_title', function(post) {
+  return displayTitle(post, this.theme.aether?.series?.rules || []);
+});
+hexo.extend.helper.register('aether_post_issue', function(post) {
+  return postIssue(post, this.theme.aether?.series?.rules || []);
+});
+hexo.extend.helper.register('aether_category_label', function(name) {
+  return catLabel(name, this.theme.aether?.taxonomy?.labels);
+});
 
 hexo.extend.helper.register('aether_visual_archive', function() {
   const selected = this.aether_visuals(Number.MAX_SAFE_INTEGER);
@@ -352,3 +323,31 @@ hexo.extend.helper.register('aether_visual_archive', function() {
     .filter(post => !paths.has(post.path)).sort((a, b) => b.date - a.date);
   return { selected, others };
 });
+
+hexo.extend.helper.register('aether_home_sections', function() {
+  return homeSections(this.theme.aether);
+});
+hexo.extend.helper.register('aether_styles', function() {
+  return appearanceStyle(this.theme.aether);
+});
+hexo.extend.helper.register('aether_glass', function() {
+  return glassOptions(this.theme.aether);
+});
+hexo.extend.helper.register('aether_text', function(key, value) {
+  const text = this.theme.aether?.labels?.[key] || this.__(`aether.${key}`);
+  return value === undefined ? text : text.replace('{value}', value);
+});
+
+hexo.extend.helper.register('aether_search_settings', function() {
+  const cfg = this.theme.aether?.cmdk || {};
+  const keys = ['loading', 'indexed', 'search_failed', 'no_results', 'results', 'post', 'series', 'visual', 'note', 'page', 'category'];
+  const messages = Object.fromEntries(keys.map(key => [key, this.theme.aether?.labels?.[key] || this.__(`aether.${key}`)]));
+  return JSON.stringify({
+    index   : sitePath('aether-search.json', this.config.root),
+    fallback: sitePath(cfg.fallback_url || 'archives/', this.config.root),
+    recent  : number(cfg.recent_count, 4, 0, 20),
+    limit   : number(cfg.result_limit, 30, 1, 100), messages
+  });
+});
+
+hexo.extend.helper.register('aether_mode', function() { return colorMode(this.theme.aether); });

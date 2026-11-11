@@ -39,7 +39,7 @@
     document.addEventListener('keydown', e => {
       if ((e.key || '').toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        window.location.href = '/search/';
+        window.location.href = new URL('archives/', location.origin + (document.body.dataset.aetherRoot || '/')).href;
       }
     });
   }
@@ -112,7 +112,7 @@
 
     function applyScheme(scheme) {
       root.setAttribute('data-color-scheme', scheme);
-      toggle.setAttribute('aria-label', scheme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+      toggle.setAttribute('aria-label', scheme === 'dark' ? document.body.dataset.aetherLightLabel : document.body.dataset.aetherDarkLabel);
       toggle.textContent = scheme === 'dark' ? '☀' : '☾';
     }
 

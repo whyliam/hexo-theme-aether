@@ -7,31 +7,22 @@
 
 {% block content %}
   {%- if theme.scheme === 'Aether' %}
-    {# 01 Hero #}
-    {%- if theme.aether.hero.enable !== false %}
-      {%- include '_partials/home/hero.njk' -%}
-    {%- endif %}
-    {%- if theme.aether.latest.enable !== false %}
-      {%- include '_partials/home/latest.njk' -%}
-    {%- endif %}
-    {%- if theme.aether.start_here and theme.aether.start_here.enable !== false %}
-      {%- include '_partials/home/start-here.njk' -%}
-    {%- elif theme.aether.paths and theme.aether.paths.enable !== false %}
-      {%- include '_partials/home/start-here.njk' -%}
-    {%- endif %}
-    {%- if theme.aether.series and theme.aether.series.enable !== false %}
-      {%- include '_partials/home/series.njk' -%}
-    {%- endif %}
-    {# 05 Notes & Visuals #}
-    {%- if theme.aether.notes_visuals and theme.aether.notes_visuals.enable !== false %}
-      {%- include '_partials/home/notes-visuals.njk' -%}
-    {%- elif (theme.aether.notes and theme.aether.notes.enable !== false) or (theme.aether.visuals and theme.aether.visuals.enable !== false) %}
-      {%- include '_partials/home/notes-visuals.njk' -%}
-    {%- endif %}
-    {# 06 Subscribe #}
-    {%- if theme.aether.newsletter.enable !== false %}
-      {%- include '_partials/home/newsletter.njk' -%}
-    {%- endif %}
+    {%- for section in aether_home_sections() %}
+      {%- if section === 'hero' and theme.aether.hero.enable !== false %}
+        {%- include '_partials/home/hero.njk' %}
+      {%- elif section === 'latest' and theme.aether.latest.enable !== false %}
+        {%- include '_partials/home/latest.njk' %}
+      {%- elif section === 'paths' %}
+        {%- set paths = theme.aether.start_here or theme.aether.paths %}
+        {%- if paths and paths.enable !== false %}{% include '_partials/home/start-here.njk' %}{% endif %}
+      {%- elif section === 'series' and theme.aether.series.enable !== false and theme.aether.series_pages.enable !== false %}
+        {%- include '_partials/home/series.njk' %}
+      {%- elif section === 'personal' and theme.aether.notes_visuals.enable !== false %}
+        {%- include '_partials/home/notes-visuals.njk' %}
+      {%- elif section === 'subscribe' and theme.aether.newsletter.enable !== false %}
+        {%- include '_partials/home/newsletter.njk' %}
+      {%- endif %}
+    {%- endfor %}
   {%- else %}
     {%- for post in page.posts.toArray() %}
       {{ partial('_macro/post.njk', {post: post, is_index: true}) }}

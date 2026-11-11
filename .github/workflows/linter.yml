@@ -17,6 +17,8 @@ jobs:
       run: curlylint --include .njk layout
     - name: Use Node.js
       uses: actions/setup-node@v6
+      with:
+        node-version: '24'
     - name: Install Dependencies
       run: npm install
     - run: npm run eslint
@@ -24,6 +26,8 @@ jobs:
       run: npx c8 --reporter=lcovonly npm test
       env:
         CI: true
+    - name: Test packed theme in a clean consumer
+      run: npm run test:smoke
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:

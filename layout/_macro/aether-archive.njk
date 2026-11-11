@@ -5,7 +5,7 @@
     {%- set issue = aether_post_issue(post) %}
     {%- set category = aether_post_category(post) %}
     {%- if issue or category %}
-    <span class="aether-archive-cat">{% if issue %}周刊 · 第 {{ issue }} 期{% else %}{{ category }}{% endif %}</span>
+    <span class="aether-archive-cat">{% if issue %}{{ aether_text('issue', issue) }}{% else %}{{ category }}{% endif %}</span>
     {%- endif %}
     <a class="aether-archive-link" href="{{ url_for(post.path) }}">{{ aether_display_title(post) or __('post.untitled') }}</a>
   </div>
@@ -13,9 +13,9 @@
 {% endmacro %}
 
 {% macro navigation(active) %}
-<nav class="aether-taxonomy-nav" aria-label="浏览方式">
-  <a href="{{ url_for('/archives/') }}"{% if active === 'archives' %} aria-current="page"{% endif %}>全部文章</a>
-  <a href="{{ url_for('/categories/') }}"{% if active === 'categories' %} aria-current="page"{% endif %}>分类</a>
-  <a href="{{ url_for('/tags/') }}"{% if active === 'tags' %} aria-current="page"{% endif %}>标签</a>
+<nav class="aether-taxonomy-nav" aria-label="{{ aether_text('browse') }}">
+  <a href="{{ url_for('/archives/') }}"{% if active === 'archives' %} aria-current="page"{% endif %}>{{ aether_text('all_posts') }}</a>
+  <a href="{{ url_for('/categories/') }}"{% if active === 'categories' %} aria-current="page"{% endif %}>{{ __('title.category') }}</a>
+  <a href="{{ url_for('/tags/') }}"{% if active === 'tags' %} aria-current="page"{% endif %}>{{ __('title.tag') }}</a>
 </nav>
 {% endmacro %}

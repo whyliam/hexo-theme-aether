@@ -1,6 +1,7 @@
 'use strict';
 
 const Hexo = require('hexo');
+const profile = require('../fixtures/aether-profile.json');
 
 describe('aether-cmdk-index', () => {
   let hexo,
@@ -33,7 +34,7 @@ describe('aether-cmdk-index', () => {
 
   before(() => {
     hexo = new Hexo(__dirname, { silent: true });
-    hexo.theme.config = { scheme: 'Aether', aether: {} };
+    hexo.theme.config = { scheme: 'Aether', aether: profile };
     global.hexo = hexo;
     require('../../scripts/generators/aether-cmdk-index');
     generatorFn = hexo.extend.generator.list()['aether-cmdk-index'];

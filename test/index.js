@@ -2,7 +2,7 @@
 
 require('chai').should();
 
-describe('NexT', () => {
+describe('Aether', () => {
   require('./helpers');
   require('./tags');
   require('./validate');

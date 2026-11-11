@@ -4,7 +4,7 @@ const { aggregateSeries } = require('../lib/aether-content');
 hexo.extend.generator.register('aether-series', function(locals) {
   const config = hexo.theme.config;
   if (config.scheme !== 'Aether' || config.aether?.series_pages?.enable === false) return [];
-  const series = aggregateSeries(locals.posts);
+  const series = aggregateSeries(locals.posts, config.aether?.series?.rules || []);
   if (!series.length) return [];
   return [{
     path  : 'series/index.html', layout: 'series-index',

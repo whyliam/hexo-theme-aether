@@ -1,12 +1,12 @@
 {%- set cfg = theme.aether.notes_visuals or {} -%}
 {%- set ncfg = theme.aether.notes or {} -%}
 {%- set vcfg = theme.aether.visuals or {} -%}
-{%- set notes = aether_notes(cfg.notes_limit or 3) -%}
-{%- set visuals = aether_visuals(cfg.visuals_limit or 4) -%}
+{%- set notes = aether_notes(ncfg.limit) if ncfg.enable !== false else [] -%}
+{%- set visuals = aether_visuals(vcfg.limit) if vcfg.enable !== false else [] -%}
 {%- if (notes and notes.length) or (visuals and visuals.length) %}
 <section class="aether-section" id="aether-personal">
   <div class="aether-sec-head">
-    <h2>{{ cfg.title or '思考碎片与影像记录' | safe }}</h2>
+    <h2>{{ cfg.title or aether_text('personal') | safe }}</h2>
     {%- if cfg.subtitle %}
       <p class="aether-sec-subtitle">{{ cfg.subtitle }}</p>
     {%- endif %}
@@ -16,8 +16,8 @@
     {%- if notes and notes.length %}
     <div class="aether-nv-notes">
       <div class="aether-nv-label">
-        <span>短札</span>
-        <a href="{{ url_for(ncfg.more_url or '/categories/Notes-Essays/') }}">全部 <span class="arr">→</span></a>
+        <span>{{ aether_text('notes') }}</span>
+        <a href="{{ url_for(ncfg.more_url or '/archives/') }}">{{ aether_text('all') }} <span class="arr">→</span></a>
       </div>
       {%- for note in notes %}
         <a class="aether-note" href="{{ aether_post_url(note) }}">
@@ -33,8 +33,8 @@
     {%- if visuals and visuals.length %}
     <div class="aether-nv-visuals">
       <div class="aether-nv-label">
-        <span>影像</span>
-        <a href="{{ url_for(vcfg.more_url or '/visuals/') }}">全部 <span class="arr">→</span></a>
+        <span>{{ aether_text('visuals') }}</span>
+        <a href="{{ url_for(vcfg.more_url or ('/visuals/' if theme.aether.visuals_page.enable !== false else '/archives/')) }}">{{ aether_text('all') }} <span class="arr">→</span></a>
       </div>
       <div class="aether-nv-grid">
         {%- for v in visuals %}
